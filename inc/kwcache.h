@@ -13,8 +13,9 @@
 
 #include <cleri/object.h>
 #include <cleri/parser.h>
+#include <sys/types.h>
 
-struct cleri_parse_result_s;
+typedef struct cleri_parser_s cleri_parser_t;
 
 typedef struct cleri_kwcache_s {
     size_t len;
@@ -22,11 +23,11 @@ typedef struct cleri_kwcache_s {
     struct cleri_kwcache_s * next;
 } cleri_kwcache_t;
 
-cleri_kwcache_t * cleri_new_kwcache(void);
-size_t cleri_kwcache_match(
-        struct cleri_parse_result_s * pr,
+cleri_kwcache_t * cleri_kwcache_new(void);
+ssize_t cleri_kwcache_match(
+        cleri_parser_t * pr,
         const char * str);
-void cleri_free_kwcache(cleri_kwcache_t * kwcache);
+void cleri_kwcache_free(cleri_kwcache_t * kwcache);
 
 
 

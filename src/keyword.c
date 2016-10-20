@@ -10,49 +10,65 @@
  *
  */
 #include <cleri/keyword.h>
-#include <logger/logger.h>
 #include <stdlib.h>
 #include <string.h>
 
-static void cleri_free_keyword(
-        cleri_grammar_t * grammar,
-        cleri_object_t * cl_obj);
+static void KEYWORD_free(cleri_object_t * cl_object);
 
-static cleri_node_t * cleri_parse_keyword(
-        cleri_parse_result_t * pr,
+static cleri_node_t * KEYWORD_parse(
+        cleri_parser_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule);
 
+/*
+ * Returns NULL in case an error has occurred.
+ */
 cleri_object_t * cleri_keyword(
         uint32_t gid,
         const char * keyword,
         int ign_case)
 {
-    cleri_object_t * cl_object;
-
-    cl_object = cleri_new_object(
+    cleri_object_t * cl_object = cleri_object_new(
             CLERI_TP_KEYWORD,
-            &cleri_free_keyword,
-            &cleri_parse_keyword);
-    cl_object->cl_obj->keyword =
+            &KEYWORD_free,
+            &KEYWORD_parse);
+
+    if (cl_object == NULL)
+    {
+        return NULL;  /* signal is set */
+    }
+
+    cl_object->via.keyword =
             (cleri_keyword_t *) malloc(sizeof(cleri_keyword_t));
-    cl_object->cl_obj->keyword->gid = gid;
-    cl_object->cl_obj->keyword->keyword = keyword;
-    cl_object->cl_obj->keyword->ign_case = ign_case;
-    cl_object->cl_obj->keyword->len = strlen(keyword);
+
+    if (cl_object->via.tokens == NULL)
+    {
+        free(cl_object);
+        return NULL;
+    }
+
+    cl_object->via.keyword->gid = gid;
+    cl_object->via.keyword->keyword = keyword;
+    cl_object->via.keyword->ign_case = ign_case;
+    cl_object->via.keyword->len = strlen(keyword);
+
     return cl_object;
 }
 
-static void cleri_free_keyword(
-        cleri_grammar_t * grammar,
-        cleri_object_t * cl_obj)
+/*
+ * Destroy keyword object.
+ */
+static void KEYWORD_free(cleri_object_t * cl_object)
 {
-    free(cl_obj->cl_obj->keyword);
+    free(cl_object->via.keyword);
 }
 
-static cleri_node_t * cleri_parse_keyword(
-        cleri_parse_result_t * pr,
+/*
+ * Returns a node or NULL. (result NULL can be also be caused by an error)
+ */
+static cleri_node_t * KEYWORD_parse(
+        cleri_parser_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule)
@@ -61,24 +77,35 @@ static cleri_node_t * cleri_parse_keyword(
     cleri_node_t * node = NULL;
     const char * str = parent->str + parent->len;
 
-    match_len = cleri_kwcache_match(pr, str);
-    if (match_len == cl_obj->cl_obj->keyword->len &&
+    if ((match_len = cleri_kwcache_match(pr, str)) < 0)
+    {
+    	cleri_err = -1; /* error occurred */
+    	return NULL;
+    }
+
+    if (match_len == cl_obj->via.keyword->len &&
        (
-           strncmp(cl_obj->cl_obj->keyword->keyword, str, match_len) == 0 ||
+           strncmp(cl_obj->via.keyword->keyword, str, match_len) == 0 ||
            (
-               cl_obj->cl_obj->keyword->ign_case &&
-               strncasecmp(cl_obj->cl_obj->keyword->keyword, str, match_len) == 0
+               cl_obj->via.keyword->ign_case &&
+               strncasecmp(cl_obj->via.keyword->keyword, str, match_len) == 0
            )
        ))
     {
-        node = cleri_new_node(cl_obj, str, match_len);
-        parent->len += node->len;
-        cleri_children_add(parent->children, node);
+        if ((node = cleri_node_new(cl_obj, str, match_len)) != NULL)
+        {
+            parent->len += node->len;
+            cleri_children_add(parent->children, node);
+        }
     }
     else
     {
         /* Update expecting */
-        cleri_expecting_update(pr->expecting, cl_obj, str);
+        if (cleri_expecting_update(pr->expecting, cl_obj, str) == -1)
+        {
+            /* error occurred, node is already NULL */
+        	cleri_err = -1;
+        }
     }
     return node;
 }

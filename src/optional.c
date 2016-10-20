@@ -10,44 +10,68 @@
  *
  */
 #include <cleri/optional.h>
-#include <logger/logger.h>
+#include <cleri/expecting.h>
 #include <stdlib.h>
 
-static void cleri_free_optional(
-        cleri_grammar_t * grammar,
-        cleri_object_t * cl_obj);
+static void OPTIONAL_free(cleri_object_t * cl_object);
 
-static cleri_node_t * cleri_parse_optional(
-        cleri_parse_result_t * pr,
+static cleri_node_t * OPTIONAL_parse(
+        cleri_parser_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule);
 
+/*
+ * Returns NULL and in case an error has occurred.
+ */
 cleri_object_t * cleri_optional(uint32_t gid, cleri_object_t * cl_obj)
 {
-    cleri_object_t * cl_object;
+    if (cl_obj == NULL)
+    {
+        return NULL;
+    }
 
-    cl_object = cleri_new_object(
+    cleri_object_t * cl_object = cleri_object_new(
             CLERI_TP_OPTIONAL,
-            &cleri_free_optional,
-            &cleri_parse_optional);
-    cl_object->cl_obj->optional =
+            &OPTIONAL_free,
+            &OPTIONAL_parse);
+
+    if (cl_object == NULL)
+    {
+        return NULL;  /* signal is set */
+    }
+
+    cl_object->via.optional =
             (cleri_optional_t *) malloc(sizeof(cleri_optional_t));
-    cl_object->cl_obj->optional->gid = gid;
-    cl_object->cl_obj->optional->cl_obj = cl_obj;
+
+    if (cl_object->via.optional == NULL)
+    {
+        free(cl_object);
+        return NULL;
+    }
+
+    cl_object->via.optional->gid = gid;
+    cl_object->via.optional->cl_obj = cl_obj;
+
+    cleri_object_incref(cl_obj);
+
     return cl_object;
 }
 
-static void cleri_free_optional(
-        cleri_grammar_t * grammar,
-        cleri_object_t * cl_obj)
+/*
+ * Destroy optional object.
+ */
+static void OPTIONAL_free(cleri_object_t * cl_object)
 {
-    cleri_free_object(grammar, cl_obj->cl_obj->optional->cl_obj);
-    free(cl_obj->cl_obj->optional);
+    cleri_object_decref(cl_object->via.optional->cl_obj);
+    free(cl_object->via.optional);
 }
 
-static cleri_node_t * cleri_parse_optional(
-        cleri_parse_result_t * pr,
+/*
+ * Returns a node or NULL. In case of an error cleri_err is set to -1.
+ */
+static cleri_node_t * OPTIONAL_parse(
+        cleri_parser_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule)
@@ -55,19 +79,31 @@ static cleri_node_t * cleri_parse_optional(
     cleri_node_t * node;
     cleri_node_t * rnode;
 
-    node = cleri_new_node(cl_obj, parent->str + parent->len, 0);
-    rnode = cleri_walk(
+    if ((node = cleri_node_new(cl_obj, parent->str + parent->len, 0)) == NULL)
+    {
+    	cleri_err = -1;
+        return NULL;
+    }
+    rnode = cleri__parser_walk(
             pr,
             node,
-            cl_obj->cl_obj->optional->cl_obj,
+            cl_obj->via.optional->cl_obj,
             rule,
             CLERI_EXP_MODE_OPTIONAL);
     if (rnode != NULL)
     {
         parent->len += node->len;
-        cleri_children_add(parent->children, node);
+        if (cleri_children_add(parent->children, node))
+        {
+			 /* error occurred, reverse changes set mg_node to NULL */
+			cleri_err = -1;
+			parent->len -= node->len;
+			cleri_node_free(node);
+			node = NULL;
+        }
         return node;
     }
-    cleri_free_node(node);
+
+    cleri_node_free(node);
     return CLERI_EMPTY_NODE;
 }

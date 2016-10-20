@@ -10,18 +10,36 @@
  *
  */
 #include <cleri/grammar.h>
-#include <logger/logger.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <pcre.h>
 
+/*
+ * In case of errors, this function terminates the program with a failure.
+ */
 cleri_grammar_t * cleri_grammar(
         cleri_object_t * start,
         const char * re_keywords)
 {
-    cleri_grammar_t * grammar;
-    grammar = (cleri_grammar_t *) malloc(sizeof(cleri_grammar_t));
+    if (start == NULL)
+    {
+        /* this is critical and unexpected, memory is not cleaned */
+    	fprintf(stderr, "NULL is parsed to grammar");
+        exit(EXIT_FAILURE);
+    }
+
+    cleri_grammar_t * grammar =
+            (cleri_grammar_t *) malloc(sizeof(cleri_grammar_t));
+    if (grammar == NULL)
+    {
+        /* this is critical and unexpected, memory is not cleaned */
+    	fprintf(stderr, "Allocation error while building grammar");
+        exit(EXIT_FAILURE);
+    }
+
+    /* bind root element and increment the reference counter */
     grammar->start = start;
+    cleri_object_incref(start);
 
     const char * pcre_error_str;
     int pcre_error_offset;
@@ -34,7 +52,7 @@ cleri_grammar_t * cleri_grammar(
     if(grammar->re_keywords == NULL)
     {
         /* this is critical and unexpected, memory is not cleaned */
-        printf("critical: could not compile '%s': %s\n",
+    	fprintf(stderr, "critical: could not compile '%s': %s\n",
                 re_keywords,
                 pcre_error_str);
         exit(EXIT_FAILURE);
@@ -48,22 +66,23 @@ cleri_grammar_t * cleri_grammar(
      * string otherwise. */
     if(pcre_error_str != NULL)
     {
-        printf("critical: could not compile '%s': %s\n",
+    	fprintf(stderr, "critical: could not compile '%s': %s\n",
                 re_keywords,
                 pcre_error_str);
         exit(EXIT_FAILURE);
     }
-    grammar->olist = NULL;
     return grammar;
 }
 
-void cleri_free_grammar(cleri_grammar_t * grammar)
+void cleri_grammar_free(cleri_grammar_t * grammar)
 {
-    grammar->olist = cleri_new_olist();
     free(grammar->re_keywords);
+
     if (grammar->re_kw_extra != NULL)
+    {
         free(grammar->re_kw_extra);
-    cleri_free_object(grammar, grammar->start);
-    cleri_free_olist(NULL, grammar->olist);
+    }
+
+    cleri_object_decref(grammar->start);
     free(grammar);
 }

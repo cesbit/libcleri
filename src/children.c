@@ -10,64 +10,66 @@
  *
  */
 #include <cleri/children.h>
-#include <logger/logger.h>
 #include <stdlib.h>
 
-cleri_children_t * cleri_new_children(void)
+/*
+ * Returns NULL and in case an error has occurred.
+ */
+cleri_children_t * cleri_children_new(void)
 {
-    cleri_children_t * children;
-    children = (cleri_children_t *) malloc(sizeof(cleri_children_t));
-    children->node = NULL;
-    children->next = NULL;
+    cleri_children_t * children =
+            (cleri_children_t *) malloc(sizeof(cleri_children_t));
+    if (children != NULL)
+    {
+		children->node = NULL;
+		children->next = NULL;
+    }
     return children;
 }
 
-void cleri_children_add(cleri_children_t * children, cleri_node_t * node)
+/*
+ * Appends a node to children but a signal is set in case an error occurs.
+ *
+ * Returns 0 when successful or -1 in case of an error.
+ */
+int cleri_children_add(cleri_children_t * children, cleri_node_t * node)
 {
     if (children->node == NULL)
     {
         children->node = node;
-        return;
+        return 0;
     }
 
     while (children->next != NULL)
+    {
         children = children->next;
+    }
 
     children->next = (cleri_children_t *) malloc(sizeof(cleri_children_t));
-    children->next->node = node;
-    children->next->next = NULL;
+    if (children->next == NULL)
+    {
+        return -1;
+    }
+    else
+    {
+        children->next->node = node;
+        children->next->next = NULL;
+    }
+    return 0;
 }
 
-void cleri_free_children(cleri_children_t * children)
+/*
+ * Destroy children.
+ */
+void cleri_children_free(cleri_children_t * children)
 {
     cleri_children_t * next;
     while (children != NULL)
     {
         next = children->next;
-        cleri_free_node(children->node);
+        cleri_node_free(children->node);
         free(children);
         children = next;
     }
 }
 
-void cleri_empty_children(cleri_children_t * children)
-{
-    cleri_children_t * current;
-
-    /* clean root node and set to NULL */
-    cleri_free_node(children->node);
-    children->node = NULL;
-
-    /* set root next to NULL */
-    current = children->next;
-    children->next = NULL;
-
-    /* clean all the rest */
-    while (current != NULL)
-    {
-        children = current->next;
-        cleri_free_node(current->node);
-        free(current);
-        current = children;
-    }
-}

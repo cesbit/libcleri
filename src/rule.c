@@ -11,37 +11,61 @@
  *
  */
 #include <cleri/rule.h>
-#include <logger/logger.h>
 #include <stdlib.h>
 
-static void cleri_free_rule(
-        cleri_grammar_t * grammar,
-        cleri_object_t * cl_obj);
-
-static cleri_node_t * cleri_parse_rule(
-        cleri_parse_result_t * pr,
+static void RULE_free(cleri_object_t * cl_object);
+static cleri_node_t * RULE_parse(
+        cleri_parser_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule);
+static void RULE_tested_free(cleri_rule_tested_t * tested);
 
-static void cleri_free_rule_tested(cleri_rule_tested_t * tested);
-
+/*
+ * Returns NULL in case an error has occurred.
+ */
 cleri_object_t * cleri_rule(uint32_t gid, cleri_object_t * cl_obj)
 {
-    cleri_object_t * cl_object;
+    if (cl_obj == NULL)
+    {
+        return NULL;
+    }
 
-    cl_object = cleri_new_object(
+    cleri_object_t * cl_object = cleri_object_new(
             CLERI_TP_RULE,
-            &cleri_free_rule,
-            &cleri_parse_rule);
-    cl_object->cl_obj->rule =
-            (cleri_rule_t *) malloc(sizeof(cleri_rule_t));
-    cl_object->cl_obj->rule->gid = gid;
-    cl_object->cl_obj->rule->cl_obj = cl_obj;
+            &RULE_free,
+            &RULE_parse);
+
+    if (cl_object != NULL)
+    {
+		cl_object->via.rule =
+				(cleri_rule_t *) malloc(sizeof(cleri_rule_t));
+
+		if (cl_object->via.rule == NULL)
+		{
+			free(cl_object);
+			cl_object = NULL;
+		}
+		else
+		{
+			cl_object->via.rule->gid = gid;
+			cl_object->via.rule->cl_obj = cl_obj;
+			cleri_object_incref(cl_obj);
+		}
+    }
+
     return cl_object;
 }
 
-int cleri_init_rule_tested(
+/*
+ * Initialize a rule and return the test result.
+ * Result can be either CLERI_RULE_TRUE, CLERI_RULE_FALSE or CLERI_RULE_ERROR.
+ *
+ *  - CLERI_RULE_TRUE: a new test is created
+ *  - CLERI_RULE_FALSE: no new test is created
+ *  - CLERI_RULE_ERROR: an error occurred
+ */
+cleri_rule_test_t cleri_rule_init(
         cleri_rule_tested_t ** target,
         cleri_rule_tested_t * tested,
         const char * str)
@@ -56,51 +80,77 @@ int cleri_init_rule_tested(
     if ((*target)->str == NULL)
     {
         (*target)->str = str;
-        return 1;
+        return CLERI_RULE_TRUE;
     }
 
     while ((*target) != NULL)
     {
         if ((*target)->str == str)
-            return 0;
+        {
+            return CLERI_RULE_FALSE;
+        }
         prev = (*target);
         (*target) = (*target)->next;
     }
-    (*target) = prev->next =
+    *target = prev->next =
             (cleri_rule_tested_t *) malloc(sizeof(cleri_rule_tested_t));
+
+    if (*target == NULL)
+    {
+        return CLERI_RULE_ERROR;
+    }
     (*target)->str = str;
     (*target)->node = NULL;
     (*target)->next = NULL;
 
-    return 1;
+    return CLERI_RULE_TRUE;
 }
 
-static void cleri_free_rule(
-        cleri_grammar_t * grammar,
-        cleri_object_t * cl_obj)
+static void RULE_free(cleri_object_t * cl_object)
 {
-    cleri_free_object(grammar, cl_obj->cl_obj->optional->cl_obj);
-    free(cl_obj->cl_obj->optional);
+    cleri_object_decref(cl_object->via.rule->cl_obj);
+    free(cl_object->via.rule);
 }
 
-static cleri_node_t * cleri_parse_rule(
-        cleri_parse_result_t * pr,
+/*
+ * Returns a node or NULL. In case of an error cleri_err is set to -1.
+ */
+static cleri_node_t * RULE_parse(
+        cleri_parser_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule)
 {
     cleri_node_t * node;
     cleri_node_t * rnode;
-    node = cleri_new_node(cl_obj, parent->str + parent->len, 0);
+    if ((node = cleri_node_new(cl_obj, parent->str + parent->len, 0)) == NULL)
+    {
+    	cleri_err = -1;
+        return NULL;
+    }
 
     rule = (cleri_rule_store_t *) malloc(sizeof(cleri_rule_store_t));
+    if (rule == NULL)
+    {
+    	cleri_err = -1;
+        cleri_node_free(node);
+        return NULL;
+    }
     rule->tested = (cleri_rule_tested_t *) malloc(sizeof(cleri_rule_tested_t));
+    if (rule->tested == NULL)
+    {
+    	cleri_err = -1;
+    	free(rule);
+        cleri_node_free(node);
+        return NULL;
+    }
+
     rule->tested->str = NULL;
     rule->tested->node = NULL;
     rule->tested->next = NULL;
-    rule->root_obj = cl_obj->cl_obj->rule->cl_obj;
+    rule->root_obj = cl_obj->via.rule->cl_obj;
 
-    rnode = cleri_walk(
+    rnode = cleri__parser_walk(
             pr,
             node,
             rule->root_obj,
@@ -110,23 +160,33 @@ static cleri_node_t * cleri_parse_rule(
 
     if (rnode == NULL)
     {
-        cleri_free_node(node);
+        cleri_node_free(node);
         node = NULL;
     }
     else
     {
         parent->len += node->len;
-        cleri_children_add(parent->children, node);
+        if (cleri_children_add(parent->children, node))
+        {
+			 /* error occurred, reverse changes set mg_node to NULL */
+			cleri_err = -1;
+			parent->len -= node->len;
+			cleri_node_free(node);
+			node = NULL;
+        }
     }
 
     /* cleanup rule */
-    cleri_free_rule_tested(rule->tested);
+    RULE_tested_free(rule->tested);
     free(rule);
 
     return node;
 }
 
-static void cleri_free_rule_tested(cleri_rule_tested_t * tested)
+/*
+ * Cleanup rule tested
+ */
+static void RULE_tested_free(cleri_rule_tested_t * tested)
 {
     cleri_rule_tested_t * next;
     while (tested != NULL)

@@ -10,24 +10,24 @@
  *
  */
 #include <cleri/regex.h>
-#include <logger/logger.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
 
-static void cleri_free_regex(
-        cleri_grammar_t * grammar,
-        cleri_object_t * cl_obj);
+static void REGEX_free(cleri_object_t * cl_object);
 
-static cleri_node_t *  cleri_parse_regex(
-        cleri_parse_result_t * pr,
+static cleri_node_t *  REGEX_parse(
+        cleri_parser_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule);
 
-cleri_object_t * cleri_regex(
-        uint32_t gid,
-        const char * pattern)
+/*
+ * When successful this function will return an regex object. Any failure will
+ * terminate the program. (not a real problem since this only will be called
+ * at startup).
+ */
+cleri_object_t * cleri_regex(uint32_t gid, const char * pattern)
 {
     cleri_object_t * cl_object;
     const char * pcre_error_str;
@@ -41,20 +41,34 @@ cleri_object_t * cleri_regex(
         exit(EXIT_FAILURE);
     }
 
-    cl_object = cleri_new_object(
+    cl_object = cleri_object_new(
             CLERI_TP_REGEX,
-            &cleri_free_regex,
-            &cleri_parse_regex);
+            &REGEX_free,
+            &REGEX_parse);
 
-    cl_object->cl_obj->regex = (cleri_regex_t *) malloc(sizeof(cleri_regex_t));
-    cl_object->cl_obj->regex->gid = gid;
-    cl_object->cl_obj->regex->regex = pcre_compile(
+    if (cl_object == NULL)
+    {
+        printf("critical: cannot allocate memory");
+        exit(EXIT_FAILURE);
+    }
+
+    cl_object->via.regex = (cleri_regex_t *) malloc(sizeof(cleri_regex_t));
+
+    if (cl_object->via.regex == NULL)
+    {
+        printf("critical: cannot allocate memory");
+        exit(EXIT_FAILURE);
+    }
+
+    cl_object->via.regex->gid = gid;
+    cl_object->via.regex->regex = pcre_compile(
             pattern,
             0,
             &pcre_error_str,
             &pcre_error_offset,
             NULL);
-    if(cl_object->cl_obj->regex->regex == NULL)
+
+    if(cl_object->via.regex->regex == NULL)
     {
         /* this is critical and unexpected, memory is not cleaned */
         printf("critical: could not compile '%s': %s\n",
@@ -62,8 +76,9 @@ cleri_object_t * cleri_regex(
                 pcre_error_str);
         exit(EXIT_FAILURE);
     }
-    cl_object->cl_obj->regex->regex_extra =
-            pcre_study(cl_object->cl_obj->regex->regex, 0, &pcre_error_str);
+
+    cl_object->via.regex->regex_extra =
+            pcre_study(cl_object->via.regex->regex, 0, &pcre_error_str);
 
     /* pcre_study() returns NULL for both errors and when it can not
      * optimize the regex.  The last argument is how one checks for
@@ -79,18 +94,24 @@ cleri_object_t * cleri_regex(
     return cl_object;
 }
 
-static void cleri_free_regex(
-        cleri_grammar_t * grammar,
-        cleri_object_t * cl_obj)
+/*
+ * Destroy regex object.
+ */
+static void REGEX_free(cleri_object_t * cl_object)
 {
-    free(cl_obj->cl_obj->regex->regex);
-    if (cl_obj->cl_obj->regex->regex_extra != NULL)
-        free(cl_obj->cl_obj->regex->regex_extra);
-    free(cl_obj->cl_obj->regex);
+    free(cl_object->via.regex->regex);
+    if (cl_object->via.regex->regex_extra != NULL)
+    {
+        free(cl_object->via.regex->regex_extra);
+    }
+    free(cl_object->via.regex);
 }
 
-static cleri_node_t *  cleri_parse_regex(
-        cleri_parse_result_t * pr,
+/*
+ * Returns a node or NULL. (result NULL can be also be caused by an error)
+ */
+static cleri_node_t *  REGEX_parse(
+        cleri_parser_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule)
@@ -101,8 +122,8 @@ static cleri_node_t *  cleri_parse_regex(
     cleri_node_t * node;
 
     pcre_exec_ret = pcre_exec(
-            cl_obj->cl_obj->regex->regex,
-            cl_obj->cl_obj->regex->regex_extra,
+            cl_obj->via.regex->regex,
+            cl_obj->via.regex->regex_extra,
             str,
             strlen(str),
             0,                     // start looking at this point
@@ -111,14 +132,30 @@ static cleri_node_t *  cleri_parse_regex(
             2);                    // length of sub_str_vec
     if (pcre_exec_ret < 0)
     {
-        cleri_expecting_update(pr->expecting, cl_obj, str);
+        if (cleri_expecting_update(pr->expecting, cl_obj, str) == -1)
+        {
+        	cleri_err = -1; /* error occurred */
+        }
         return NULL;
     }
     /* since each regex pattern should start with ^ we now sub_str_vec[0]
      * should be 0. sub_str_vec[1] contains the end position in the sting
      */
-    node = cleri_new_node(cl_obj, str, (size_t) sub_str_vec[1]);
-    parent->len += node->len;
-    cleri_children_add(parent->children, node);
+    if ((node = cleri_node_new(cl_obj, str, (size_t) sub_str_vec[1])) != NULL)
+    {
+        parent->len += node->len;
+        if (cleri_children_add(parent->children, node))
+        {
+        	 /* error occurred, reverse changes set node to NULL */
+        	cleri_err = -1;
+        	parent->len -= node->len;
+        	cleri_node_free(node);
+        	node = NULL;
+        }
+    }
+    else
+    {
+    	cleri_err = -1; /* error occurred */
+    }
     return node;
 }
