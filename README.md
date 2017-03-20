@@ -5,6 +5,7 @@ Related projects
 ----------------
 - [pyleri](https://github.com/transceptor-technology/pyleri): Python parser (can export grammar to pyleri, cleri and jsleri)
 - [jsleri](https://github.com/transceptor-technology/jsleri): JavaScript parser
+- [goleri](https://github.com/transceptor-technology/goleri): Go parser
 
 Why Cleri?
 -----------
