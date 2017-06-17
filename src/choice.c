@@ -8,7 +8,7 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - fixed issue #53, 23-02-2017
  */
 #include <cleri/choice.h>
 #include <cleri/node.h>
@@ -19,19 +19,19 @@
 static void CHOICE_free(cleri_object_t * cl_object);
 
 static cleri_node_t * CHOICE_parse(
-        cleri_parser_t * pr,
+        cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule);
 
 static cleri_node_t * CHOICE_parse_most_greedy(
-        cleri_parser_t * pr,
+        cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule);
 
 static cleri_node_t * CHOICE_parse_first_match(
-        cleri_parser_t * pr,
+        cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule);
@@ -54,7 +54,7 @@ cleri_object_t * cleri_choice(
 
     if (cl_object == NULL)
     {
-        return NULL;  /* signal is set */
+        return NULL;
     }
 
     cl_object->via.choice =
@@ -73,7 +73,7 @@ cleri_object_t * cleri_choice(
     if (cl_object->via.choice->olist == NULL)
     {
         cleri_object_decref(cl_object);
-        return NULL;  /* signal is set */
+        return NULL;
     }
 
     va_start(ap, len);
@@ -103,10 +103,10 @@ static void CHOICE_free(cleri_object_t * cl_object)
 }
 
 /*
- * Returns a node or NULL. In case of an error a signal is set.
+ * Returns a node or NULL.
  */
 static cleri_node_t * CHOICE_parse(
-        cleri_parser_t * pr,
+        cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule)
@@ -117,10 +117,10 @@ static cleri_node_t * CHOICE_parse(
 }
 
 /*
- * Returns a node or NULL. In case of an error cleri_err is set to -1.
+ * Returns a node or NULL. In case of an error pr->is_valid is set to -1.
  */
 static cleri_node_t * CHOICE_parse_most_greedy(
-        cleri_parser_t * pr,
+        cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule)
@@ -136,10 +136,10 @@ static cleri_node_t * CHOICE_parse_most_greedy(
     {
         if ((node = cleri_node_new(cl_obj, str, 0)) == NULL)
         {
-        	cleri_err = -1;
+            pr->is_valid = -1;
             return NULL;
         }
-        rnode = cleri__parser_walk(
+        rnode = cleri__parse_walk(
                 pr,
                 node,
                 olist->cl_obj,
@@ -161,21 +161,21 @@ static cleri_node_t * CHOICE_parse_most_greedy(
         parent->len += mg_node->len;
         if (cleri_children_add(parent->children, mg_node))
         {
-			 /* error occurred, reverse changes set mg_node to NULL */
-			cleri_err = -1;
-        	parent->len -= mg_node->len;
-        	cleri_node_free(mg_node);
-        	mg_node = NULL;
+             /* error occurred, reverse changes set mg_node to NULL */
+            pr->is_valid = -1;
+            parent->len -= mg_node->len;
+            cleri_node_free(mg_node);
+            mg_node = NULL;
         }
     }
     return mg_node;
 }
 
 /*
- * Returns a node or NULL. In case of an error cleri_err is set to -1.
+ * Returns a node or NULL. In case of an error pr->is_valid is set to -1.
  */
 static cleri_node_t * CHOICE_parse_first_match(
-        cleri_parser_t * pr,
+        cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule)
@@ -184,16 +184,16 @@ static cleri_node_t * CHOICE_parse_first_match(
     cleri_node_t * node;
     cleri_node_t * rnode;
 
-    olist = cl_obj->via.sequence->olist;
+    olist = cl_obj->via.choice->olist;
     node = cleri_node_new(cl_obj, parent->str + parent->len, 0);
     if (node == NULL)
     {
-    	cleri_err = -1;
+        pr->is_valid = -1;
         return NULL;
     }
     while (olist != NULL)
     {
-        rnode = cleri__parser_walk(
+        rnode = cleri__parse_walk(
                 pr,
                 node,
                 olist->cl_obj,
@@ -204,11 +204,11 @@ static cleri_node_t * CHOICE_parse_first_match(
             parent->len += node->len;
             if (cleri_children_add(parent->children, node))
             {
-				 /* error occurred, reverse changes set mg_node to NULL */
-				cleri_err = -1;
-				parent->len -= node->len;
-				cleri_node_free(node);
-				node = NULL;
+                 /* error occurred, reverse changes set mg_node to NULL */
+                pr->is_valid = -1;
+                parent->len -= node->len;
+                cleri_node_free(node);
+                node = NULL;
             }
             return node;
         }

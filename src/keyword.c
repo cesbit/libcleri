@@ -16,7 +16,7 @@
 static void KEYWORD_free(cleri_object_t * cl_object);
 
 static cleri_node_t * KEYWORD_parse(
-        cleri_parser_t * pr,
+        cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule);
@@ -36,7 +36,7 @@ cleri_object_t * cleri_keyword(
 
     if (cl_object == NULL)
     {
-        return NULL;  /* signal is set */
+        return NULL;
     }
 
     cl_object->via.keyword =
@@ -65,22 +65,22 @@ static void KEYWORD_free(cleri_object_t * cl_object)
 }
 
 /*
- * Returns a node or NULL. (result NULL can be also be caused by an error)
+ * Returns a node or NULL. In case or an error, pr->is_valid is set to -1.
  */
 static cleri_node_t * KEYWORD_parse(
-        cleri_parser_t * pr,
+        cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule)
 {
-    size_t match_len;
+    ssize_t match_len;
     cleri_node_t * node = NULL;
     const char * str = parent->str + parent->len;
 
     if ((match_len = cleri_kwcache_match(pr, str)) < 0)
     {
-    	cleri_err = -1; /* error occurred */
-    	return NULL;
+        pr->is_valid = -1; /* error occurred */
+        return NULL;
     }
 
     if (match_len == cl_obj->via.keyword->len &&
@@ -104,7 +104,7 @@ static cleri_node_t * KEYWORD_parse(
         if (cleri_expecting_update(pr->expecting, cl_obj, str) == -1)
         {
             /* error occurred, node is already NULL */
-        	cleri_err = -1;
+            pr->is_valid = -1;
         }
     }
     return node;

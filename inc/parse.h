@@ -27,9 +27,9 @@ typedef struct cleri_expecting_s cleri_expecting_t;
 typedef struct cleri_kwcache_s cleri_kwcache_t;
 typedef struct cleri_rule_store_s cleri_rule_store_t;
 
-typedef struct cleri_parser_s
+typedef struct cleri_parse_s
 {
-    bool is_valid;
+    int is_valid;
     size_t pos;
     const char * str;
     cleri_node_t * tree;
@@ -37,19 +37,17 @@ typedef struct cleri_parser_s
     pcre * re_keywords;
     pcre_extra * re_kw_extra;
     cleri_kwcache_t * kwcache;
-} cleri_parser_t;
+} cleri_parse_t;
 
-cleri_parser_t * cleri_parser_new(
+cleri_parse_t * cleri_parse(
         cleri_grammar_t * grammar,
         const char * str);
 
-void cleri_parser_free(cleri_parser_t * pr);
+void cleri_parse_free(cleri_parse_t * pr);
 
-cleri_node_t * cleri__parser_walk(
-        cleri_parser_t * pr,
+cleri_node_t * cleri__parse_walk(
+        cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule,
         int mode);
-
-extern int cleri_err;

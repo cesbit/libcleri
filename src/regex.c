@@ -17,15 +17,19 @@
 static void REGEX_free(cleri_object_t * cl_object);
 
 static cleri_node_t *  REGEX_parse(
-        cleri_parser_t * pr,
+        cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule);
 
 /*
- * When successful this function will return an regex object. Any failure will
- * terminate the program. (not a real problem since this only will be called
- * at startup).
+ * Returns a regex object or NULL in case of an error.
+ *
+ * Argument pattern must start with character '^'. Be sure to check the pattern
+ * for the '^' character before calling this function.
+ *
+ * Warning: this function could write to stderr in case the pattern could not
+ * be compiled.
  */
 cleri_object_t * cleri_regex(uint32_t gid, const char * pattern)
 {
@@ -33,13 +37,7 @@ cleri_object_t * cleri_regex(uint32_t gid, const char * pattern)
     const char * pcre_error_str;
     int pcre_error_offset;
 
-    if (pattern[0] != '^')
-    {
-        /* this is critical and unexpected, memory is not cleaned */
-        printf("critical: regex patterns must start with ^ but got '%s'\n",
-                pattern);
-        exit(EXIT_FAILURE);
-    }
+    assert (pattern[0] == '^');
 
     cl_object = cleri_object_new(
             CLERI_TP_REGEX,
@@ -48,16 +46,15 @@ cleri_object_t * cleri_regex(uint32_t gid, const char * pattern)
 
     if (cl_object == NULL)
     {
-        printf("critical: cannot allocate memory");
-        exit(EXIT_FAILURE);
+        return NULL;
     }
 
     cl_object->via.regex = (cleri_regex_t *) malloc(sizeof(cleri_regex_t));
 
     if (cl_object->via.regex == NULL)
     {
-        printf("critical: cannot allocate memory");
-        exit(EXIT_FAILURE);
+        free(cl_object);
+        return NULL;
     }
 
     cl_object->via.regex->gid = gid;
@@ -70,11 +67,13 @@ cleri_object_t * cleri_regex(uint32_t gid, const char * pattern)
 
     if(cl_object->via.regex->regex == NULL)
     {
-        /* this is critical and unexpected, memory is not cleaned */
-        printf("critical: could not compile '%s': %s\n",
+        fprintf(stderr,
+                "error: cannot compile '%s' (%s)\n",
                 pattern,
                 pcre_error_str);
-        exit(EXIT_FAILURE);
+        free(cl_object->via.regex);
+        free(cl_object);
+        return NULL;
     }
 
     cl_object->via.regex->regex_extra =
@@ -86,11 +85,15 @@ cleri_object_t * cleri_regex(uint32_t gid, const char * pattern)
      * string otherwise. */
     if(pcre_error_str != NULL)
     {
-        printf("critical: could not compile '%s': %s\n",
+        fprintf(stderr,
+                "error: cannot compile '%s' (%s)\n",
                 pattern,
                 pcre_error_str);
-        exit(EXIT_FAILURE);
+        REGEX_free(cl_object);
+        free(cl_object);
+        return NULL;
     }
+
     return cl_object;
 }
 
@@ -100,18 +103,15 @@ cleri_object_t * cleri_regex(uint32_t gid, const char * pattern)
 static void REGEX_free(cleri_object_t * cl_object)
 {
     free(cl_object->via.regex->regex);
-    if (cl_object->via.regex->regex_extra != NULL)
-    {
-        free(cl_object->via.regex->regex_extra);
-    }
+    free(cl_object->via.regex->regex_extra);
     free(cl_object->via.regex);
 }
 
 /*
- * Returns a node or NULL. (result NULL can be also be caused by an error)
+ * Returns a node or NULL. In case of an error, pr->is_valid is set to -1
  */
 static cleri_node_t *  REGEX_parse(
-        cleri_parser_t * pr,
+        cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule)
@@ -134,7 +134,7 @@ static cleri_node_t *  REGEX_parse(
     {
         if (cleri_expecting_update(pr->expecting, cl_obj, str) == -1)
         {
-        	cleri_err = -1; /* error occurred */
+            pr->is_valid = -1; /* error occurred */
         }
         return NULL;
     }
@@ -146,16 +146,16 @@ static cleri_node_t *  REGEX_parse(
         parent->len += node->len;
         if (cleri_children_add(parent->children, node))
         {
-        	 /* error occurred, reverse changes set node to NULL */
-        	cleri_err = -1;
-        	parent->len -= node->len;
-        	cleri_node_free(node);
-        	node = NULL;
+             /* error occurred, reverse changes set node to NULL */
+            pr->is_valid = -1;
+            parent->len -= node->len;
+            cleri_node_free(node);
+            node = NULL;
         }
     }
     else
     {
-    	cleri_err = -1; /* error occurred */
+        pr->is_valid = -1; /* error occurred */
     }
     return node;
 }

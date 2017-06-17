@@ -4,10 +4,11 @@
  *
  * author       : Jeroen van der Heijden
  * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
+ * copyright    : 2017, Transceptor Technology
  *
  * changes
  *  - initial version, 08-03-2016
+ *  - refactoring, 17-06-2017
  *
  */
 #pragma once

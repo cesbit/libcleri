@@ -9,13 +9,16 @@
  *  - initial version, 08-03-2016
  *
  */
-#include <cleri/grammar.h>
+#include <grammar.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <pcre.h>
 
 /*
- * In case of errors, this function terminates the program with a failure.
+ * Returns a grammar object or NULL in case of an error.
+ *
+ * Warning: this function could write to stderr in case the re_keywords could
+ * not be compiled.
  */
 cleri_grammar_t * cleri_grammar(
         cleri_object_t * start,
@@ -23,23 +26,15 @@ cleri_grammar_t * cleri_grammar(
 {
     if (start == NULL)
     {
-        /* this is critical and unexpected, memory is not cleaned */
-    	fprintf(stderr, "NULL is parsed to grammar");
-        exit(EXIT_FAILURE);
+        return NULL;
     }
 
     cleri_grammar_t * grammar =
             (cleri_grammar_t *) malloc(sizeof(cleri_grammar_t));
     if (grammar == NULL)
     {
-        /* this is critical and unexpected, memory is not cleaned */
-    	fprintf(stderr, "Allocation error while building grammar");
-        exit(EXIT_FAILURE);
+        return NULL;
     }
-
-    /* bind root element and increment the reference counter */
-    grammar->start = start;
-    cleri_object_incref(start);
 
     const char * pcre_error_str;
     int pcre_error_offset;
@@ -52,10 +47,12 @@ cleri_grammar_t * cleri_grammar(
     if(grammar->re_keywords == NULL)
     {
         /* this is critical and unexpected, memory is not cleaned */
-    	fprintf(stderr, "critical: could not compile '%s': %s\n",
+        fprintf(stderr,
+                "error: cannot compile '%s' (%s)\n",
                 re_keywords,
                 pcre_error_str);
-        exit(EXIT_FAILURE);
+        free(grammar);
+        return NULL;
     }
     grammar->re_kw_extra =
             pcre_study(grammar->re_keywords, 0, &pcre_error_str);
@@ -66,11 +63,19 @@ cleri_grammar_t * cleri_grammar(
      * string otherwise. */
     if(pcre_error_str != NULL)
     {
-    	fprintf(stderr, "critical: could not compile '%s': %s\n",
+        fprintf(stderr,
+                "error: cannot compile '%s' (%s)\n",
                 re_keywords,
                 pcre_error_str);
-        exit(EXIT_FAILURE);
+        free(grammar->re_keywords);
+        free(grammar);
+        return NULL;
     }
+
+    /* bind root element and increment the reference counter */
+    grammar->start = start;
+    cleri_object_incref(start);
+
     return grammar;
 }
 

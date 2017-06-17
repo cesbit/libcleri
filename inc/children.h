@@ -9,17 +9,13 @@
  *  - initial version, 08-03-2016
  *
  */
-#pragma once
+#ifndef CLERI_CHILDREN_H_
+#define CLERI_CHILDREN_H_
 
-#include <cleri/node.h>
+#include <node.h>
 
 typedef struct cleri_node_s cleri_node_t;
-
-typedef struct cleri_children_s
-{
-    cleri_node_t * node;
-    struct cleri_children_s * next;
-} cleri_children_t;
+typedef struct cleri_children_s cleri_children_t;
 
 cleri_children_t * cleri_children_new(void);
 void cleri_children_free(cleri_children_t * children);
@@ -27,4 +23,10 @@ int cleri_children_add(
         cleri_children_t * children,
         cleri_node_t * node);
 
+struct cleri_children_s
+{
+    cleri_node_t * node;
+    struct cleri_children_s * next;
+};
 
+#endif /* CLERI_CHILDREN_H_ */

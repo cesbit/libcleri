@@ -19,7 +19,7 @@
 static void TOKEN_free(cleri_object_t * cl_object);
 
 static cleri_node_t * TOKEN_parse(
-        cleri_parser_t * pr,
+        cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule);
@@ -39,7 +39,7 @@ cleri_object_t * cleri_token(
 
     if (cl_object == NULL)
     {
-        return NULL;  /* signal is set */
+        return NULL;
     }
 
     cl_object->via.token =
@@ -67,10 +67,10 @@ static void TOKEN_free(cleri_object_t * cl_object)
 }
 
 /*
- * Returns a node or NULL. In case of an error cleri_err is set to -1.
+ * Returns a node or NULL. In case of an error pr->is_valid is set to -1.
  */
 static cleri_node_t * TOKEN_parse(
-        cleri_parser_t * pr,
+        cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule)
@@ -87,21 +87,21 @@ static cleri_node_t * TOKEN_parse(
             parent->len += node->len;
             if (cleri_children_add(parent->children, node))
             {
-				 /* error occurred, reverse changes set mg_node to NULL */
-				cleri_err = -1;
-				parent->len -= node->len;
-				cleri_node_free(node);
-				node = NULL;
+                 /* error occurred, reverse changes set mg_node to NULL */
+                pr->is_valid = -1;
+                parent->len -= node->len;
+                cleri_node_free(node);
+                node = NULL;
             }
         }
         else
         {
-        	cleri_err = -1;
+            pr->is_valid = -1;
         }
     }
     else if (cleri_expecting_update(pr->expecting, cl_obj, str) == -1)
     {
-    	cleri_err = -1;
+        pr->is_valid = -1;
     }
     return node;
 }

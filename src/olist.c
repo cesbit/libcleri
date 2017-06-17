@@ -10,7 +10,6 @@
  *
  */
 #include <cleri/olist.h>
-#include <logger/logger.h>
 #include <stdlib.h>
 
 /*
@@ -22,8 +21,8 @@ cleri_olist_t * cleri_olist_new(void)
     olist = (cleri_olist_t *) malloc(sizeof(cleri_olist_t));
     if (olist != NULL)
     {
-		olist->cl_obj = NULL;
-		olist->next = NULL;
+        olist->cl_obj = NULL;
+        olist->next = NULL;
     }
     return olist;
 }
