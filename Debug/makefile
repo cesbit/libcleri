@@ -23,19 +23,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables
 
 # All Target
-all: libsiridb.so
+all: libcleri.so
 
 # Tool invocations
-libsiridb.so: $(OBJS) $(USER_OBJS)
+libcleri.so: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	gcc -shared -o "libsiridb.so" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -shared -o "libcleri.so" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(LIBRARIES)$(OBJS)$(C_DEPS) libsiridb.so
+	-$(RM) $(LIBRARIES)$(OBJS)$(C_DEPS) libcleri.so
 	-@echo ' '
 
 .PHONY: all clean dependents
