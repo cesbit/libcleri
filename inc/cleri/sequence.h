@@ -7,9 +7,10 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_SEQUENCE_H_
+#define CLERI_SEQUENCE_H_
 
 #include <stddef.h>
 #include <inttypes.h>
@@ -30,3 +31,4 @@ cleri_object_t * cleri_sequence(
         size_t len,
         ...);
 
+#endif /* CLERI_SEQUENCE_H_ */

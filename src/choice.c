@@ -159,7 +159,7 @@ static cleri_node_t * CHOICE_parse_most_greedy(
     if (mg_node != NULL)
     {
         parent->len += mg_node->len;
-        if (cleri_children_add(parent->children, mg_node))
+        if (cleri__children_add(parent->children, mg_node))
         {
              /* error occurred, reverse changes set mg_node to NULL */
             pr->is_valid = -1;
@@ -202,7 +202,7 @@ static cleri_node_t * CHOICE_parse_first_match(
         if (rnode != NULL)
         {
             parent->len += node->len;
-            if (cleri_children_add(parent->children, node))
+            if (cleri__children_add(parent->children, node))
             {
                  /* error occurred, reverse changes set mg_node to NULL */
                 pr->is_valid = -1;

@@ -9,7 +9,7 @@
  *  - initial version, 08-03-2016
  *
  */
-#include <cleri/olist.h>
+#include <olist.h>
 #include <stdlib.h>
 
 /*

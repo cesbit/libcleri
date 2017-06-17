@@ -156,7 +156,7 @@ static cleri_node_t * TOKENS_parse(
             if ((node = cleri_node_new(cl_obj, str, tlist->len)) != NULL)
             {
                 parent->len += node->len;
-                if (cleri_children_add(parent->children, node))
+                if (cleri__children_add(parent->children, node))
                 {
                      /* error occurred, reverse changes set mg_node to NULL */
                     pr->is_valid = -1;

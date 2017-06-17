@@ -9,9 +9,9 @@
  *  - initial version, 08-03-2016
  *
  */
-#include <cleri/keyword.h>
 #include <stdlib.h>
 #include <string.h>
+#include <cleri/keyword.h>
 
 static void KEYWORD_free(cleri_object_t * cl_object);
 
@@ -95,7 +95,7 @@ static cleri_node_t * KEYWORD_parse(
         if ((node = cleri_node_new(cl_obj, str, match_len)) != NULL)
         {
             parent->len += node->len;
-            cleri_children_add(parent->children, node);
+            cleri__children_add(parent->children, node);
         }
     }
     else

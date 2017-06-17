@@ -7,9 +7,10 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_OBJECT_H_
+#define CLERI_OBJECT_H_
 
 #include <cleri/expecting.h>
 #include <cleri/keyword.h>
@@ -110,4 +111,4 @@ void cleri_object_decref(cleri_object_t * cl_object);
 
 cleri_object_t * CLERI_END_OF_STATEMENT;
 
-
+#endif /* CLERI_OBJECT_H_ */

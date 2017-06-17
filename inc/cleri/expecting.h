@@ -8,14 +8,15 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_EXPECTING_H_
+#define CLERI_EXPECTING_H_
 
-#include <cleri/olist.h>
-#include <cleri/object.h>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <cleri/olist.h>
+#include <cleri/object.h>
 
 typedef struct cleri_object_s cleri_object_t;
 typedef struct cleri_olist_s cleri_olist_t;
@@ -53,3 +54,5 @@ int cleri_expecting_set_mode(
 void cleri_expecting_free(cleri_expecting_t * expecting);
 void cleri_expecting_combine(cleri_expecting_t * expecting);
 void cleri_expecting_remove(cleri_expecting_t * expecting, uint32_t gid);
+
+#endif /* CLERI_EXPECTING_H_ */

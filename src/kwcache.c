@@ -9,10 +9,10 @@
  *  - initial version, 08-03-2016
  *
  */
-#include <cleri/kwcache.h>
 #include <stdlib.h>
 #include <pcre.h>
 #include <string.h>
+#include <cleri/kwcache.h>
 
 static void KWCACHE_kw_match(
         cleri_kwcache_t * kwcache,

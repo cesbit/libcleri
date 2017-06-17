@@ -15,7 +15,7 @@
 /*
  * Returns NULL and in case an error has occurred.
  */
-cleri_children_t * cleri_children_new(void)
+cleri_children_t * cleri__children_new(void)
 {
     cleri_children_t * children =
             (cleri_children_t *) malloc(sizeof(cleri_children_t));
@@ -32,7 +32,7 @@ cleri_children_t * cleri_children_new(void)
  *
  * Returns 0 when successful or -1 in case of an error.
  */
-int cleri_children_add(cleri_children_t * children, cleri_node_t * node)
+int cleri__children_add(cleri_children_t * children, cleri_node_t * node)
 {
     if (children->node == NULL)
     {
@@ -61,7 +61,7 @@ int cleri_children_add(cleri_children_t * children, cleri_node_t * node)
 /*
  * Destroy children.
  */
-void cleri_children_free(cleri_children_t * children)
+void cleri__children_free(cleri_children_t * children)
 {
     cleri_children_t * next;
     while (children != NULL)

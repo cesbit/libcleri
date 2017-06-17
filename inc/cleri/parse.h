@@ -7,9 +7,10 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_PARSE_H_
+#define CLERI_PARSE_H_
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -51,3 +52,5 @@ cleri_node_t * cleri__parse_walk(
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule,
         int mode);
+
+/* CLERI_PARSE_H_ */

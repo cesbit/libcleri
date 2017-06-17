@@ -1,5 +1,5 @@
 /*
- * keyword.h - cleri keyword element
+ * regex.h - cleri regular expression element.
  *
  * author       : Jeroen van der Heijden
  * email        : jeroen@transceptor.technology
@@ -7,25 +7,27 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_REGEX_H_
+#define CLERI_REGEX_H_
 
+#include <pcre.h>
 #include <stddef.h>
 #include <inttypes.h>
 #include <cleri/object.h>
 
 typedef struct cleri_object_s cleri_object_t;
 
-typedef struct cleri_keyword_s
+typedef struct cleri_regex_s
 {
     uint32_t gid;
-    const char * keyword;
-    int ign_case;
-    size_t len;
-} cleri_keyword_t;
+    pcre * regex;
+    pcre_extra * regex_extra;
+} cleri_regex_t;
 
-cleri_object_t * cleri_keyword(
+cleri_object_t * cleri_regex(
         uint32_t gid,
-        const char * keyword,
-        int ign_case);
+        const char * pattern);
+
+#endif /* CLERI_REGEX_H_ */

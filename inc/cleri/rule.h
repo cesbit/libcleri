@@ -8,9 +8,10 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_RULE_H_
+#define CLERI_RULE_H_
 
 #include <stddef.h>
 #include <inttypes.h>
@@ -54,3 +55,5 @@ cleri_rule_test_t cleri_rule_init(
         cleri_rule_tested_t ** target,
         cleri_rule_tested_t * tested,
         const char * str);
+
+#endif /* CLERI_RULE_H_ */

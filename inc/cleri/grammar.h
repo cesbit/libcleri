@@ -7,13 +7,14 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_GRAMMAR_H_
+#define CLERI_GRAMMAR_H_
 
-#include <pcre.h>
 #include <cleri/object.h>
 #include <cleri/olist.h>
+#include <pcre.h>
 
 typedef struct cleri_object_s cleri_object_t;
 
@@ -32,3 +33,6 @@ cleri_grammar_t * cleri_grammar(
         const char * re_keywords);
 
 void cleri_grammar_free(cleri_grammar_t * grammar);
+
+
+#endif /* CLERI_GRAMMAR_H_ */

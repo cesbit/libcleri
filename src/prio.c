@@ -10,9 +10,9 @@
  *  - initial version, 08-03-2016
  *
  */
-#include <cleri/prio.h>
-#include <cleri/expecting.h>
-#include <cleri/olist.h>
+#include <prio.h>
+#include <expecting.h>
+#include <olist.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -144,7 +144,7 @@ static cleri_node_t *  PRIO_parse(
     if (tested->node != NULL)
     {
         parent->len += tested->node->len;
-        if (cleri_children_add(parent->children, tested->node))
+        if (cleri__children_add(parent->children, tested->node))
         {
              /* error occurred, reverse changes set mg_node to NULL */
             pr->is_valid = -1;

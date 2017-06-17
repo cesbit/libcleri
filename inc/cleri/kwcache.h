@@ -7,9 +7,10 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_KWCACHE_H_
+#define CLERI_KWCACHE_H_
 
 #include <cleri/object.h>
 #include <cleri/parse.h>
@@ -29,6 +30,5 @@ ssize_t cleri_kwcache_match(
         const char * str);
 void cleri_kwcache_free(cleri_kwcache_t * kwcache);
 
-
-
+#endif /* CLERI_KWCACHE_H_ */
 

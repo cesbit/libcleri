@@ -7,9 +7,10 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_OPTIONAL_H_
+#define CLERI_OPTIONAL_H_
 
 #include <inttypes.h>
 #include <cleri/object.h>
@@ -26,3 +27,4 @@ cleri_object_t * cleri_optional(
         uint32_t gid,
 		cleri_object_t * cl_obj);
 
+#endif /* CLERI_OPTIONAL_H_ */

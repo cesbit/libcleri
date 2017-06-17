@@ -8,9 +8,10 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_NODE_H_
+#define CLERI_NODE_H_
 
 #include <stddef.h>
 #include <cleri/object.h>
@@ -38,3 +39,5 @@ cleri_node_t * cleri_node_new(
 void cleri_node_free(cleri_node_t * node);
 
 cleri_node_t * CLERI_EMPTY_NODE;
+
+#endif /* CLERI_NODE_H_ */

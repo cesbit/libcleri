@@ -9,7 +9,7 @@
  *  - initial version, 08-03-2016
  *
  */
-#include <grammar.h>
+#include <cleri/grammar.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <pcre.h>

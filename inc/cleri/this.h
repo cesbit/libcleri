@@ -10,9 +10,10 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_THIS_H_
+#define CLERI_THIS_H_
 
 #include <cleri/expecting.h>
 #include <cleri/object.h>
@@ -20,3 +21,5 @@
 typedef struct cleri_object_s cleri_object_t;
 
 cleri_object_t * CLERI_THIS;
+
+#endif /* CLERI_THIS_H_ */

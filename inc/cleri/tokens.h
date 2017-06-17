@@ -8,9 +8,10 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_TOKENS_H_
+#define CLERI_TOKENS_H_
 
 #include <stddef.h>
 #include <inttypes.h>
@@ -36,3 +37,5 @@ typedef struct cleri_tokens_s
 cleri_object_t * cleri_tokens(
         uint32_t gid,
         const char * tokens);
+
+#endif /* CLERI_TOKENS_H_ */

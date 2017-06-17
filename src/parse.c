@@ -9,8 +9,8 @@
  *  - initial version, 08-03-2016
  *
  */
-#include <cleri/expecting.h>
-#include <cleri/parse.h>
+#include <expecting.h>
+#include <parse.h>
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>

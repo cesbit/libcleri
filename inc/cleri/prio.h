@@ -8,9 +8,10 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_PRIO_H_
+#define CLERI_PRIO_H_
 
 #include <stddef.h>
 #include <inttypes.h>
@@ -32,3 +33,4 @@ cleri_object_t * cleri_prio(
         size_t len,
         ...);
 
+#endif /* CLERI_PRIO_H_ */

@@ -7,9 +7,10 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_OLIST_H_
+#define CLERI_OLIST_H_
 
 #include <cleri/object.h>
 
@@ -27,3 +28,5 @@ int cleri_olist_append(cleri_olist_t * olist, cleri_object_t * cl_object);
 int cleri_olist_append_nref(cleri_olist_t * olist, cleri_object_t * cl_object);
 void cleri_olist_free(cleri_olist_t * olist);
 void cleri_olist_empty(cleri_olist_t * olist);
+
+#endif /* CLERI_OLIST_H_ */

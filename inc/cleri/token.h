@@ -10,9 +10,10 @@
  *
  * changes
  *  - initial version, 08-03-2016
- *
+ *  - refactoring, 17-06-2017
  */
-#pragma once
+#ifndef CLERI_TOKEN_H_
+#define CLERI_TOKEN_H_
 
 #include <stddef.h>
 #include <inttypes.h>
@@ -31,3 +32,4 @@ cleri_object_t * cleri_token(
         uint32_t gid,
         const char * token);
 
+#endif /* CLERI_TOKEN_H_ /*
