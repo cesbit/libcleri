@@ -15,6 +15,7 @@
 #include <inttypes.h>
 #include <cleri/object.h>
 
+/* typedefs */
 typedef struct cleri_object_s cleri_object_t;
 
 typedef struct cleri_optional_s

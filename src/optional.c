@@ -89,7 +89,7 @@ static cleri_node_t * OPTIONAL_parse(
             node,
             cl_obj->via.optional->cl_obj,
             rule,
-            CLERI_EXP_MODE_OPTIONAL);
+            CLERI__EXP_MODE_OPTIONAL);
     if (rnode != NULL)
     {
         parent->len += node->len;

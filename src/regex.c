@@ -132,7 +132,7 @@ static cleri_node_t *  REGEX_parse(
             2);                    // length of sub_str_vec
     if (pcre_exec_ret < 0)
     {
-        if (cleri_expecting_update(pr->expecting, cl_obj, str) == -1)
+        if (cleri__expecting_update(pr->expecting, cl_obj, str) == -1)
         {
             pr->is_valid = -1; /* error occurred */
         }

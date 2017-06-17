@@ -128,7 +128,7 @@ static cleri_node_t *  PRIO_parse(
                 node,
                 olist->cl_obj,
                 rule,
-                CLERI_EXP_MODE_REQUIRED);
+                CLERI__EXP_MODE_REQUIRED);
         if (rnode != NULL &&
                 (tested->node == NULL || node->len > tested->node->len))
         {

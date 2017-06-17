@@ -204,7 +204,7 @@ static cleri_exp_modes_t * EXPECTING_modes_new(const char * str)
             (cleri_exp_modes_t *) malloc(sizeof(cleri_exp_modes_t));
     if (modes != NULL)
     {
-        modes->mode = CLERI_EXP_MODE_REQUIRED;
+        modes->mode = CLERI__EXP_MODE_REQUIRED;
         modes->next = NULL;
         modes->str = str;
     }
@@ -258,7 +258,7 @@ static int EXPECTING_get_mode(cleri_exp_modes_t * modes, const char * str)
             return modes->mode;
         }
     }
-    return CLERI_EXP_MODE_REQUIRED;
+    return CLERI__EXP_MODE_REQUIRED;
 }
 
 /*

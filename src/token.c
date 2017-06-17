@@ -99,7 +99,7 @@ static cleri_node_t * TOKEN_parse(
             pr->is_valid = -1;
         }
     }
-    else if (cleri_expecting_update(pr->expecting, cl_obj, str) == -1)
+    else if (cleri__expecting_update(pr->expecting, cl_obj, str) == -1)
     {
         pr->is_valid = -1;
     }

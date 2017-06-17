@@ -16,6 +16,7 @@
 #include <cleri/parse.h>
 #include <sys/types.h>
 
+/* typedefs */
 typedef struct cleri_parse_s cleri_parse_t;
 
 typedef struct cleri_kwcache_s {

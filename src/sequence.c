@@ -111,7 +111,7 @@ static cleri_node_t * SEQUENCE_parse(
                 node,
                 olist->cl_obj,
                 rule,
-                CLERI_EXP_MODE_REQUIRED);
+                CLERI__EXP_MODE_REQUIRED);
         if (rnode == NULL)
         {
             cleri_node_free(node);

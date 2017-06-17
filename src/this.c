@@ -59,7 +59,7 @@ static cleri_node_t * cleri_parse_this(
                 node,
                 rule->root_obj,
                 rule,
-                CLERI_EXP_MODE_REQUIRED);
+                CLERI__EXP_MODE_REQUIRED);
 
         if (tested->node == NULL)
         {

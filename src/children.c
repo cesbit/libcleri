@@ -9,8 +9,8 @@
  *  - initial version, 08-03-2016
  *
  */
-#include <cleri/children.h>
 #include <stdlib.h>
+#include <cleri/children.h>
 
 /*
  * Returns NULL and in case an error has occurred.

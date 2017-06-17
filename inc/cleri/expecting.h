@@ -18,41 +18,43 @@
 #include <cleri/olist.h>
 #include <cleri/object.h>
 
+#define CLERI__EXP_MODE_OPTIONAL 0
+#define CLERI__EXP_MODE_REQUIRED 1
+
+/* typedefs */
 typedef struct cleri_object_s cleri_object_t;
 typedef struct cleri_olist_s cleri_olist_t;
+typedef struct cleri_expecting_modes_s cleri_exp_modes_t;
+typedef struct cleri_expecting_s cleri_expecting_t;
 
-#define CLERI_EXP_MODE_OPTIONAL 0
-#define CLERI_EXP_MODE_REQUIRED 1
+/* private functions */
+cleri_expecting_t * cleri__expecting_new(const char * str);
+int cleri__expecting_update(
+        cleri_expecting_t * expecting,
+        cleri_object_t * cl_obj,
+        const char * str);
+int cleri__expecting_set_mode(
+        cleri_expecting_t * expecting,
+        const char * str,
+        int mode);
+void cleri__expecting_free(cleri_expecting_t * expecting);
+void cleri__expecting_combine(cleri_expecting_t * expecting);
+void cleri__expecting_remove(cleri_expecting_t * expecting, uint32_t gid);
 
-typedef struct cleri_expecting_modes_s
+/* structs */
+struct cleri_expecting_modes_s
 {
     int mode;
     const char * str;
     struct cleri_expecting_modes_s * next;
-} cleri_exp_modes_t;
+};
 
-typedef struct cleri_expecting_s
+struct cleri_expecting_s
 {
     const char * str;
     cleri_olist_t * required;
     cleri_olist_t * optional;
     cleri_exp_modes_t * modes;
-} cleri_expecting_t;
-
-cleri_expecting_t * cleri_expecting_new(const char * str);
-
-int cleri_expecting_update(
-        cleri_expecting_t * expecting,
-        cleri_object_t * cl_obj,
-        const char * str);
-
-int cleri_expecting_set_mode(
-        cleri_expecting_t * expecting,
-        const char * str,
-        int mode);
-
-void cleri_expecting_free(cleri_expecting_t * expecting);
-void cleri_expecting_combine(cleri_expecting_t * expecting);
-void cleri_expecting_remove(cleri_expecting_t * expecting, uint32_t gid);
+};
 
 #endif /* CLERI_EXPECTING_H_ */

@@ -19,6 +19,7 @@
 #include <cleri/node.h>
 #include <cleri/expecting.h>
 
+/* typedefs */
 typedef struct cleri_object_s cleri_object_t;
 typedef struct cleri_node_s cleri_node_t;
 

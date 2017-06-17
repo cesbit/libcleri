@@ -172,7 +172,7 @@ static cleri_node_t * TOKENS_parse(
             return node;
         }
     }
-    if (cleri_expecting_update(pr->expecting, cl_obj, str) == -1)
+    if (cleri__expecting_update(pr->expecting, cl_obj, str) == -1)
     {
         pr->is_valid = -1;
     }

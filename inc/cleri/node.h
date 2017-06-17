@@ -18,6 +18,7 @@
 #include <cleri/children.h>
 #include <inttypes.h>
 
+/* typedefs */
 typedef struct cleri_object_s cleri_object_t;
 typedef struct cleri_children_s cleri_children_t;
 

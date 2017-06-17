@@ -144,7 +144,7 @@ static cleri_node_t * CHOICE_parse_most_greedy(
                 node,
                 olist->cl_obj,
                 rule,
-                CLERI_EXP_MODE_REQUIRED);
+                CLERI__EXP_MODE_REQUIRED);
         if (rnode != NULL && (mg_node == NULL || node->len > mg_node->len))
         {
             cleri_node_free(mg_node);
@@ -198,7 +198,7 @@ static cleri_node_t * CHOICE_parse_first_match(
                 node,
                 olist->cl_obj,
                 rule,
-                CLERI_EXP_MODE_REQUIRED);
+                CLERI__EXP_MODE_REQUIRED);
         if (rnode != NULL)
         {
             parent->len += node->len;

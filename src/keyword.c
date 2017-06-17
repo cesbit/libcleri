@@ -101,7 +101,7 @@ static cleri_node_t * KEYWORD_parse(
     else
     {
         /* Update expecting */
-        if (cleri_expecting_update(pr->expecting, cl_obj, str) == -1)
+        if (cleri__expecting_update(pr->expecting, cl_obj, str) == -1)
         {
             /* error occurred, node is already NULL */
             pr->is_valid = -1;

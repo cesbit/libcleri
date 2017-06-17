@@ -151,7 +151,7 @@ static cleri_node_t * RULE_parse(
             node,
             nrule.root_obj,
             &nrule,
-            CLERI_EXP_MODE_REQUIRED);
+            CLERI__EXP_MODE_REQUIRED);
 
 
     if (rnode == NULL)

@@ -55,7 +55,7 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
             pr->tree,
             grammar->start,
             NULL,
-            CLERI_EXP_MODE_REQUIRED);
+            CLERI__EXP_MODE_REQUIRED);
 
     /*
      * When is_valid is -1 an unexpected error like an allocation error
@@ -88,7 +88,7 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
         if (cleri_expecting_set_mode(
                 pr->expecting,
                 end,
-                CLERI_EXP_MODE_REQUIRED) == -1 ||
+                CLERI__EXP_MODE_REQUIRED) == -1 ||
             cleri_expecting_update(
                 pr->expecting,
                 CLERI_END_OF_STATEMENT,
@@ -99,7 +99,7 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
         }
     }
 
-    cleri_expecting_combine(pr->expecting);
+    cleri__expecting_combine(pr->expecting);
 
     return pr;
 }

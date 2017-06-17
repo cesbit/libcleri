@@ -23,7 +23,6 @@ typedef struct cleri_object_s cleri_object_t;
 typedef struct cleri_olist_s cleri_olist_t;
 typedef struct cleri_choice_s cleri_choice_t;
 
-
 /* public functions */
 cleri_object_t * cleri_choice(
         uint32_t gid,

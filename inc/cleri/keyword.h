@@ -16,19 +16,23 @@
 #include <inttypes.h>
 #include <cleri/object.h>
 
+/* typedefs */
 typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_keyword_s cleri_keyword_t;
 
-typedef struct cleri_keyword_s
+/* public functions */
+cleri_object_t * cleri_keyword(
+        uint32_t gid,
+        const char * keyword,
+        int ign_case);
+
+/* structs */
+struct cleri_keyword_s
 {
     uint32_t gid;
     const char * keyword;
     int ign_case;
     size_t len;
-} cleri_keyword_t;
-
-cleri_object_t * cleri_keyword(
-        uint32_t gid,
-        const char * keyword,
-        int ign_case);
+};
 
 #endif /* CLERI_KEYWORD_H_ */

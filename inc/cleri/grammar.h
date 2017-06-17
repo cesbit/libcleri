@@ -16,23 +16,24 @@
 #include <cleri/olist.h>
 #include <pcre.h>
 
-typedef struct cleri_object_s cleri_object_t;
-
 #define CLERI_DEFAULT_RE_KEYWORDS "^\\w+"
 
-typedef struct cleri_grammar_s
+/* typedefs */
+typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_grammar_s cleri_grammar_t;
+
+/* public functions */
+cleri_grammar_t * cleri_grammar(
+        cleri_object_t * start,
+        const char * re_keywords);
+void cleri_grammar_free(cleri_grammar_t * grammar);
+
+/* structs */
+struct cleri_grammar_s
 {
     cleri_object_t * start;
     pcre * re_keywords;
     pcre_extra * re_kw_extra;
-} cleri_grammar_t;
-
-
-cleri_grammar_t * cleri_grammar(
-        cleri_object_t * start,
-        const char * re_keywords);
-
-void cleri_grammar_free(cleri_grammar_t * grammar);
-
+};
 
 #endif /* CLERI_GRAMMAR_H_ */

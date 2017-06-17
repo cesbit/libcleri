@@ -21,6 +21,7 @@
 #include <cleri/kwcache.h>
 #include <cleri/rule.h>
 
+/* typedefs */
 typedef struct cleri_object_s cleri_object_t;
 typedef struct cleri_grammar_s cleri_grammar_t;
 typedef struct cleri_node_s cleri_node_t;
