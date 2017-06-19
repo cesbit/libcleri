@@ -24,6 +24,9 @@ cleri_grammar_t * cleri_grammar(
         cleri_object_t * start,
         const char * re_keywords)
 {
+    const char * re_kw = (re_keywords == NULL) ?
+            CLERI_DEFAULT_RE_KEYWORDS : re_keywords;
+
     if (start == NULL)
     {
         return NULL;
@@ -39,7 +42,7 @@ cleri_grammar_t * cleri_grammar(
     const char * pcre_error_str;
     int pcre_error_offset;
     grammar->re_keywords = pcre_compile(
-            re_keywords,
+            re_kw,
             0,
             &pcre_error_str,
             &pcre_error_offset,
@@ -49,7 +52,7 @@ cleri_grammar_t * cleri_grammar(
         /* this is critical and unexpected, memory is not cleaned */
         fprintf(stderr,
                 "error: cannot compile '%s' (%s)\n",
-                re_keywords,
+                re_kw,
                 pcre_error_str);
         free(grammar);
         return NULL;
@@ -65,7 +68,7 @@ cleri_grammar_t * cleri_grammar(
     {
         fprintf(stderr,
                 "error: cannot compile '%s' (%s)\n",
-                re_keywords,
+                re_kw,
                 pcre_error_str);
         free(grammar->re_keywords);
         free(grammar);

@@ -32,6 +32,7 @@ cleri_object_t * cleri_token(
         const char * token)
 {
     cleri_object_t * cl_object = cleri_object_new(
+            gid,
             CLERI_TP_TOKEN,
             &TOKEN_free,
             &TOKEN_parse);
@@ -51,7 +52,6 @@ cleri_object_t * cleri_token(
         return NULL;
     }
 
-    cl_object->via.token->gid = gid;
     cl_object->via.token->token = token;
     cl_object->via.token->len = strlen(token);
 
@@ -82,7 +82,10 @@ static cleri_node_t * TOKEN_parse(
             str,
             cl_obj->via.token->len) == 0)
     {
-        if ((node = cleri_node_new(cl_obj, str, cl_obj->via.token->len)) != NULL)
+        if ((node = cleri__node_new(
+                cl_obj,
+                str,
+                cl_obj->via.token->len)) != NULL)
         {
             parent->len += node->len;
             if (cleri__children_add(parent->children, node))
@@ -90,7 +93,7 @@ static cleri_node_t * TOKEN_parse(
                  /* error occurred, reverse changes set mg_node to NULL */
                 pr->is_valid = -1;
                 parent->len -= node->len;
-                cleri_node_free(node);
+                cleri__node_free(node);
                 node = NULL;
             }
         }

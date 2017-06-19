@@ -20,16 +20,18 @@
 /* typedefs */
 typedef struct cleri_object_s cleri_object_t;
 typedef struct cleri_olist_s cleri_olist_t;
+typedef struct cleri_sequence_s cleri_sequence_t;
 
-typedef struct cleri_sequence_s
-{
-    uint32_t gid;
-    cleri_olist_t * olist;
-} cleri_sequence_t;
-
+/* public functions */
 cleri_object_t * cleri_sequence(
         uint32_t gid,
         size_t len,
         ...);
+
+/* structs */
+struct cleri_sequence_s
+{
+    cleri_olist_t * olist;
+};
 
 #endif /* CLERI_SEQUENCE_H_ */

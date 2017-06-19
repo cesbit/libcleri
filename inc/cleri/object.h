@@ -46,8 +46,20 @@ typedef struct cleri_rule_s cleri_rule_t;
 typedef struct cleri_rule_store_s cleri_rule_store_t;
 typedef struct cleri_node_s cleri_node_t;
 typedef struct cleri_parse_s cleri_parse_t;
+typedef struct cleri_object_s cleri_object_t;
 
-typedef enum {
+typedef enum cleri_object_e cleri_object_tp;
+typedef union cleri_object_u cleri_object_via_t;
+
+typedef void (*cleri_free_object_t)(cleri_object_t *);
+typedef cleri_node_t * (*cleri_parse_object_t)(
+        cleri_parse_t *,
+        cleri_node_t *,
+        cleri_object_t *,
+        cleri_rule_store_t *);
+
+/* enums */
+enum cleri_object_e {
     CLERI_TP_SEQUENCE,
     CLERI_TP_OPTIONAL,
     CLERI_TP_CHOICE,
@@ -62,14 +74,10 @@ typedef enum {
     CLERI_TP_TOKENS,
     CLERI_TP_REGEX,
     CLERI_TP_END_OF_STATEMENT
-} cleri_object_tp;
+};
 
-typedef struct cleri_dummy_s
-{
-    uint32_t gid;
-} cleri_dummy_t;
-
-typedef union
+/* unions */
+union cleri_object_u
 {
     cleri_keyword_t * keyword;
     cleri_sequence_t * sequence;
@@ -82,34 +90,33 @@ typedef union
     cleri_tokens_t * tokens;
     cleri_prio_t * prio;
     cleri_rule_t * rule;
-    cleri_dummy_t * dummy; /* place holder so we can easy get a gid */
-} cleri_object_u;
+    void * dummy; /* place holder */
+};
 
-typedef void (*cleri_free_object_t)(cleri_object_t *);
-
-typedef cleri_node_t * (*cleri_parse_object_t)(
-        cleri_parse_t *,
-        cleri_node_t *,
-        cleri_object_t *,
-        cleri_rule_store_t *);
-
-typedef struct cleri_object_s
-{
-    cleri_object_tp tp;
-    uint32_t ref;
-    cleri_free_object_t free_object;
-    cleri_parse_object_t parse_object;
-    cleri_object_u via;
-} cleri_object_t;
-
+/* public functions */
 cleri_object_t * cleri_object_new(
+        uint32_t gid,
         cleri_object_tp tp,
         cleri_free_object_t free_object,
         cleri_parse_object_t parse_object);
-
 void cleri_object_incref(cleri_object_t * cl_object);
 void cleri_object_decref(cleri_object_t * cl_object);
 
-cleri_object_t * CLERI_END_OF_STATEMENT;
+/* private functions */
+void cleri__object_cancel(size_t len, ...);
+
+/* fixed end of statement object */
+extern cleri_object_t * CLERI_END_OF_STATEMENT;
+
+/* structs */
+struct cleri_object_s
+{
+    uint32_t gid;
+    uint32_t ref;
+    cleri_free_object_t free_object;
+    cleri_parse_object_t parse_object;
+    cleri_object_tp tp;
+    cleri_object_via_t via;
+};
 
 #endif /* CLERI_OBJECT_H_ */

@@ -10,9 +10,9 @@
  *  - initial version, 08-03-2016
  *
  */
-#include <prio.h>
-#include <expecting.h>
-#include <olist.h>
+#include <cleri/prio.h>
+#include <cleri/expecting.h>
+#include <cleri/olist.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -36,8 +36,8 @@ cleri_object_t * cleri_prio(
         ...)
 {
     va_list ap;
-
     cleri_object_t * cl_object = cleri_object_new(
+            0,
             CLERI_TP_PRIO,
             &PRIO_free,
             &PRIO_parse);
@@ -56,8 +56,7 @@ cleri_object_t * cleri_prio(
         return NULL;
     }
 
-    cl_object->via.prio->gid = 0;
-    cl_object->via.prio->olist = cleri_olist_new();
+    cl_object->via.prio->olist = cleri__olist_new();
 
     if (cl_object->via.prio->olist == NULL)
     {
@@ -68,17 +67,18 @@ cleri_object_t * cleri_prio(
     va_start(ap, len);
     while(len--)
     {
-        if (cleri_olist_append(
+        if (cleri__olist_append(
                 cl_object->via.prio->olist,
                 va_arg(ap, cleri_object_t *)))
         {
+            cleri__olist_cancel(cl_object->via.prio->olist);
             cleri_object_decref(cl_object);
-            return NULL;
+            cl_object = NULL;
         }
     }
     va_end(ap);
 
-    return cleri_rule(gid, cl_object);
+    return cleri__rule(gid, cl_object);
 }
 
 /*
@@ -86,7 +86,7 @@ cleri_object_t * cleri_prio(
  */
 static void PRIO_free(cleri_object_t * cl_object)
 {
-    cleri_olist_free(cl_object->via.prio->olist);
+    cleri__olist_free(cl_object->via.prio->olist);
     free(cl_object->via.prio);
 }
 
@@ -108,7 +108,7 @@ static cleri_node_t *  PRIO_parse(
     /* initialize and return rule test, or return an existing test
      * if *str is already in tested */
     if (    rule->depth++ > PRIO_MAX_RECURSION_DEPTH ||
-            cleri_rule_init(&tested, rule->tested, str) == CLERI_RULE_ERROR)
+            cleri__rule_init(&tested, rule->tested, str) == CLERI_RULE_ERROR)
     {
         pr->is_valid = -1;
         return NULL;
@@ -118,7 +118,7 @@ static cleri_node_t *  PRIO_parse(
 
     while (olist != NULL)
     {
-        if ((node = cleri_node_new(cl_obj, str, 0)) == NULL)
+        if ((node = cleri__node_new(cl_obj, str, 0)) == NULL)
         {
             pr->is_valid = -1;
             return NULL;
@@ -132,12 +132,12 @@ static cleri_node_t *  PRIO_parse(
         if (rnode != NULL &&
                 (tested->node == NULL || node->len > tested->node->len))
         {
-            cleri_node_free(tested->node);
+            cleri__node_free(tested->node);
             tested->node = node;
         }
         else
         {
-            cleri_node_free(node);
+            cleri__node_free(node);
         }
         olist = olist->next;
     }
@@ -149,7 +149,7 @@ static cleri_node_t *  PRIO_parse(
              /* error occurred, reverse changes set mg_node to NULL */
             pr->is_valid = -1;
             parent->len -=  tested->node->len;
-            cleri_node_free(tested->node);
+            cleri__node_free(tested->node);
             tested->node = NULL;
         }
         return tested->node;

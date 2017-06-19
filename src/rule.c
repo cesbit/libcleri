@@ -24,7 +24,7 @@ static void RULE_tested_free(cleri_rule_tested_t * tested);
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_object_t * cleri_rule(uint32_t gid, cleri_object_t * cl_obj)
+cleri_object_t * cleri__rule(uint32_t gid, cleri_object_t * cl_obj)
 {
     if (cl_obj == NULL)
     {
@@ -32,6 +32,7 @@ cleri_object_t * cleri_rule(uint32_t gid, cleri_object_t * cl_obj)
     }
 
     cleri_object_t * cl_object = cleri_object_new(
+            gid,
             CLERI_TP_RULE,
             &RULE_free,
             &RULE_parse);
@@ -48,7 +49,6 @@ cleri_object_t * cleri_rule(uint32_t gid, cleri_object_t * cl_obj)
         }
         else
         {
-            cl_object->via.rule->gid = gid;
             cl_object->via.rule->cl_obj = cl_obj;
             cleri_object_incref(cl_obj);
         }
@@ -65,7 +65,7 @@ cleri_object_t * cleri_rule(uint32_t gid, cleri_object_t * cl_obj)
  *  - CLERI_RULE_FALSE: no new test is created
  *  - CLERI_RULE_ERROR: an error occurred
  */
-cleri_rule_test_t cleri_rule_init(
+cleri_rule_test_t cleri__rule_init(
         cleri_rule_tested_t ** target,
         cleri_rule_tested_t * tested,
         const char * str)
@@ -125,7 +125,7 @@ static cleri_node_t * RULE_parse(
     cleri_node_t * rnode;
     cleri_rule_store_t nrule;
 
-    if ((node = cleri_node_new(cl_obj, parent->str + parent->len, 0)) == NULL)
+    if ((node = cleri__node_new(cl_obj, parent->str + parent->len, 0)) == NULL)
     {
         pr->is_valid = -1;
         return NULL;
@@ -137,7 +137,7 @@ static cleri_node_t * RULE_parse(
     if (nrule.tested == NULL)
     {
         pr->is_valid = -1;
-        cleri_node_free(node);
+        cleri__node_free(node);
         return NULL;
     }
 
@@ -156,7 +156,7 @@ static cleri_node_t * RULE_parse(
 
     if (rnode == NULL)
     {
-        cleri_node_free(node);
+        cleri__node_free(node);
         node = NULL;
     }
     else
@@ -167,7 +167,7 @@ static cleri_node_t * RULE_parse(
              /* error occurred, reverse changes set mg_node to NULL */
             pr->is_valid = -1;
             parent->len -= node->len;
-            cleri_node_free(node);
+            cleri__node_free(node);
             node = NULL;
         }
     }

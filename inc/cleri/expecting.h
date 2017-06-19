@@ -27,6 +27,9 @@ typedef struct cleri_olist_s cleri_olist_t;
 typedef struct cleri_expecting_modes_s cleri_exp_modes_t;
 typedef struct cleri_expecting_s cleri_expecting_t;
 
+/* public functions */
+void cleri_expecting_remove(cleri_expecting_t * expecting, uint32_t gid);
+
 /* private functions */
 cleri_expecting_t * cleri__expecting_new(const char * str);
 int cleri__expecting_update(
@@ -39,7 +42,6 @@ int cleri__expecting_set_mode(
         int mode);
 void cleri__expecting_free(cleri_expecting_t * expecting);
 void cleri__expecting_combine(cleri_expecting_t * expecting);
-void cleri__expecting_remove(cleri_expecting_t * expecting, uint32_t gid);
 
 /* structs */
 struct cleri_expecting_modes_s

@@ -32,6 +32,7 @@ cleri_object_t * cleri_sequence(
 {
     va_list ap;
     cleri_object_t * cl_object = cleri_object_new(
+            gid,
             CLERI_TP_SEQUENCE,
             &SEQUENCE_free,
             &SEQUENCE_parse);
@@ -50,8 +51,7 @@ cleri_object_t * cleri_sequence(
         return NULL;
     }
 
-    cl_object->via.sequence->gid = gid;
-    cl_object->via.sequence->olist = cleri_olist_new();
+    cl_object->via.sequence->olist = cleri__olist_new();
 
     if (cl_object->via.sequence->olist == NULL)
     {
@@ -62,12 +62,14 @@ cleri_object_t * cleri_sequence(
     va_start(ap, len);
     while(len--)
     {
-        if (cleri_olist_append(
+        if (cleri__olist_append(
                 cl_object->via.sequence->olist,
                 va_arg(ap, cleri_object_t *)))
         {
+            cleri__olist_cancel(cl_object->via.sequence->olist);
             cleri_object_decref(cl_object);
-            return NULL;
+            cl_object = NULL;
+            break;
         }
     }
     va_end(ap);
@@ -80,7 +82,7 @@ cleri_object_t * cleri_sequence(
  */
 static void SEQUENCE_free(cleri_object_t * cl_object)
 {
-    cleri_olist_free(cl_object->via.sequence->olist);
+    cleri__olist_free(cl_object->via.sequence->olist);
     free(cl_object->via.sequence);
 }
 
@@ -98,7 +100,7 @@ static cleri_node_t * SEQUENCE_parse(
     cleri_node_t * rnode;
 
     olist = cl_obj->via.sequence->olist;
-    if ((node = cleri_node_new(cl_obj, parent->str + parent->len, 0)) == NULL)
+    if ((node = cleri__node_new(cl_obj, parent->str + parent->len, 0)) == NULL)
     {
         pr->is_valid = -1;
         return NULL;
@@ -114,7 +116,7 @@ static cleri_node_t * SEQUENCE_parse(
                 CLERI__EXP_MODE_REQUIRED);
         if (rnode == NULL)
         {
-            cleri_node_free(node);
+            cleri__node_free(node);
             return NULL;
         }
         olist = olist->next;
@@ -126,7 +128,7 @@ static cleri_node_t * SEQUENCE_parse(
         /* error occurred, reverse changes set mg_node to NULL */
         pr->is_valid = -1;
         parent->len -= node->len;
-        cleri_node_free(node);
+        cleri__node_free(node);
         node = NULL;
     }
     return node;

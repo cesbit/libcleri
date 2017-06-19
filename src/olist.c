@@ -9,13 +9,13 @@
  *  - initial version, 08-03-2016
  *
  */
-#include <olist.h>
+#include <cleri/olist.h>
 #include <stdlib.h>
 
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_olist_t * cleri_olist_new(void)
+cleri_olist_t * cleri__olist_new(void)
 {
     cleri_olist_t * olist;
     olist = (cleri_olist_t *) malloc(sizeof(cleri_olist_t));
@@ -32,7 +32,7 @@ cleri_olist_t * cleri_olist_new(void)
  * The list remains unchanged in case of an error and the object reference
  * counter will be incremented when successful.
  */
-int cleri_olist_append(cleri_olist_t * olist, cleri_object_t * cl_object)
+int cleri__olist_append(cleri_olist_t * olist, cleri_object_t * cl_object)
 {
     if (cl_object == NULL)
     {
@@ -67,10 +67,10 @@ int cleri_olist_append(cleri_olist_t * olist, cleri_object_t * cl_object)
 }
 
 /*
- * Exactly the same as cleri_olist_append, except the reference counter
+ * Exactly the same as cleri__olist_append, except the reference counter
  * will not be incremented.
  */
-int cleri_olist_append_nref(cleri_olist_t * olist, cleri_object_t * cl_object)
+int cleri__olist_append_nref(cleri_olist_t * olist, cleri_object_t * cl_object)
 {
     if (cl_object == NULL)
     {
@@ -106,7 +106,7 @@ int cleri_olist_append_nref(cleri_olist_t * olist, cleri_object_t * cl_object)
  * Destroy the olist and decrement the reference counter for each object in
  * the list. (NULL is allowed as olist and does nothing)
  */
-void cleri_olist_free(cleri_olist_t * olist)
+void cleri__olist_free(cleri_olist_t * olist)
 {
     cleri_olist_t * next;
     while (olist != NULL)
@@ -123,7 +123,7 @@ void cleri_olist_free(cleri_olist_t * olist)
  * Empty the object list but do not free the list. This will not decrement
  * the reference counters for object in the list.
  */
-void cleri_olist_empty(cleri_olist_t * olist)
+void cleri__olist_empty(cleri_olist_t * olist)
 {
     cleri_olist_t * current;
 
@@ -148,4 +148,19 @@ void cleri_olist_empty(cleri_olist_t * olist)
     }
 }
 
+/*
+ * Cancel building olist. Used to recover from an error while creating
+ * a new element.
+ */
+void cleri__olist_cancel(cleri_olist_t * olist)
+{
+    cleri_olist_t * current = olist->next;
 
+    /* cleanup all the rest */
+    while (current != NULL)
+    {
+        olist->cl_obj->ref--;
+        current = current->next;
+    }
+    cleri__olist_empty(olist);
+}

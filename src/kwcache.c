@@ -22,7 +22,7 @@ static void KWCACHE_kw_match(
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_kwcache_t * cleri_kwcache_new(void)
+cleri_kwcache_t * cleri__kwcache_new(void)
 {
     cleri_kwcache_t * kwcache;
     kwcache = (cleri_kwcache_t *) malloc(sizeof(cleri_kwcache_t));
@@ -39,7 +39,7 @@ cleri_kwcache_t * cleri_kwcache_new(void)
  * Returns 0 when no kw_match is found, -1 when an error has occurred, or the
  * new kwcache->len value.
  */
-ssize_t cleri_kwcache_match(
+ssize_t cleri__kwcache_match(
         cleri_parse_t * pr,
         const char * str)
 {
@@ -77,7 +77,7 @@ ssize_t cleri_kwcache_match(
 /*
  * Destroy kwcache. (parsing NULL is allowed)
  */
-void cleri_kwcache_free(cleri_kwcache_t * kwcache)
+void cleri__kwcache_free(cleri_kwcache_t * kwcache)
 {
     cleri_kwcache_t * next;
     while (kwcache != NULL)

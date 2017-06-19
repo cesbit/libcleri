@@ -25,7 +25,7 @@ static void EXPECTING_modes_free(cleri_exp_modes_t * modes);
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_expecting_t * cleri_expecting_new(const char * str)
+cleri_expecting_t * cleri__expecting_new(const char * str)
 {
     cleri_expecting_t * expecting =
             (cleri_expecting_t *) malloc(sizeof(cleri_expecting_t));
@@ -34,13 +34,13 @@ cleri_expecting_t * cleri_expecting_new(const char * str)
     {
         expecting->str = str;
 
-        if ((expecting->required = cleri_olist_new()) == NULL)
+        if ((expecting->required = cleri__olist_new()) == NULL)
         {
             free(expecting);
             return NULL;
         }
 
-        if ((expecting->optional = cleri_olist_new()) == NULL)
+        if ((expecting->optional = cleri__olist_new()) == NULL)
         {
             free(expecting->required);
             free(expecting);
@@ -62,7 +62,7 @@ cleri_expecting_t * cleri_expecting_new(const char * str)
 /*
  * Returns 0 if the mode is set successful and -1 if an error has occurred.
  */
-int cleri_expecting_update(
+int cleri__expecting_update(
         cleri_expecting_t * expecting,
         cleri_object_t * cl_obj,
         const char * str)
@@ -81,12 +81,12 @@ int cleri_expecting_update(
         if (EXPECTING_get_mode(expecting->modes, str))
         {
             /* true (1) is required */
-            rc = cleri_olist_append_nref(expecting->required, cl_obj);
+            rc = cleri__olist_append_nref(expecting->required, cl_obj);
         }
         else
         {
             /* false (0) is optional */
-            rc = cleri_olist_append_nref(expecting->optional, cl_obj);
+            rc = cleri__olist_append_nref(expecting->optional, cl_obj);
         }
     }
 
@@ -96,7 +96,7 @@ int cleri_expecting_update(
 /*
  * Returns 0 if the mode is set successful and -1 if an error has occurred.
  */
-int cleri_expecting_set_mode(
+int cleri__expecting_set_mode(
         cleri_expecting_t * expecting,
         const char * str,
         int mode)
@@ -127,7 +127,7 @@ int cleri_expecting_set_mode(
 /*
  * Destroy expecting object.
  */
-void cleri_expecting_free(cleri_expecting_t * expecting)
+void cleri__expecting_free(cleri_expecting_t * expecting)
 {
     EXPECTING_empty(expecting);
     free(expecting->required);
@@ -139,13 +139,13 @@ void cleri_expecting_free(cleri_expecting_t * expecting)
 /*
  * append optional to required and sets optional to NULL
  */
-void cleri_expecting_combine(cleri_expecting_t * expecting)
+void cleri__expecting_combine(cleri_expecting_t * expecting)
 {
     cleri_olist_t * required = expecting->required;
 
     if (required->cl_obj == NULL)
     {
-        cleri_olist_empty(expecting->required);
+        cleri__olist_empty(expecting->required);
         free(expecting->required);
         expecting->required = expecting->optional;
     }
@@ -161,9 +161,11 @@ void cleri_expecting_combine(cleri_expecting_t * expecting)
 }
 
 /*
- * removes an gid from expecting if the gid exists in the list.
+ * Removes an gid from expecting if the gid exists in the list.
  * note: we only look in required since this is where the final
  * expects are stored.
+ *
+ * This function can be helpful in case you want to filter the expecting.
  */
 void cleri_expecting_remove(cleri_expecting_t * expecting, uint32_t gid)
 {
@@ -177,7 +179,7 @@ void cleri_expecting_remove(cleri_expecting_t * expecting, uint32_t gid)
 
     for (; curr != NULL; prev = curr, curr = curr->next)
     {
-        if (curr->cl_obj != NULL && curr->cl_obj->via.dummy->gid == gid)
+        if (curr->cl_obj != NULL && curr->cl_obj->gid == gid)
         {
             if (prev == NULL)
             {
@@ -266,6 +268,6 @@ static int EXPECTING_get_mode(cleri_exp_modes_t * modes, const char * str)
  */
 static void EXPECTING_empty(cleri_expecting_t * expecting)
 {
-    cleri_olist_empty(expecting->required);
-    cleri_olist_empty(expecting->optional);
+    cleri__olist_empty(expecting->required);
+    cleri__olist_empty(expecting->optional);
 }

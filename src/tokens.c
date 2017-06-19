@@ -44,6 +44,7 @@ cleri_object_t * cleri_tokens(
     cleri_object_t * cl_object;
 
     cl_object = cleri_object_new(
+            gid,
             CLERI_TP_TOKENS,
             &TOKENS_free,
             &TOKENS_parse);
@@ -61,8 +62,6 @@ cleri_object_t * cleri_tokens(
         free(cl_object);
         return NULL;
     }
-
-    cl_object->via.tokens->gid = gid;
 
     /* copy the sting twice, first one we set spaces to 0...*/
     cl_object->via.tokens->tokens = strdup(tokens);
@@ -153,7 +152,7 @@ static cleri_node_t * TOKENS_parse(
     {
         if (strncmp(tlist->token, str, tlist->len) == 0)
         {
-            if ((node = cleri_node_new(cl_obj, str, tlist->len)) != NULL)
+            if ((node = cleri__node_new(cl_obj, str, tlist->len)) != NULL)
             {
                 parent->len += node->len;
                 if (cleri__children_add(parent->children, node))
@@ -161,7 +160,7 @@ static cleri_node_t * TOKENS_parse(
                      /* error occurred, reverse changes set mg_node to NULL */
                     pr->is_valid = -1;
                     parent->len -= node->len;
-                    cleri_node_free(node);
+                    cleri__node_free(node);
                     node = NULL;
                 }
             }

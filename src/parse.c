@@ -9,14 +9,16 @@
  *  - initial version, 08-03-2016
  *
  */
-#include <expecting.h>
-#include <parse.h>
+#include <cleri/expecting.h>
+#include <cleri/parse.h>
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdio.h>
 
 /*
- * Returns NULL in case an error has occurred.
+ * Return a parse result. In case of a memory allocation error the return value
+ * will be NULL.
  */
 cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
 {
@@ -38,9 +40,9 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
     pr->expecting = NULL;
     pr->is_valid = 0;
 
-    if (    (pr->tree = cleri_node_new(NULL, str, 0)) == NULL ||
-            (pr->kwcache = cleri_kwcache_new()) == NULL ||
-            (pr->expecting = cleri_expecting_new(str)) == NULL)
+    if (    (pr->tree = cleri__node_new(NULL, str, 0)) == NULL ||
+            (pr->kwcache = cleri__kwcache_new()) == NULL ||
+            (pr->expecting = cleri__expecting_new(str)) == NULL)
     {
         cleri_parse_free(pr);
         return NULL;
@@ -57,10 +59,7 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
             NULL,
             CLERI__EXP_MODE_REQUIRED);
 
-    /*
-     * When is_valid is -1 an unexpected error like an allocation error
-     * has occurred.
-     */
+    /* When is_valid is -1, an allocation error has occurred. */
     if (pr->is_valid == -1)
     {
         cleri_parse_free(pr);
@@ -85,11 +84,11 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
 
     if (!at_end && pr->expecting->required->cl_obj == NULL)
     {
-        if (cleri_expecting_set_mode(
+        if (cleri__expecting_set_mode(
                 pr->expecting,
                 end,
                 CLERI__EXP_MODE_REQUIRED) == -1 ||
-            cleri_expecting_update(
+            cleri__expecting_update(
                 pr->expecting,
                 CLERI_END_OF_STATEMENT,
                 end) == -1)
@@ -109,11 +108,11 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
  */
 void cleri_parse_free(cleri_parse_t * pr)
 {
-    cleri_node_free(pr->tree);
-    cleri_kwcache_free(pr->kwcache);
+    cleri__node_free(pr->tree);
+    cleri__kwcache_free(pr->kwcache);
     if (pr->expecting != NULL)
     {
-        cleri_expecting_free(pr->expecting);
+        cleri__expecting_free(pr->expecting);
     }
     free(pr);
 }
@@ -137,7 +136,7 @@ cleri_node_t * cleri__parse_walk(
     }
 
     /* set expecting mode */
-    if (cleri_expecting_set_mode(pr->expecting, parent->str, mode) == -1)
+    if (cleri__expecting_set_mode(pr->expecting, parent->str, mode) == -1)
     {
         pr->is_valid = -1;
         return NULL;

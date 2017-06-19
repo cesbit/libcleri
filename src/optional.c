@@ -32,6 +32,7 @@ cleri_object_t * cleri_optional(uint32_t gid, cleri_object_t * cl_obj)
     }
 
     cleri_object_t * cl_object = cleri_object_new(
+            gid,
             CLERI_TP_OPTIONAL,
             &OPTIONAL_free,
             &OPTIONAL_parse);
@@ -50,7 +51,6 @@ cleri_object_t * cleri_optional(uint32_t gid, cleri_object_t * cl_obj)
         return NULL;
     }
 
-    cl_object->via.optional->gid = gid;
     cl_object->via.optional->cl_obj = cl_obj;
 
     cleri_object_incref(cl_obj);
@@ -79,7 +79,7 @@ static cleri_node_t * OPTIONAL_parse(
     cleri_node_t * node;
     cleri_node_t * rnode;
 
-    if ((node = cleri_node_new(cl_obj, parent->str + parent->len, 0)) == NULL)
+    if ((node = cleri__node_new(cl_obj, parent->str + parent->len, 0)) == NULL)
     {
         pr->is_valid = -1;
         return NULL;
@@ -98,12 +98,12 @@ static cleri_node_t * OPTIONAL_parse(
              /* error occurred, reverse changes set mg_node to NULL */
             pr->is_valid = -1;
             parent->len -= node->len;
-            cleri_node_free(node);
+            cleri__node_free(node);
             node = NULL;
         }
         return node;
     }
 
-    cleri_node_free(node);
+    cleri__node_free(node);
     return CLERI_EMPTY_NODE;
 }

@@ -14,15 +14,27 @@
 #define CLERI_NODE_H_
 
 #include <stddef.h>
+#include <inttypes.h>
 #include <cleri/object.h>
 #include <cleri/children.h>
-#include <inttypes.h>
 
 /* typedefs */
 typedef struct cleri_object_s cleri_object_t;
 typedef struct cleri_children_s cleri_children_t;
+typedef struct cleri_node_s cleri_node_t;
 
-typedef struct cleri_node_s
+/* pricate functions */
+cleri_node_t * cleri__node_new(
+        cleri_object_t * cl_obj,
+        const char * str,
+        size_t len);
+void cleri__node_free(cleri_node_t * node);
+
+/* private use as empty node */
+extern cleri_node_t * CLERI_EMPTY_NODE;
+
+/* structs */
+struct cleri_node_s
 {
     cleri_object_t * cl_obj;
     const char * str;
@@ -30,15 +42,6 @@ typedef struct cleri_node_s
     uint_fast8_t ref;
     int64_t result;
     cleri_children_t * children;
-} cleri_node_t;
-
-cleri_node_t * cleri_node_new(
-        cleri_object_t * cl_obj,
-        const char * str,
-        size_t len);
-
-void cleri_node_free(cleri_node_t * node);
-
-cleri_node_t * CLERI_EMPTY_NODE;
+};
 
 #endif /* CLERI_NODE_H_ */

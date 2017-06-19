@@ -1,12 +1,12 @@
 .PHONY: install
 install:
-	@mkdir /usr/include/libsiridb
-	@cp ../include/*.h /usr/include/libsiridb/
-	@cp libsiridb.so /usr/lib/x86_64-linux-gnu/libsiridb.so
+	@mkdir /usr/include/cleri
+	@cp ../inc/cleri/*.h /usr/include/cleri/
+	@cp libcleri.so /usr/lib/x86_64-linux-gnu/libcleri.so
 
 .PHONY: uninstall
 uninstall:
-	@rm -f /usr/include/libsiridb/*.h
-	@rmdir /usr/include/libsiridb/
-	@rm -f /usr/lib/x86_64-linux-gnu/libsiridb.so
+	@rm -f /usr/include/cleri/*.h
+	@rmdir /usr/include/cleri/
+	@rm -f /usr/lib/x86_64-linux-gnu/libcleri.so
 

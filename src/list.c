@@ -45,6 +45,7 @@ cleri_object_t * cleri_list(
     }
 
     cleri_object_t * cl_object = cleri_object_new(
+            gid,
             CLERI_TP_LIST,
             &LIST_free,
             &LIST_parse);
@@ -63,7 +64,6 @@ cleri_object_t * cleri_list(
         return NULL;
     }
 
-    cl_object->via.list->gid = gid;
     cl_object->via.list->cl_obj = cl_obj;
     cl_object->via.list->delimiter = delimiter;
     cl_object->via.list->min = min;
@@ -100,7 +100,7 @@ static cleri_node_t *  LIST_parse(
     size_t i = 0;
     size_t j = 0;
 
-    if ((node = cleri_node_new(cl_obj, parent->str + parent->len, 0)) == NULL)
+    if ((node = cleri__node_new(cl_obj, parent->str + parent->len, 0)) == NULL)
     {
         pr->is_valid = -1;
         return NULL;
@@ -135,7 +135,7 @@ static cleri_node_t *  LIST_parse(
             (cl_obj->via.list->max && i > cl_obj->via.list->max) ||
             ((cl_obj->via.list->opt_closing == 0) && i && i == j))
     {
-        cleri_node_free(node);
+        cleri__node_free(node);
         return NULL;
     }
     parent->len += node->len;
@@ -144,7 +144,7 @@ static cleri_node_t *  LIST_parse(
          /* error occurred, reverse changes set mg_node to NULL */
         pr->is_valid = -1;
         parent->len -= node->len;
-        cleri_node_free(node);
+        cleri__node_free(node);
         node = NULL;
     }
     return node;

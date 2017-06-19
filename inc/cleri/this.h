@@ -21,6 +21,7 @@
 /* typedefs */
 typedef struct cleri_object_s cleri_object_t;
 
-cleri_object_t * CLERI_THIS;
+/* public THIS */
+extern cleri_object_t * CLERI_THIS;
 
 #endif /* CLERI_THIS_H_ */

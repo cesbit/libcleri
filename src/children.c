@@ -67,7 +67,7 @@ void cleri__children_free(cleri_children_t * children)
     while (children != NULL)
     {
         next = children->next;
-        cleri_node_free(children->node);
+        cleri__node_free(children->node);
         free(children);
         children = next;
     }

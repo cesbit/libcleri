@@ -33,7 +33,6 @@ cleri_object_t * cleri_choice(
 /* structs */
 struct cleri_choice_s
 {
-    uint32_t gid;
     int most_greedy;
     cleri_olist_t * olist;
 };

@@ -19,17 +19,9 @@
 
 /* typedefs */
 typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_list_s cleri_list_t;
 
-typedef struct cleri_list_s
-{
-    uint32_t gid;
-    cleri_object_t * cl_obj;
-    cleri_object_t * delimiter;
-    size_t min;
-    size_t max;
-    int opt_closing;
-} cleri_list_t;
-
+/* public functions */
 cleri_object_t * cleri_list(
         uint32_t gid,
 		cleri_object_t * cl_obj,
@@ -37,5 +29,16 @@ cleri_object_t * cleri_list(
         size_t min,
         size_t max,
         int opt_closing);
+
+/* structs */
+struct cleri_list_s
+{
+    uint32_t gid;
+    cleri_object_t * cl_obj;
+    cleri_object_t * delimiter;
+    size_t min;
+    size_t max;
+    int opt_closing;
+};
 
 #endif /* CLERI_LIST_H_ */

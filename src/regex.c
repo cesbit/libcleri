@@ -13,6 +13,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 static void REGEX_free(cleri_object_t * cl_object);
 
@@ -40,6 +41,7 @@ cleri_object_t * cleri_regex(uint32_t gid, const char * pattern)
     assert (pattern[0] == '^');
 
     cl_object = cleri_object_new(
+            gid,
             CLERI_TP_REGEX,
             &REGEX_free,
             &REGEX_parse);
@@ -57,7 +59,6 @@ cleri_object_t * cleri_regex(uint32_t gid, const char * pattern)
         return NULL;
     }
 
-    cl_object->via.regex->gid = gid;
     cl_object->via.regex->regex = pcre_compile(
             pattern,
             0,
@@ -141,7 +142,7 @@ static cleri_node_t *  REGEX_parse(
     /* since each regex pattern should start with ^ we now sub_str_vec[0]
      * should be 0. sub_str_vec[1] contains the end position in the sting
      */
-    if ((node = cleri_node_new(cl_obj, str, (size_t) sub_str_vec[1])) != NULL)
+    if ((node = cleri__node_new(cl_obj, str, (size_t) sub_str_vec[1])) != NULL)
     {
         parent->len += node->len;
         if (cleri__children_add(parent->children, node))
@@ -149,7 +150,7 @@ static cleri_node_t *  REGEX_parse(
              /* error occurred, reverse changes set node to NULL */
             pr->is_valid = -1;
             parent->len -= node->len;
-            cleri_node_free(node);
+            cleri__node_free(node);
             node = NULL;
         }
     }

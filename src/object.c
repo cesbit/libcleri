@@ -13,8 +13,13 @@
 #include <stdlib.h>
 #include <assert.h>
 
-static cleri_object_t end_of_statement =
-    {CLERI_TP_END_OF_STATEMENT, 1, NULL, NULL, {.dummy=NULL}};
+static cleri_object_t end_of_statement = {
+        .gid=0,
+        .ref=1,
+        .free_object=NULL,
+        .parse_object=NULL,
+        .tp=CLERI_TP_END_OF_STATEMENT,
+        .via={.dummy=NULL}};
 
 cleri_object_t * CLERI_END_OF_STATEMENT = &end_of_statement;
 
@@ -22,6 +27,7 @@ cleri_object_t * CLERI_END_OF_STATEMENT = &end_of_statement;
  * Returns NULL in case an error has occurred.
  */
 cleri_object_t * cleri_object_new(
+        uint32_t gid,
         cleri_object_tp tp,
         cleri_free_object_t free_object,
         cleri_parse_object_t parse_object)
@@ -31,6 +37,7 @@ cleri_object_t * cleri_object_new(
     cl_object = (cleri_object_t *) malloc(sizeof(cleri_object_t));
     if (cl_object != NULL)
     {
+        cl_object->gid = gid;
         cl_object->tp = tp;
         cl_object->ref = 1;
         cl_object->via.dummy = NULL;
@@ -64,7 +71,10 @@ void cleri_object_decref(cleri_object_t * cl_object)
     {
         (*cl_object->free_object)(cl_object);
         cl_object->via.dummy = NULL;
-        cleri_object_decref(cl_object);
+        if (cl_object->ref > 1)
+        {
+            cl_object->ref--;
+        }
     }
 
     if (!--cl_object->ref)
@@ -72,5 +82,4 @@ void cleri_object_decref(cleri_object_t * cl_object)
         free(cl_object);
     }
 }
-
 

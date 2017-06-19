@@ -13,19 +13,19 @@
 #include <cleri/node.h>
 #include <stdlib.h>
 
-static cleri_node_t Cleri_empty_node = {
+static cleri_node_t CLERI__EMPTY_NODE = {
         .children=NULL,
         .cl_obj=NULL,
         .len=0,
         .str=NULL
 };
 
-cleri_node_t * CLERI_EMPTY_NODE = &Cleri_empty_node;
+cleri_node_t * CLERI_EMPTY_NODE = &CLERI__EMPTY_NODE;
 
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_node_t * cleri_node_new(
+cleri_node_t * cleri__node_new(
         cleri_object_t * cl_obj,
         const char * str,
         size_t len)
@@ -63,7 +63,7 @@ cleri_node_t * cleri_node_new(
 /*
  * Destroy node. (parsing NULL is allowed)
  */
-void cleri_node_free(cleri_node_t * node)
+void cleri__node_free(cleri_node_t * node)
 {
     /* node can be NULL or this could be an CLERI_EMPTY_NODE */
     if (node == NULL || node == CLERI_EMPTY_NODE || --node->ref)

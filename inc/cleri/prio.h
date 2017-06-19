@@ -22,16 +22,18 @@
 /* typedefs */
 typedef struct cleri_object_s cleri_object_t;
 typedef struct cleri_olist_s cleri_olist_t;
+typedef struct cleri_prio_s cleri_prio_t;
 
-typedef struct cleri_prio_s
-{
-    uint32_t gid;
-    cleri_olist_t * olist;
-} cleri_prio_t;
-
+/* public functions */
 cleri_object_t * cleri_prio(
         uint32_t gid,
         size_t len,
         ...);
+
+/* structs */
+struct cleri_prio_s
+{
+    cleri_olist_t * olist;
+};
 
 #endif /* CLERI_PRIO_H_ */

@@ -29,7 +29,6 @@ cleri_object_t * cleri_keyword(
 /* structs */
 struct cleri_keyword_s
 {
-    uint32_t gid;
     const char * keyword;
     int ign_case;
     size_t len;

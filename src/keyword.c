@@ -30,6 +30,7 @@ cleri_object_t * cleri_keyword(
         int ign_case)
 {
     cleri_object_t * cl_object = cleri_object_new(
+            gid,
             CLERI_TP_KEYWORD,
             &KEYWORD_free,
             &KEYWORD_parse);
@@ -48,7 +49,6 @@ cleri_object_t * cleri_keyword(
         return NULL;
     }
 
-    cl_object->via.keyword->gid = gid;
     cl_object->via.keyword->keyword = keyword;
     cl_object->via.keyword->ign_case = ign_case;
     cl_object->via.keyword->len = strlen(keyword);
@@ -77,7 +77,7 @@ static cleri_node_t * KEYWORD_parse(
     cleri_node_t * node = NULL;
     const char * str = parent->str + parent->len;
 
-    if ((match_len = cleri_kwcache_match(pr, str)) < 0)
+    if ((match_len = cleri__kwcache_match(pr, str)) < 0)
     {
         pr->is_valid = -1; /* error occurred */
         return NULL;
@@ -92,7 +92,7 @@ static cleri_node_t * KEYWORD_parse(
            )
        ))
     {
-        if ((node = cleri_node_new(cl_obj, str, match_len)) != NULL)
+        if ((node = cleri__node_new(cl_obj, str, match_len)) != NULL)
         {
             parent->len += node->len;
             cleri__children_add(parent->children, node);

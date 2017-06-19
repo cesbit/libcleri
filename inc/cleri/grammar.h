@@ -12,9 +12,9 @@
 #ifndef CLERI_GRAMMAR_H_
 #define CLERI_GRAMMAR_H_
 
+#include <pcre.h>
 #include <cleri/object.h>
 #include <cleri/olist.h>
-#include <pcre.h>
 
 #define CLERI_DEFAULT_RE_KEYWORDS "^\\w+"
 
