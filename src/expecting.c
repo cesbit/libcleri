@@ -143,9 +143,14 @@ void cleri__expecting_combine(cleri_expecting_t * expecting)
 {
     cleri_olist_t * required = expecting->required;
 
+    if (expecting->optional->cl_obj == NULL)
+    {
+        free(expecting->optional);
+        expecting->optional = NULL;
+    }
+
     if (required->cl_obj == NULL)
     {
-        cleri__olist_empty(expecting->required);
         free(expecting->required);
         expecting->required = expecting->optional;
     }
@@ -158,43 +163,6 @@ void cleri__expecting_combine(cleri_expecting_t * expecting)
         required->next = expecting->optional;
     }
     expecting->optional = NULL;
-}
-
-/*
- * Removes an gid from expecting if the gid exists in the list.
- * note: we only look in required since this is where the final
- * expects are stored.
- *
- * This function can be helpful in case you want to filter the expecting.
- */
-void cleri_expecting_remove(cleri_expecting_t * expecting, uint32_t gid)
-{
-    cleri_olist_t * curr = expecting->required;
-    cleri_olist_t * prev = NULL;
-
-    if (curr == NULL || curr->cl_obj == NULL)
-    {
-        return;
-    }
-
-    for (; curr != NULL; prev = curr, curr = curr->next)
-    {
-        if (curr->cl_obj != NULL && curr->cl_obj->gid == gid)
-        {
-            if (prev == NULL)
-            {
-                expecting->required = curr->next;
-            }
-            else
-            {
-                prev->next = curr->next;
-            }
-
-            /* free current */
-            free(curr);
-            return;
-        }
-    }
 }
 
 /*

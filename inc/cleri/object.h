@@ -102,9 +102,6 @@ cleri_object_t * cleri_object_new(
 void cleri_object_incref(cleri_object_t * cl_object);
 void cleri_object_decref(cleri_object_t * cl_object);
 
-/* private functions */
-void cleri__object_cancel(size_t len, ...);
-
 /* fixed end of statement object */
 extern cleri_object_t * CLERI_END_OF_STATEMENT;
 

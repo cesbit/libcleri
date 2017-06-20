@@ -100,6 +100,8 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
 
     cleri__expecting_combine(pr->expecting);
 
+    pr->expect = pr->expecting->required;
+
     return pr;
 }
 
@@ -115,6 +117,14 @@ void cleri_parse_free(cleri_parse_t * pr)
         cleri__expecting_free(pr->expecting);
     }
     free(pr);
+}
+
+/*
+ * Reset expect to start
+ */
+void cleri_parse_expect_start(cleri_parse_t * pr)
+{
+    pr->expect = pr->expecting->required;
 }
 
 /*

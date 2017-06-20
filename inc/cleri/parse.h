@@ -31,10 +31,9 @@ typedef struct cleri_rule_store_s cleri_rule_store_t;
 typedef struct cleri_parse_s cleri_parse_t;
 
 /* public functions */
-cleri_parse_t * cleri_parse(
-        cleri_grammar_t * grammar,
-        const char * str);
+cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str);
 void cleri_parse_free(cleri_parse_t * pr);
+void cleri_parse_expect_start(cleri_parse_t * pr);
 
 /* private functions */
 cleri_node_t * cleri__parse_walk(
@@ -51,6 +50,7 @@ struct cleri_parse_s
     size_t pos;
     const char * str;
     cleri_node_t * tree;
+    const cleri_olist_t * expect;
     cleri_expecting_t * expecting;
     pcre * re_keywords;
     pcre_extra * re_kw_extra;

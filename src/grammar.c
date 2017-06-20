@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <pcre.h>
+#include <assert.h>
 
 /*
  * Returns a grammar object or NULL in case of an error.
@@ -26,6 +27,8 @@ cleri_grammar_t * cleri_grammar(
 {
     const char * re_kw = (re_keywords == NULL) ?
             CLERI_DEFAULT_RE_KEYWORDS : re_keywords;
+
+    assert (re_kw[0] == '^');
 
     if (start == NULL)
     {

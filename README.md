@@ -6,6 +6,10 @@ Languange parser for the C program language.
   * [Related projects](#related-projects)
   * [API](#api)
     * [cleri_object_t](#cleri_object_t)
+    * [cleri_grammar_t](#cleri_grammar_t)
+    * [cleri_parse_t](#cleri_parse_t)
+    * [cleri_node_t](#cleri_node_t)
+    * [cleri_children_t](#cleri_children_t)
     * [Miscellaneous functions](#miscellaneous-functions)
 
 ---------------------------------------
@@ -81,8 +85,8 @@ Cleri object is the base object for each element.
 - `uint32_t gid`: Global Identifier for the element. This GID is not required and
 as a rule it should be set to 0 if not used. You can use the GID for identifiying
 an element in a parse result. When exporting a Pyleri grammar, each named element
-will have set the GID be default.
-- `cleri_object_tp tp`: Type for the object.
+will have set the GID be default. (readonly)
+- `cleri_object_tp tp`: Type for the object. (readonly)
     - `CLERI_TP_SEQUENCE`
     - `CLERI_TP_OPTIONAL`
     - `CLERI_TP_CHOICE`
@@ -96,7 +100,7 @@ will have set the GID be default.
     - `CLERI_TP_TOKENS`
     - `CLERI_TP_REGEX`
     - `CLERI_TP_END_OF_STATEMENT`
-- `cleri_object_via_t via`: Object.
+- `cleri_object_via_t via`: Object. (readonly)
     - `cleri_sequence_t * sequence`
     - `cleri_optional_t * optional`
     - `cleri_choice_t * choice`
@@ -111,7 +115,9 @@ will have set the GID be default.
     - `void * dummy` (place holder, this, eof)
 
 #### `cleri_object_t * cleri_object_new(uint32_t gid, cleri_object_tp tp, cleri_free_object_t free_object, cleri_parse_object_t parse_object)`
-Create and return a new cleri object. This function should only be used in case
+Create and return a new cleri object. A unique gid is not required but can help
+you wih identifiying the element in a [parse result](#cleri_parse_t). As a rule
+you should assign 0 in case no specific  This function should only be used in case
 you want to create your own custom element.
 
 #### `void cleri_object_incref(cleri_object_t * cl_object)`
@@ -165,4 +171,131 @@ cleri_grammar_t * compile_grammar(void)
 >to which the argument is parsed to, will return NULL. Following this
 >chain the final grammar returns NULL in case somewhere an error has occurred.
 >In this case you should usually abort the program.
+
+### `cleri_grammar_t`
+Compiled libcleri grammar.
+
+*No public members*
+
+#### `cleri_grammar_t * cleri_grammar(cleri_object_t * start, const char * re_keywords)`
+Create and return a compiled grammar. Argument `start` must be the entry element
+for the grammar. Argument `re_keywords` should be a regular expression starting
+with character `^` for matching keywords in a grammar. When a grammar is created,
+each defined [keyword](#cleri_keyword_t) should match this regular expression.
+`re_keywords` is allowed to be `NULL` in which case the defualt
+`CLERI_DEFAULT_RE_KEYWORDS` is used.
+
+#### `void cleri_grammar_free(cleri_grammar_t * grammar)`
+Cleanup grammar. This will also destroy all elements which are used by the
+grammar. Make sure all parse results are destroyed before destroying the grammar
+because a [parse result](#cleri_parse_t) depends on elements from the grammar.
+
+### `cleri_parse_t`
+Parse result containing the parse tree and other information about the parse
+result.
+
+*Public members*
+- `int cleri_parse_t.is_valid`: Boolean. Value is 1 (TRUE) in case the parse string is valid or 0 (FALSE) if not. (readonly)
+- `size_t cleri_parse_t.pos`: Position in the string to where the string was successfully parsed. This value is (readonly)
+equal to the length of the string in case `cleri_parse_t.is_valid` is TRUE. (readonly)
+- `const char * cleri_parse_t.str`: Pointer to the provided string. (readonly)
+- `cleri_node_t * tree`: Parse tree. (see [cleri_node_t](#cleri_node_t) and [cleri_children_t](#cleri_children_t)) (readonly)
+- `const cleri_olist_t * expect`: Linked list to possible elements at position `cleri_parse_t.pos` in `cleri_parse_t.str`.
+(see [cleri_olist_t](#cleri_olist_t) for more information)
+
+#### `cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)`
+Create and return a parse result. The parse result contains pointers to the
+provided string (`str`) so make sure the string is available while using the
+parse result.
+
+#### `void cleri_parse_free(cleri_parse_t * pr)`
+Cleanup a parse result.
+
+#### `void cleri_parse_expect_start(cleri_parse_t * pr)`
+Can be used to reset the expect list to start. Usually you are not required to
+use this function since the expect list is already at the start position.
+
+### `cleri_node_t`
+Node obeject. A parse result has a parse tree which consists of nodes. Each node
+may have children.
+
+*Public members*
+- `const char * cleri_node_t.str`: Pointer to the position in the parse string where this node starts. (readonly)
+- `size_t cleri_node_t.len`: Length of the string which is applicable for this node. (readonly)
+- `cleri_object_t * cleri_node_t.cl_obj`: Element from the grammar which matches this node. (readonly)
+- `cleri_children_t * cleri_node_t.children`: Optional children for this node. (readonly)
+
+#### `bool cleri_node_has_children(cleri_node_t * node)`
+Macro function for checking if a node has children.
+
+### `cleri_children_t`
+Children from a node in a linked list.
+
+*Public members*
+- `cleri_node_t * cleri_children_t.node`: Child node. (readonly)
+- `struct cleri_children_s * cleri_children_t.next`: Next child node or `NULL` if there are no other childs. (readonly)
+
+Example looping over all children within a node:
+```c
+/* we asume having a node (cleri_node_t*) */
+if (cleri_node_has_children(node)) {
+    cleri_children_t * child = node->children;
+    while (child != NULL) {
+        // do something with child->node
+        child = child->next;
+    }
+}
+```
+
+### `cleri_olist_t`
+Linked list holding libcleri objects. A `cleri_olist_t` type is used for
+expected elements in a parse result.
+
+*Public members*
+- `cleri_object_t * cl_obj`: Object (holding an element, readonly)
+- `cleri_olist_t * next`: Next object. (readonly)
+
+Example looping over `cleri_parse_t.expect`:
+```c
+/* we asume having a pr (cleri_parse_t*)
+ *
+ * Notes:
+ *    pr->expect is NULL if nothing is expected and it is save to
+ *    change pr->expect. If required the linked list can be reset to start
+ *    using cleri_parse_expect_start(). */
+while (pr->expect != NULL) {
+    // do something with pr->expect->cl_obj
+    pr->expect = pr->expect->next;
+}
+```
+
+### `cleri_keyword_t`
+Keyword element. The parser needs a match with the keyword.
+
+*Public members*
+- `const char * cleri_keyword_t.keyword`
+- `int cleri_keyword_t.ign_case`
+- `size_t cleri_keyword_t.len`
+
+#### `cleri_object_t * cleri_keyword(uint32_t gid, const char * keyword, int ign_case)`
+Create and return a new [object](#cleri_object_t) containing a keyword element.
+Argument `ign_case` can be set to 1 for a case insensitive keyword match.
+
+Example:
+```c
+/* define case insensitive keyword */
+cleri_object_t * k_tictactoe = cleri_keyword(0, "tic-tac-toe", 1);
+
+/* create grammar with custom keyword regular expression match */
+cleri_grammar_t * grammar = cleri_grammar(k_tictactoe, "^[A-Za-z-]+");
+
+/* parse some test string */
+cleri_parse_t * pr = cleri_parse(grammar, "Tic-Tac-Toe");
+
+printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
+
+/* cleanup */
+cleri_parse_free(pr);
+cleri_grammar_free(grammar);
+```
 
