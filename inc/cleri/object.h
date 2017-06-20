@@ -28,6 +28,7 @@
 #include <cleri/parse.h>
 #include <cleri/rule.h>
 #include <cleri/this.h>
+#include <cleri/ref.h>
 
 /* typedefs */
 typedef struct cleri_object_s cleri_object_t;
@@ -46,6 +47,7 @@ typedef struct cleri_rule_s cleri_rule_t;
 typedef struct cleri_rule_store_s cleri_rule_store_t;
 typedef struct cleri_node_s cleri_node_t;
 typedef struct cleri_parse_s cleri_parse_t;
+typedef struct cleri_ref_s cleri_ref_t;
 typedef struct cleri_object_s cleri_object_t;
 
 typedef enum cleri_object_e cleri_object_tp;
@@ -73,6 +75,7 @@ enum cleri_object_e {
     CLERI_TP_TOKEN,
     CLERI_TP_TOKENS,
     CLERI_TP_REGEX,
+    CLERI_TP_REF,
     CLERI_TP_END_OF_STATEMENT
 };
 

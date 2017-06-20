@@ -17,6 +17,7 @@ C_SRCS += \
 ../src/optional.c \
 ../src/parse.c \
 ../src/prio.c \
+../src/ref.c \
 ../src/regex.c \
 ../src/repeat.c \
 ../src/rule.c \
@@ -39,6 +40,7 @@ OBJS += \
 ./src/optional.o \
 ./src/parse.o \
 ./src/prio.o \
+./src/ref.o \
 ./src/regex.o \
 ./src/repeat.o \
 ./src/rule.o \
@@ -61,6 +63,7 @@ C_DEPS += \
 ./src/optional.d \
 ./src/parse.d \
 ./src/prio.d \
+./src/ref.d \
 ./src/regex.d \
 ./src/repeat.d \
 ./src/rule.d \

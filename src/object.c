@@ -67,10 +67,18 @@ void cleri_object_decref(cleri_object_t * cl_object)
         return;
     }
 
-    if (cl_object->via.dummy != NULL)
+    /* Use tp to check because we need to be sure this check validates false
+     * before calling the free function. */
+    if (cl_object->tp != CLERI_TP_REF)
     {
+        /* Change the type so the other are treated as references */
+        cl_object->tp = CLERI_TP_REF;
+
         (*cl_object->free_object)(cl_object);
-        cl_object->via.dummy = NULL;
+
+        /* We decrement once more as soon as the element has joined at least
+         * one other element so we don't have to run the cleanup on this
+         * specific element. */
         if (cl_object->ref > 1)
         {
             cl_object->ref--;

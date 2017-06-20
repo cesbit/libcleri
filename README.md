@@ -4,13 +4,16 @@ Languange parser for the C program language.
 ---------------------------------------
   * [Installation](#installation)
   * [Related projects](#related-projects)
+  * [Quick usage](#quick-usage)
   * [API](#api)
     * [cleri_object_t](#cleri_object_t)
     * [cleri_grammar_t](#cleri_grammar_t)
     * [cleri_parse_t](#cleri_parse_t)
     * [cleri_node_t](#cleri_node_t)
     * [cleri_children_t](#cleri_children_t)
-    * [Miscellaneous functions](#miscellaneous-functions)
+  * [Elements](#elements)
+    * [cleri_keyword_t](#cleri_keyword_t)
+  * [Miscellaneous functions](#miscellaneous-functions)
 
 ---------------------------------------
 
@@ -39,7 +42,7 @@ $ sudo make install
 - [jsleri](https://github.com/transceptor-technology/jsleri): JavaScript parser
 - [goleri](https://github.com/transceptor-technology/goleri): Go parser
 
-## Usage
+## Quick usage
 >The recommended way to create a static grammar is to use [pyleri](https://github.com/transceptor-technology/pyleri) for
 >writing the language and from there export the language to libcleri or other languages.
 
@@ -268,6 +271,8 @@ while (pr->expect != NULL) {
     pr->expect = pr->expect->next;
 }
 ```
+## Elements
+Elements are objects used to define a grammar.
 
 ### `cleri_keyword_t`
 Keyword element. The parser needs a match with the keyword.
@@ -299,3 +304,6 @@ cleri_parse_free(pr);
 cleri_grammar_free(grammar);
 ```
 
+### Miscellaneous functions
+#### `const char * siridb_version(void)`
+Returns the version of libsiridb.

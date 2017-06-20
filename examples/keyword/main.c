@@ -17,4 +17,6 @@ int main(void)
     /* cleanup */
     cleri_parse_free(pr);
     cleri_grammar_free(grammar);
+
+    return 0;
 }
