@@ -48,6 +48,7 @@ typedef struct cleri_rule_store_s cleri_rule_store_t;
 typedef struct cleri_node_s cleri_node_t;
 typedef struct cleri_parse_s cleri_parse_t;
 typedef struct cleri_ref_s cleri_ref_t;
+typedef struct cleri_dup_s cleri_dup_t;
 typedef struct cleri_object_s cleri_object_t;
 
 typedef enum cleri_object_e cleri_object_tp;

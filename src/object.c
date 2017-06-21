@@ -22,6 +22,13 @@ static cleri_object_t end_of_statement = {
         .via={.dummy=NULL}};
 static void OBJECT_dup_free(cleri_object_t * cl_object);
 
+typedef struct cleri_dup_s cleri_dup_t;
+struct cleri_dup_s
+{
+    cleri_object_t * dup;
+};
+
+
 cleri_object_t * CLERI_END_OF_STATEMENT = &end_of_statement;
 
 /*
