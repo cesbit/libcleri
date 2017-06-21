@@ -30,10 +30,7 @@ static cleri_node_t *  PRIO_parse(
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_object_t * cleri_prio(
-        uint32_t gid,
-        size_t len,
-        ...)
+cleri_object_t * cleri_prio(uint32_t gid, size_t len, ...)
 {
     va_list ap;
     cleri_object_t * cl_object = cleri_object_new(

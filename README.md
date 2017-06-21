@@ -289,7 +289,7 @@ reference.
 >```c
 >cleri_ref_set(ref, cleri_optional(0, ref)); // DON'T DO THIS
 >```
->Use [prio](#cleri_prio_t) is such a recursive constrution is required.
+>Use [prio](#cleri_prio_t) if such recursive constrution is required.
 
 #### `cleri_object_t * cleri_ref(void)`
 Create and return a new [object](#cleri_object_t) as reference element.
@@ -410,7 +410,7 @@ cleri_grammar_free(grammar);
 ```
 
 ### `cleri_sequence_t`
-Sequence element. The parsermust match each element in the specified order.
+Sequence element. The parser must match each element in the specified order.
 
 *Public members*
 - `cleri_olist_t * cleri_sequence_t.olist`: Elements. (readonly)
@@ -466,6 +466,58 @@ cleri_grammar_t * grammar = cleri_grammar(greet, NULL);
 
 /* parse some test string */
 cleri_parse_t * pr = cleri_parse(grammar, "hello");
+printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
+
+/* cleanup */
+cleri_parse_free(pr);
+cleri_grammar_free(grammar);
+```
+
+### `cleri_prio_t`
+Prio element. The parser must match one element. Inside the prio element it
+is possible to use `CLERI_THIS` which is a reference to itself.
+
+>Note: Use a [forward reference](#forward-reference) when possible.
+>A prio is required when the same position in a string is potentially checked
+>more than once.
+
+*Public members*
+- `cleri_olist_t * cleri_sequence_t.olist`: Elements. (readonly)
+
+#### `cleri_object_t * cleri_prio(uint32_t gid, size_t len, ...)`
+Create and return a new [object](#cleri_object_t) containing a prio element.
+
+Example:
+```c
+/*
+ * define grammar.
+ *
+ * Note: The third and fourth element are using a reference to the prio
+ *       element at the same position in the string as the prio element.
+ *       This is why a forward reference cannot be used for this example.
+ */
+cleri_object_t * prio = cleri_prio(
+    0,                              // gid, not used in the example
+    4,                              // number of elements
+    cleri_keyword(0, "ni", 0),      // first element
+    cleri_sequence(0, 3,            // second element
+        cleri_token(0, "("),
+        CLERI_THIS,
+        cleri_token(0, ")")),
+    cleri_sequence(0, 3,            // third element
+        CLERI_THIS,
+        cleri_keyword(0, "or", 0),
+        CLERI_THIS),
+    cleri_sequence(0, 3,            // fourth element
+        CLERI_THIS,
+        cleri_keyword(0, "and", 0),
+        CLERI_THIS));
+
+/* create grammar */
+cleri_grammar_t * grammar = cleri_grammar(prio, NULL);
+
+/* parse some test string */
+cleri_parse_t * pr = cleri_parse(grammar, "(ni or ni) and (ni or ni)");
 printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
 
 /* cleanup */
