@@ -12,7 +12,12 @@ Languange parser for the C program language.
     * [cleri_node_t](#cleri_node_t)
     * [cleri_children_t](#cleri_children_t)
   * [Elements](#elements)
+    * [Forward reference](#forward-reference)
     * [cleri_keyword_t](#cleri_keyword_t)
+    * [cleri_regex_t](#cleri_regex_t)
+    * [cleri_choice_t](#cleri_choice_t)
+    * [cleri_sequence_t](#cleri_sequence_t)
+    * [cleri_optional_t](#cleri_optional_t)
   * [Miscellaneous functions](#miscellaneous-functions)
 
 ---------------------------------------
@@ -278,13 +283,21 @@ Elements are objects used to define a grammar.
 Forward reference to a libcleri object. There is no specific type for a
 reference.
 
+>Warning: A reference is not protected against testing the same position in
+>in a string. This could potentially lead to an infinite loop.
+>For example:
+>```c
+>cleri_ref_set(ref, cleri_optional(0, ref)); // DON'T DO THIS
+>```
+>Use [prio](#cleri_prio_t) is such a recursive constrution is required.
+
 #### `cleri_object_t * cleri_ref(void)`
-Create and return a new [object](#cleri_object_t) reference element.
+Create and return a new [object](#cleri_object_t) as reference element.
 Once the reference is created, it can be used as element in you grammar. Do not
 forget to actualle set the reference using `cleri_ref_set()`.
 
 #### `void cleri_ref_set(cleri_object_t * ref, cleri_object_t * cl_obj)`
-Set a reference. For every created forward refenrece, this function must be
+Set a reference. For every created forward reference, this function must be
 called exactly once. Argument `ref` must be created with `cleri_ref()`. Argument
 `cl_obj` cannot be used outside the reference. Since the reference becomes
 the `cl_obj`, it is the reference you should use.
@@ -301,8 +314,7 @@ cleri_ref_set(ref, cleri_sequence(
     3,
     cleri_token(0, "["),
     cleri_list(0, choice, cleri_token(0, ","), 0, 0, 0),
-    cleri_token(0, "]")
-));
+    cleri_token(0, "]")));
 
 /* create grammar */
 cleri_grammar_t * grammar = cleri_grammar(ref, NULL);
@@ -331,7 +343,10 @@ Argument `ign_case` can be set to 1 for a case insensitive keyword match.
 Example:
 ```c
 /* define case insensitive keyword */
-cleri_object_t * k_tictactoe = cleri_keyword(0, "tic-tac-toe", 1);
+cleri_object_t * k_tictactoe = cleri_keyword(
+    0,                  // gid, not used in this example
+    "tic-tac-toe",      // keyword
+    1);                 // case insensitive
 
 /* create grammar with custom keyword regular expression match */
 cleri_grammar_t * grammar = cleri_grammar(k_tictactoe, "^[A-Za-z-]+");
@@ -345,7 +360,21 @@ cleri_parse_free(pr);
 cleri_grammar_free(grammar);
 ```
 
-#### `cleri_choice_t`
+### `cleri_regex_t`
+Regular expression element. The parser needs a match with the regular
+expression.
+
+*No public members*
+
+#### `cleri_object_t * cleri_regex(uint32_t gid, const char * pattern)`
+Create and return a new [object](#cleri_object_t) containing a regular
+expression element. Argument `pattern` should contain the regular expression.
+Each pattern must start with character `^` and the pattern should be checked
+before calling this function.
+
+See [Quick usage](#quick-usage) for a `cleri_regex_t` example.
+
+### `cleri_choice_t`
 Choice element. The parser must choose one of the child elements.
 
 *Public members*
@@ -362,7 +391,11 @@ Example:
 /* define grammar */
 cleri_object_t * k_hello = cleri_keyword(0, "hello", 0);
 cleri_object_t * k_goodbye = cleri_keyword(0, "goodbye", 0);
-cleri_object_t * choice = cleri_choice(0, 0, 2, k_hello, k_goodbye);
+cleri_object_t * choice = cleri_choice(
+    0,                      // gid, not used in this example
+    0,                      // stop at first match
+    2,                      // number of elements
+    k_hello, k_goodbye);    // elements
 
 /* create grammar */
 cleri_grammar_t * grammar = cleri_grammar(choice, NULL);
@@ -376,7 +409,69 @@ cleri_parse_free(pr);
 cleri_grammar_free(grammar);
 ```
 
+### `cleri_sequence_t`
+Sequence element. The parsermust match each element in the specified order.
 
+*Public members*
+- `cleri_olist_t * cleri_sequence_t.olist`: Elements. (readonly)
+
+#### `cleri_object_t * cleri_sequence(uint32_t gid, size_t len, ...)`
+Create and return a new [object](#cleri_object_t) containing a sequence element.
+
+Example:
+```c
+cleri_object_t * sequence = cleri_sequence(
+    0,                              // gid, not used in the example
+    3,                              // number of elements
+    cleri_keyword(0, "Tic", 0),     // first element
+    cleri_keyword(0, "Tac", 0),     // second element
+    cleri_keyword(0, "Toe", 0));    // third element
+
+/* create grammar */
+cleri_grammar_t * grammar = cleri_grammar(sequence, NULL);
+
+/* parse some test string */
+cleri_parse_t * pr = cleri_parse(grammar, "Tic Tac Toe");
+printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
+
+/* cleanup */
+cleri_parse_free(pr);
+cleri_grammar_free(grammar);
+```
+
+### `cleri_optional_t`
+Optional element. The parser looks for an optional element.
+
+*Public members*
+- `cleri_object_t * cleri_optional_t.cl_obj`: Optional element. (readonly)
+
+#### `cleri_object_t * cleri_optional(uint32_t gid, cleri_object_t * cl_obj)`
+Create and return a new [object](#cleri_object_t) containing an optional element.
+
+Example:
+```c
+/* define grammar */
+cleri_object_t * k_hello = cleri_keyword(0, "hello", 0);
+cleri_object_t * k_there = cleri_keyword(0, "there", 0);
+cleri_object_t * optional = cleri_optional(
+    0,                  // gid, not used in this example
+    k_there);           // optional element
+cleri_object_t * greet = cleri_sequence(
+    0,                  // gid, not used in this example
+    2,                  // number of elements
+    k_hello, optional); // elements
+
+/* create grammar */
+cleri_grammar_t * grammar = cleri_grammar(greet, NULL);
+
+/* parse some test string */
+cleri_parse_t * pr = cleri_parse(grammar, "hello");
+printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
+
+/* cleanup */
+cleri_parse_free(pr);
+cleri_grammar_free(grammar);
+```
 
 ### Miscellaneous functions
 #### `const char * siridb_version(void)`

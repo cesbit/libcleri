@@ -22,9 +22,7 @@ typedef struct cleri_object_s cleri_object_t;
 typedef struct cleri_regex_s cleri_regex_t;
 
 /* public functions */
-cleri_object_t * cleri_regex(
-        uint32_t gid,
-        const char * pattern);
+cleri_object_t * cleri_regex(uint32_t gid, const char * pattern);
 
 /* structs */
 struct cleri_regex_s

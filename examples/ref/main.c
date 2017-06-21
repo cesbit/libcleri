@@ -15,8 +15,7 @@ int main(void)
         3,
         cleri_token(0, "["),
         cleri_list(0, choice, cleri_token(0, ","), 0, 0, 0),
-        cleri_token(0, "]")
-    ));
+        cleri_token(0, "]")));
 
     /* create grammar */
     cleri_grammar_t * grammar = cleri_grammar(ref, NULL);

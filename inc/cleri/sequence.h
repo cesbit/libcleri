@@ -23,10 +23,7 @@ typedef struct cleri_olist_s cleri_olist_t;
 typedef struct cleri_sequence_s cleri_sequence_t;
 
 /* public functions */
-cleri_object_t * cleri_sequence(
-        uint32_t gid,
-        size_t len,
-        ...);
+cleri_object_t * cleri_sequence(uint32_t gid, size_t len, ...);
 
 /* structs */
 struct cleri_sequence_s

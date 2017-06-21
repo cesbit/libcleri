@@ -20,14 +20,12 @@ typedef struct cleri_object_s cleri_object_t;
 typedef struct cleri_optional_s cleri_optional_t;
 
 /* public functions */
-cleri_object_t * cleri_optional(
-        uint32_t gid,
-		cleri_object_t * cl_obj);
+cleri_object_t * cleri_optional(uint32_t gid, cleri_object_t * cl_obj);
 
 /* structs */
 struct cleri_optional_s
 {
-    struct cleri_object_s * cl_obj;
+    cleri_object_t * cl_obj;
 };
 
 #endif /* CLERI_OPTIONAL_H_ */

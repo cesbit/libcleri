@@ -8,7 +8,11 @@ int main(void)
     /* define grammar */
     cleri_object_t * k_hello = cleri_keyword(0, "hello", 0);
     cleri_object_t * k_goodbye = cleri_keyword(0, "goodbye", 0);
-    cleri_object_t * choice = cleri_choice(0, 0, 2, k_hello, k_goodbye);
+    cleri_object_t * choice = cleri_choice(
+        0,                      // gid, not used in this example
+        0,                      // stop at first match
+        2,                      // number of elements
+        k_hello, k_goodbye);    // elements
 
     /* create grammar */
     cleri_grammar_t * grammar = cleri_grammar(choice, NULL);

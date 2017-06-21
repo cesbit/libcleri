@@ -25,10 +25,7 @@ static cleri_node_t * SEQUENCE_parse(
 /*
  * Returns NULL and in case an error has occurred.
  */
-cleri_object_t * cleri_sequence(
-        uint32_t gid,
-        size_t len,
-        ...)
+cleri_object_t * cleri_sequence(uint32_t gid, size_t len, ...)
 {
     va_list ap;
     cleri_object_t * cl_object = cleri_object_new(
