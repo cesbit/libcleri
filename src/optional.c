@@ -63,7 +63,7 @@ cleri_object_t * cleri_optional(uint32_t gid, cleri_object_t * cl_obj)
  */
 static void OPTIONAL_free(cleri_object_t * cl_object)
 {
-    cleri_object_decref(cl_object->via.optional->cl_obj);
+    cleri_object_free(cl_object->via.optional->cl_obj);
     free(cl_object->via.optional);
 }
 

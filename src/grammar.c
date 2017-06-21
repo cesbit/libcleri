@@ -94,6 +94,6 @@ void cleri_grammar_free(cleri_grammar_t * grammar)
         free(grammar->re_kw_extra);
     }
 
-    cleri_object_decref(grammar->start);
+    cleri_object_free(grammar->start);
     free(grammar);
 }

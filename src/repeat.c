@@ -11,6 +11,7 @@
  */
 #include <cleri/repeat.h>
 #include <stdlib.h>
+#include <assert.h>
 
 static void REPEAT_free(cleri_object_t * cl_object);
 
@@ -38,6 +39,8 @@ cleri_object_t * cleri_repeat(
     {
         return NULL;
     }
+
+    assert (!max || max >= min);
 
     cleri_object_t * cl_object = cleri_object_new(
             gid,
@@ -73,7 +76,7 @@ cleri_object_t * cleri_repeat(
  */
 static void REPEAT_free(cleri_object_t * cl_object)
 {
-    cleri_object_decref(cl_object->via.repeat->cl_obj);
+    cleri_object_free(cl_object->via.repeat->cl_obj);
     free(cl_object->via.repeat);
 }
 

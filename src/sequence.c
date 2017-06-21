@@ -52,7 +52,7 @@ cleri_object_t * cleri_sequence(uint32_t gid, size_t len, ...)
 
     if (cl_object->via.sequence->olist == NULL)
     {
-        cleri_object_decref(cl_object);
+        cleri_object_free(cl_object);
         return NULL;
     }
 
@@ -64,7 +64,7 @@ cleri_object_t * cleri_sequence(uint32_t gid, size_t len, ...)
                 va_arg(ap, cleri_object_t *)))
         {
             cleri__olist_cancel(cl_object->via.sequence->olist);
-            cleri_object_decref(cl_object);
+            cleri_object_free(cl_object);
             cl_object = NULL;
             break;
         }

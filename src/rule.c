@@ -108,7 +108,7 @@ cleri_rule_test_t cleri__rule_init(
 
 static void RULE_free(cleri_object_t * cl_object)
 {
-    cleri_object_decref(cl_object->via.rule->cl_obj);
+    cleri_object_free(cl_object->via.rule->cl_obj);
     free(cl_object->via.rule);
 }
 

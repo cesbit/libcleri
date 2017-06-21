@@ -112,7 +112,7 @@ void cleri__olist_free(cleri_olist_t * olist)
     while (olist != NULL)
     {
         next = olist->next;
-        cleri_object_decref(olist->cl_obj);
+        cleri_object_free(olist->cl_obj);
         free(olist);
         olist = next;
     }

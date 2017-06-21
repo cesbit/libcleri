@@ -133,6 +133,12 @@ Increment the reference counter for an object. Should only be used in case you
 want to write your own custom element.
 
 #### `void cleri_object_decref(cleri_object_t * cl_object)`
+Decrement the reference counter for an object. If no references are left the
+object will be destroyed. Do not use this function after the element has
+successfully been added to another element or grammar. Should only be used in
+case you want to write your own custom element.
+
+#### `int cleri_object_free(cleri_object_t * cl_object)`
 Decrement referenct counter for a cleri object. When the no more references are
 left the object will be destroyed. Use this function to cleanup after errors
 have occurred. Do not use this function after the element has successfully been
@@ -148,25 +154,25 @@ cleri_grammar_t * compile_grammar(void)
     }
     cleri_object_t * k_world = cleri_keyword(0, "world", 0);
     if (k_world == NULL) {
-        cleri_object_decref(k_hello); // must cleanup k_hello
+        cleri_object_free(k_hello); // must cleanup k_hello
         return NULL;
     }
     cleri_object_t * hello_world = cleri_sequence(0, 2, k_hello, k_world);
     if (start == NULL) {
-        cleri_object_decref(k_hello);
-        cleri_object_decref(k_world);
+        cleri_object_free(k_hello);
+        cleri_object_free(k_world);
         return NULL;
     }
     cleri_object_t * opt = cleri_optional(0, hello_world);
     if (opt == NULL) {
         /* we now must only cleanup hello_world since this sequence will
         * cleanup both keywords too. */
-        cleri_object_decref(hello_world);
+        cleri_object_free(hello_world);
         return NULL;
     }
     cleri_grammar_t * grammar = cleri_grammar(opt, NULL);
     if (grammar == NULL) {
-        cleri_object_decref(opt);
+        cleri_object_free(opt);
     }
     /* when your program has finished, the grammar including all elements can
      * be destroyed using cleri_grammar_free() */
@@ -179,6 +185,26 @@ cleri_grammar_t * compile_grammar(void)
 >to which the argument is parsed to, will return NULL. Following this
 >chain the final grammar returns NULL in case somewhere an error has occurred.
 >In this case you should usually abort the program.
+
+#### `cleri_object_t * cleri_object_dup(cleri_object_t * cl_obj, uint32_t gid)`
+Duplicate a libcleri object.
+
+>Note: Only the object is duplicated. The element (`cleri_object_via_t via`)
+>is a pointer to the original object. Make sure the original object will be
+>destroyed when and only when the duplicated object can be destroyed too.
+>(this is usually done automatically, as long as the original object is
+>somewhere used inside the grammar)
+
+The following [pyleri](https://github.com/transceptor-technology/pyleri) code
+will use `cleri_object_dup()` when exported:
+```python
+elem = Repeat(obj, mi=1, ma=1)
+```
+
+Use the code below if you do not want duplication:
+```python
+elem = Sequence(obj)
+```
 
 ### `cleri_grammar_t`
 Compiled libcleri grammar.
@@ -523,6 +549,25 @@ printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
 /* cleanup */
 cleri_parse_free(pr);
 cleri_grammar_free(grammar);
+```
+
+### `cleri_repeat_t`
+Repeat element. The parser must math at least `cleri_repeat_t.min` elements and
+at most `cleri_repeat_t.max`. An unlimited amount is allowed in case `cleri_repeat_t.max`
+is set to 0 (zero).
+
+*Public members*
+- `cleri_object_t * cleri_repeat_t.cl_obj`: Element to repeat.
+- `size_t cleri_repeat_t.min`: Minimum times an element is expected. (readonly)
+- `size_t cleri_repeat_t.max`: Maximum times an element is expected or 0 for unlimited. (readonly)
+
+#### `cleri_object_t * cleri_repeat(uint32_t gid, cleri_object_t * cl_obj, size_t min, size_t max)`
+Create and return a new [object](#cleri_object_t) containing a repeat element.
+Argument `max` should be greater or equal to `min` or 0.
+
+Example:
+```c
+
 ```
 
 ### Miscellaneous functions

@@ -72,7 +72,7 @@ cleri_object_t * cleri_choice(
 
     if (cl_object->via.choice->olist == NULL)
     {
-        cleri_object_decref(cl_object);
+        cleri_object_free(cl_object);
         return NULL;
     }
 
@@ -84,7 +84,7 @@ cleri_object_t * cleri_choice(
                 va_arg(ap, cleri_object_t *)))
         {
             cleri__olist_cancel(cl_object->via.choice->olist);
-            cleri_object_decref(cl_object);
+            cleri_object_free(cl_object);
             cl_object = NULL;
             break;
         }

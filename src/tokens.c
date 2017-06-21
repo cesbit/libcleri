@@ -76,7 +76,7 @@ cleri_object_t * cleri_tokens(
             cl_object->via.tokens->spaced == NULL ||
             cl_object->via.tokens->tlist == NULL)
     {
-        cleri_object_decref(cl_object);
+        cleri_object_free(cl_object);
         return NULL;
     }
 
@@ -97,7 +97,7 @@ cleri_object_t * cleri_tokens(
                         pt - len,
                         len))
                 {
-                    cleri_object_decref(cl_object);
+                    cleri_object_free(cl_object);
                     return NULL;
                 }
                 len = 0;

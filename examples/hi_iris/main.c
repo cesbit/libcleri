@@ -13,8 +13,6 @@ int main(void)
     /* define grammar */
     cleri_object_t * k_hi = cleri_keyword(0, "hi", 0);
     cleri_object_t * r_name = cleri_regex(0, "^(?:\"(?:[^\"]*)\")+");
-    cleri_object_t * prio = cleri_prio(0, 1, CLERI_THIS);
-    cleri_object_decref(prio);
     cleri_object_t * start = cleri_sequence(0, 2, k_hi, r_name);
 
     /* compile grammar */

@@ -20,6 +20,7 @@ static cleri_object_t end_of_statement = {
         .parse_object=NULL,
         .tp=CLERI_TP_END_OF_STATEMENT,
         .via={.dummy=NULL}};
+static void OBJECT_dup_free(cleri_object_t * cl_object);
 
 cleri_object_t * CLERI_END_OF_STATEMENT = &end_of_statement;
 
@@ -56,15 +57,28 @@ inline void cleri_object_incref(cleri_object_t * cl_object)
 }
 
 /*
- * Decrement reference counter, except when the object is THIS because THIS is
- * allocated in stack memory and does not have a free call-back.
- * For any other object the free-callback will be called once.
+ * Decrement reference counter.
+ * If no references are left the object is destoryed. (never the element)
  */
 void cleri_object_decref(cleri_object_t * cl_object)
 {
+    if (!--cl_object->ref)
+    {
+        free(cl_object);
+    }
+}
+
+/*
+ * Recursive cleanup an object including the element.
+ * If there are still references left, then only the element but not the object
+ * is not destroyed and this function will return -1. If successful
+ * cleaned the return value is 0.
+ */
+int cleri_object_free(cleri_object_t * cl_object)
+{
     if (cl_object->tp == CLERI_TP_THIS)
     {
-        return;
+        return 0;
     }
 
     /* Use tp to check because we need to be sure this check validates false
@@ -88,6 +102,34 @@ void cleri_object_decref(cleri_object_t * cl_object)
     if (!--cl_object->ref)
     {
         free(cl_object);
+        return 0;
     }
+    return -1;
+}
+
+/*
+ * Duplicate a libcleri object.
+ * Note: a pointer to the original object->via (element) is used.
+ */
+cleri_object_t * cleri_object_dup(cleri_object_t * cl_obj, uint32_t gid)
+{
+    cleri_object_t * cl_object;
+
+    cl_object = (cleri_object_t *) malloc(sizeof(cleri_object_t));
+    if (cl_object != NULL)
+    {
+        cl_object->gid = gid;
+        cl_object->tp = cl_obj->tp;
+        cl_object->ref = 1;
+        cl_object->via = cl_obj->via;
+        cl_object->free_object = &OBJECT_dup_free;
+        cl_object->parse_object = cl_obj->parse_object;
+    }
+    return cl_object;
+}
+
+static void OBJECT_dup_free(cleri_object_t * cl_object)
+{
+    /* dummy function for ducplicated objects */
 }
 

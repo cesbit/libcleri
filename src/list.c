@@ -81,8 +81,8 @@ cleri_object_t * cleri_list(
  */
 static void LIST_free(cleri_object_t * cl_object)
 {
-    cleri_object_decref(cl_object->via.list->cl_obj);
-    cleri_object_decref(cl_object->via.list->delimiter);
+    cleri_object_free(cl_object->via.list->cl_obj);
+    cleri_object_free(cl_object->via.list->delimiter);
     free(cl_object->via.list);
 }
 

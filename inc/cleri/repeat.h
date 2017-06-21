@@ -24,14 +24,14 @@ typedef struct cleri_repeat_s cleri_repeat_t;
 /* public functions */
 cleri_object_t * cleri_repeat(
         uint32_t gid,
-        struct cleri_object_s * cl_obj,
+        cleri_object_t * cl_obj,
         size_t min,
         size_t max);
 
 /* structs */
 struct cleri_repeat_s
 {
-    struct cleri_object_s * cl_obj;
+    cleri_object_t * cl_obj;
     size_t min;
     size_t max;
 };

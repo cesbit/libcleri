@@ -104,6 +104,8 @@ cleri_object_t * cleri_object_new(
         cleri_parse_object_t parse_object);
 void cleri_object_incref(cleri_object_t * cl_object);
 void cleri_object_decref(cleri_object_t * cl_object);
+int cleri_object_free(cleri_object_t * cl_object);
+cleri_object_t * cleri_object_dup(cleri_object_t * cl_obj, uint32_t gid);
 
 /* fixed end of statement object */
 extern cleri_object_t * CLERI_END_OF_STATEMENT;
