@@ -274,13 +274,55 @@ while (pr->expect != NULL) {
 ## Elements
 Elements are objects used to define a grammar.
 
+### `Forward reference`
+Forward reference to a libcleri object. There is no specific type for a
+reference.
+
+#### `cleri_object_t * cleri_ref(void)`
+Create and return a new [object](#cleri_object_t) reference element.
+Once the reference is created, it can be used as element in you grammar. Do not
+forget to actualle set the reference using `cleri_ref_set()`.
+
+#### `void cleri_ref_set(cleri_object_t * ref, cleri_object_t * cl_obj)`
+Set a reference. For every created forward refenrece, this function must be
+called exactly once. Argument `ref` must be created with `cleri_ref()`. Argument
+`cl_obj` cannot be used outside the reference. Since the reference becomes
+the `cl_obj`, it is the reference you should use.
+
+Example
+```c
+/* define grammar */
+cleri_object_t * ref = cleri_ref();
+cleri_object_t * choice = cleri_choice(
+    0, 0, 2, cleri_keyword(0, "ni", 0), ref);
+
+cleri_ref_set(ref, cleri_sequence(
+    0,
+    3,
+    cleri_token(0, "["),
+    cleri_list(0, choice, cleri_token(0, ","), 0, 0, 0),
+    cleri_token(0, "]")
+));
+
+/* create grammar */
+cleri_grammar_t * grammar = cleri_grammar(ref, NULL);
+
+/* parse some test string */
+cleri_parse_t * pr = cleri_parse(grammar, "[ni, ni, [ni, [], [ni, ni]]]");
+printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
+
+/* cleanup */
+cleri_parse_free(pr);
+cleri_grammar_free(grammar);
+```
+
 ### `cleri_keyword_t`
 Keyword element. The parser needs a match with the keyword.
 
 *Public members*
-- `const char * cleri_keyword_t.keyword`
-- `int cleri_keyword_t.ign_case`
-- `size_t cleri_keyword_t.len`
+- `const char * cleri_keyword_t.keyword`: Contains the keyword string. (readonly)
+- `int cleri_keyword_t.ign_case`: Boolean. (readonly)
+- `size_t cleri_keyword_t.len`: Length of the keyword string. (readonly)
 
 #### `cleri_object_t * cleri_keyword(uint32_t gid, const char * keyword, int ign_case)`
 Create and return a new [object](#cleri_object_t) containing a keyword element.
@@ -296,13 +338,45 @@ cleri_grammar_t * grammar = cleri_grammar(k_tictactoe, "^[A-Za-z-]+");
 
 /* parse some test string */
 cleri_parse_t * pr = cleri_parse(grammar, "Tic-Tac-Toe");
-
 printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
 
 /* cleanup */
 cleri_parse_free(pr);
 cleri_grammar_free(grammar);
 ```
+
+#### `cleri_choice_t`
+Choice element. The parser must choose one of the child elements.
+
+*Public members*
+- `int cleri_choice_t.most_greedy`: Boolean. (readonly)
+- `cleri_olist_t * cleri_choice_t.olist`: Children. (readonly)
+
+#### `cleri_object_t * cleri_choice(uint32_t gid, int most_greedy, size_t len, ...)`
+Create and return a new [object](#cleri_object_t) containing a choice element.
+Argument `most_greedy` can be set to 1 in which case the parser will select the
+most greedy match. When 0 the parser will select the first match.
+
+Example:
+```c
+/* define grammar */
+cleri_object_t * k_hello = cleri_keyword(0, "hello", 0);
+cleri_object_t * k_goodbye = cleri_keyword(0, "goodbye", 0);
+cleri_object_t * choice = cleri_choice(0, 0, 2, k_hello, k_goodbye);
+
+/* create grammar */
+cleri_grammar_t * grammar = cleri_grammar(choice, NULL);
+
+/* parse some test string */
+cleri_parse_t * pr = cleri_parse(grammar, "goodbye");
+printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
+
+/* cleanup */
+cleri_parse_free(pr);
+cleri_grammar_free(grammar);
+```
+
+
 
 ### Miscellaneous functions
 #### `const char * siridb_version(void)`

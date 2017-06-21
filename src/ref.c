@@ -33,7 +33,10 @@ cleri_object_t * cleri_ref(void)
 void cleri_ref_set(cleri_object_t * ref, cleri_object_t * cl_obj)
 {
     /* cl_obj should have no other refs */
-    assert (ref != NULL && cl_obj != NULL && cl_obj->ref == 1);
+    assert (ref != NULL &&
+            ref->tp == CLERI_TP_REF &&
+            cl_obj != NULL &&
+            cl_obj->ref == 1);
 
     /* assign properties, except ref counter */
     ref->gid = cl_obj->gid;

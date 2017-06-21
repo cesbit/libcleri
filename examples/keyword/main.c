@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <cleri/object.h>
 
+const char * TestKeyword = "Tic-Tac-Toe";
+
 int main(void)
 {
     /* define keyword */
@@ -10,9 +12,8 @@ int main(void)
     cleri_grammar_t * grammar = cleri_grammar(k_tictactoe, "^[A-Za-z-]+");
 
     /* parse some test string */
-    cleri_parse_t * pr = cleri_parse(grammar, "Tic-Tac-Toe");
-
-    printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
+    cleri_parse_t * pr = cleri_parse(grammar, TestKeyword);
+    printf("Test '%s': %s\n", TestKeyword, pr->is_valid ? "true" : "false");
 
     /* cleanup */
     cleri_parse_free(pr);
