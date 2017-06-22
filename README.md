@@ -358,7 +358,7 @@ elem = Sequence(obj)
 ### `cleri_keyword_t`
 Keyword element. The parser needs a match with the keyword.
 
-Type (`cleri_object_t.tp`): `CLERI_TP_KEYWORD`
+*Type (`cleri_object_t.tp`)*: `CLERI_TP_KEYWORD`
 
 *Public members*
 - `const char * cleri_keyword_t.keyword`: Contains the keyword string. (readonly)
