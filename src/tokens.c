@@ -185,8 +185,8 @@ static int TOKENS_list_add(
         const char * token,
         size_t len)
 {
-    cleri_tlist_t * tmp, * prev;
-    cleri_tlist_t * current = *tlist;
+    cleri_tlist_t * tmp, * prev, * current;
+    current = prev = *tlist;
 
     if (current->token == NULL)
     {
@@ -201,6 +201,7 @@ static int TOKENS_list_add(
     }
     tmp->len = len;
     tmp->token = token;
+
 
     while (current != NULL && len <= current->len)
     {
