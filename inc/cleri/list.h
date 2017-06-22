@@ -33,7 +33,6 @@ cleri_object_t * cleri_list(
 /* structs */
 struct cleri_list_s
 {
-    uint32_t gid;
     cleri_object_t * cl_obj;
     cleri_object_t * delimiter;
     size_t min;

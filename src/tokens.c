@@ -23,8 +23,8 @@ static cleri_node_t * TOKENS_parse(
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule);
-static int TOKENS_list_append(
-        cleri_tlist_t * tlist,
+static int TOKENS_list_add(
+        cleri_tlist_t ** tlist,
         const char * token,
         size_t len);
 static void TOKENS_list_free(cleri_tlist_t * tlist);
@@ -32,9 +32,7 @@ static void TOKENS_list_free(cleri_tlist_t * tlist);
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_object_t * cleri_tokens(
-        uint32_t gid,
-        const char * tokens)
+cleri_object_t * cleri_tokens(uint32_t gid, const char * tokens)
 {
     size_t len;
     char * pt;
@@ -89,8 +87,8 @@ cleri_object_t * cleri_tokens(
         {
             if (len)
             {
-                if (TOKENS_list_append(
-                        cl_object->via.tokens->tlist,
+                if (TOKENS_list_add(
+                        &cl_object->via.tokens->tlist,
                         pt - len,
                         len))
                 {
@@ -178,32 +176,48 @@ static cleri_node_t * TOKENS_parse(
 /*
  * Returns 0 if successful and -1 in case an error occurred.
  * (the token list remains unchanged in case of an error)
+ *
+ * The token will be placed in the list based on the length. Thus the token
+ * list remains ordered on length. (largest first)
  */
-static int TOKENS_list_append(
-        cleri_tlist_t * tlist,
+static int TOKENS_list_add(
+        cleri_tlist_t ** tlist,
         const char * token,
         size_t len)
 {
-    if (tlist->token == NULL)
+    cleri_tlist_t * tmp, * prev;
+    cleri_tlist_t * current = *tlist;
+
+    if (current->token == NULL)
     {
-        tlist->token = token;
-        tlist->len = len;
+        current->token = token;
+        current->len = len;
         return 0;
     }
-
-    while (tlist->next != NULL)
-    {
-        tlist = tlist->next;
-    }
-
-    tlist->next = (cleri_tlist_t *) malloc(sizeof(cleri_tlist_t));
-    if (tlist->next == NULL)
+    tmp = (cleri_tlist_t *) malloc(sizeof(cleri_tlist_t));
+    if (tmp == NULL)
     {
         return -1;
     }
-    tlist->next->len = len;
-    tlist->next->token = token;
-    tlist->next->next = NULL;
+    tmp->len = len;
+    tmp->token = token;
+
+    while (current != NULL && len <= current->len)
+    {
+        prev = current;
+        current = current->next;
+    }
+
+    if (current == *tlist)
+    {
+        tmp->next = *tlist;
+        *tlist = tmp;
+    }
+    else
+    {
+        tmp->next = current;
+        prev->next = tmp;
+    }
 
     return 0;
 }

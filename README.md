@@ -11,14 +11,20 @@ Languange parser for the C program language.
     * [cleri_parse_t](#cleri_parse_t)
     * [cleri_node_t](#cleri_node_t)
     * [cleri_children_t](#cleri_children_t)
+    * [cleri_olist_t](#cleri_olist_t)
   * [Elements](#elements)
-    * [Forward reference](#forward-reference)
-    * [cleri_dup_t](#cleri_dup_t)
     * [cleri_keyword_t](#cleri_keyword_t)
     * [cleri_regex_t](#cleri_regex_t)
     * [cleri_choice_t](#cleri_choice_t)
     * [cleri_sequence_t](#cleri_sequence_t)
     * [cleri_optional_t](#cleri_optional_t)
+    * [cleri_prio_t](#cleri_prio_t)
+    * [cleri_repeat_t](#cleri_repeat_t)
+    * [cleri_list_t](#cleri_list_t)
+    * [cleri_token_t](#cleri_repeat_t)
+    * [cleri_tokens_t](#cleri_tokens_t)
+    * [Forward reference](#forward-reference)
+    * [cleri_dup_t](#cleri_dup_t)
   * [Miscellaneous functions](#miscellaneous-functions)
 
 ---------------------------------------
@@ -44,13 +50,13 @@ $ sudo make install
 > Note: run `sudo make uninstall` for removal.
 
 ## Related projects
-- [pyleri](https://github.com/transceptor-technology/pyleri): Python parser (can export grammar to pyleri, cleri and jsleri)
+- [pyleri](https://github.com/transceptor-technology/pyleri): Python parser (can export grammar to pyleri, libcleri, goleri and jsleri)
 - [jsleri](https://github.com/transceptor-technology/jsleri): JavaScript parser
 - [goleri](https://github.com/transceptor-technology/goleri): Go parser
 
 ## Quick usage
->The recommended way to create a static grammar is to use [pyleri](https://github.com/transceptor-technology/pyleri) for
->writing the language and from there export the language to libcleri or other languages.
+>The recommended way to create a grammar is to use [pyleri](https://github.com/transceptor-technology/pyleri) for
+>writing the grammar and then export the grammar to libcleri or other languages.
 
 This is a simple example using libcleri:
 ```c
@@ -286,75 +292,6 @@ while (pr->expect != NULL) {
 ## Elements
 Elements are objects used to define a grammar.
 
-### `Forward reference`
-Forward reference to a libcleri object. There is no specific type for a
-reference.
-
->Warning: A reference is not protected against testing the same position in
->in a string. This could potentially lead to an infinite loop.
->For example:
->```c
->cleri_ref_set(ref, cleri_optional(0, ref)); // DON'T DO THIS
->```
->Use [prio](#cleri_prio_t) if such recursive constrution is required.
-
-#### `cleri_object_t * cleri_ref(void)`
-Create and return a new [object](#cleri_object_t) as reference element.
-Once the reference is created, it can be used as element in you grammar. Do not
-forget to actualle set the reference using `cleri_ref_set()`.
-
-#### `void cleri_ref_set(cleri_object_t * ref, cleri_object_t * cl_obj)`
-Set a reference. For every created forward reference, this function must be
-called exactly once. Argument `ref` must be created with `cleri_ref()`. Argument
-`cl_obj` cannot be used outside the reference. Since the reference becomes
-the `cl_obj`, it is the reference you should use.
-
-Example
-```c
-/* define grammar */
-cleri_object_t * ref = cleri_ref();
-cleri_object_t * choice = cleri_choice(
-    0, 0, 2, cleri_keyword(0, "ni", 0), ref);
-
-cleri_ref_set(ref, cleri_sequence(
-    0,
-    3,
-    cleri_token(0, "["),
-    cleri_list(0, choice, cleri_token(0, ","), 0, 0, 0),
-    cleri_token(0, "]")));
-
-/* create grammar */
-cleri_grammar_t * grammar = cleri_grammar(ref, NULL);
-
-/* parse some test string */
-cleri_parse_t * pr = cleri_parse(grammar, "[ni, ni, [ni, [], [ni, ni]]]");
-printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
-
-/* cleanup */
-cleri_parse_free(pr);
-cleri_grammar_free(grammar);
-```
-
-### `cleri_dup_t`
-Duplicate an object. The type is an extension to `cleri_object_t`.
-
-#### `cleri_object_t * cleri_dup(uint32_t gid, cleri_object_t * cl_obj)`
-Duplicate a libcleri object with a different gid but using the same element.
-
->Note: Only the object is duplicated. The element (`cleri_object_via_t via`)
->is a pointer to the original object.
-
-The following [pyleri](https://github.com/transceptor-technology/pyleri) code
-will use `cleri_dup()` when exported to c:
-```python
-elem = Repeat(obj, mi=1, ma=1)
-```
-
-Use the code below if you want similar behavior without duplication:
-```python
-elem = Sequence(obj)
-```
-
 ### `cleri_keyword_t`
 Keyword element. The parser needs a match with the keyword.
 
@@ -560,7 +497,7 @@ at most `cleri_repeat_t.max`. An unlimited amount is allowed in case `cleri_repe
 is set to 0 (zero).
 
 *Public members*
-- `cleri_object_t * cleri_repeat_t.cl_obj`: Element to repeat.
+- `cleri_object_t * cleri_repeat_t.cl_obj`: Element to repeat. (readonly)
 - `size_t cleri_repeat_t.min`: Minimum times an element is expected. (readonly)
 - `size_t cleri_repeat_t.max`: Maximum times an element is expected or 0 for unlimited. (readonly)
 
@@ -570,7 +507,195 @@ Argument `max` should be greater or equal to `min` or 0.
 
 Example:
 ```c
+/* define grammar */
+cleri_object_t * repeat = cleri_repeat(
+    0,                          // gid, not used in this example
+    cleri_keyword(0, "ni", 0),  // repeated element
+    0,                          // min n times
+    0);                         // max n times (0 for unlimited)
 
+/* create grammar */
+cleri_grammar_t * grammar = cleri_grammar(repeat, NULL);
+
+/* parse some test string */
+cleri_parse_t * pr = cleri_parse(grammar, "ni ni ni ni ni");
+printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
+
+/* cleanup */
+cleri_parse_free(pr);
+cleri_grammar_free(grammar);
+```
+
+### `cleri_list_t`
+List element. Like [repeat](#cleri_repeat_t) but with an delimiter.
+
+*Public members*
+- `cleri_object_t * cleri_list_t.cl_obj`: Element to repeat. (readonly)
+- `cleri_object_t * cleri_list_t.delimiter`: Delimiter between repeating element. (readonly)
+- `size_t cleri_list_t.min`: Minimum times an element is expected. (readonly)
+- `size_t cleri_list_t.max`: Maximum times an element is expected or 0 for unlimited. (readonly)
+- `int cleri_list_t.opt_closing`: Allow or disallow ending with a delimiter.
+
+
+#### `cleri_object_t * cleri_list(uint32_t gid, cleri_object_t * cl_obj, cleri_object_t * delimiter, size_t min, size_t max, int opt_closing)
+Create and return a new [object](#cleri_object_t) containing a list element.
+Argument `max` should be greater or equal to `min` or 0. Argument `opt_closing`
+can be 1 (TRUE) to allow or 0 (FALSE) to disallow a list to end with a delimiter.
+
+Example:
+```c
+/* define grammar */
+cleri_object_t * list = cleri_list(
+    0,                          // gid, not used in this example
+    cleri_keyword(0, "ni", 0),  // repeated element
+    cleri_token(0, ","),        // delimiter element
+    0,                          // min n times
+    0,                          // max n times (0 for unlimited)
+    0);                         // disallow ending with a delimiter
+
+/* create grammar */
+cleri_grammar_t * grammar = cleri_grammar(list, NULL);
+
+/* parse some test string */
+cleri_parse_t * pr = cleri_parse(grammar, "ni, ni, ni, ni, ni");
+printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
+
+/* cleanup */
+cleri_parse_free(pr);
+cleri_grammar_free(grammar);
+```
+
+### `cleri_token_t`
+Token element. The parser must math a token exactly. A token can be one or more
+characters and is usually used to match operators like `+`, `-`, `*` etc.
+
+*Public members*
+- `const char * cleri_token_t.token`: Token string. (readonly)
+- `size_t cleri_token_t.len`: Length of the token string. (readonly)
+
+#### `cleri_object_t * cleri_token(uint32_t gid, const char * token)`
+Create and return a new [object](#cleri_object_t) containing a token element.
+
+Example:
+```c
+/* define grammar */
+cleri_object_t * token = cleri_token(
+    0,          // gid, not used in this example
+    "-");       // token string (dash)
+
+cleri_object_t * ni =  cleri_keyword(0, "ni", 0);
+cleri_object_t * list = cleri_list(0, ni, token, 0, 0, 0);
+
+/* create grammar */
+cleri_grammar_t * grammar = cleri_grammar(list, NULL);
+
+/* parse some test string */
+cleri_parse_t * pr = cleri_parse(grammar, "ni-ni - ni- ni -ni");
+printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
+
+/* cleanup */
+cleri_parse_free(pr);
+cleri_grammar_free(grammar);
+```
+
+### `cleri_tokens_t`
+Tokens element. Can be used to register multiple tokens at once.
+
+#### `cleri_object_t * cleri_tokens(uint32_t gid, const char * tokens)`
+Create and return a new [object](#cleri_object_t) containing a tokens element.
+Argument `tokens` must be a string with tokens seperated by spaces. If given
+tokens are different in size the parser will try to match the longest tokens
+first.
+
+Example:
+```c
+/* define grammar */
+cleri_object_t * tokens = cleri_tokens(
+    0,              // gid, not used in this example
+    "+ - -=");      // tokens string '+', '-' and '-='
+
+cleri_object_t * ni =  cleri_keyword(0, "ni", 0);
+cleri_object_t * list = cleri_list(0, ni, tokens, 0, 0, 0);
+
+/* create grammar */
+cleri_grammar_t * grammar = cleri_grammar(list, NULL);
+
+/* parse some test string */
+cleri_parse_t * pr = cleri_parse(grammar, "ni + ni -= ni - ni");
+printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
+
+/* cleanup */
+cleri_parse_free(pr);
+cleri_grammar_free(grammar);
+```
+
+### `Forward reference`
+Forward reference to a libcleri object. There is no specific type for a
+reference.
+
+>Warning: A reference is not protected against testing the same position in
+>in a string. This could potentially lead to an infinite loop.
+>For example:
+>```c
+>cleri_ref_set(ref, cleri_optional(0, ref)); // DON'T DO THIS
+>```
+>Use [prio](#cleri_prio_t) if such recursive constrution is required.
+
+#### `cleri_object_t * cleri_ref(void)`
+Create and return a new [object](#cleri_object_t) as reference element.
+Once the reference is created, it can be used as element in you grammar. Do not
+forget to actualle set the reference using `cleri_ref_set()`.
+
+#### `void cleri_ref_set(cleri_object_t * ref, cleri_object_t * cl_obj)`
+Set a reference. For every created forward reference, this function must be
+called exactly once. Argument `ref` must be created with `cleri_ref()`. Argument
+`cl_obj` cannot be used outside the reference. Since the reference becomes
+the `cl_obj`, it is the reference you should use.
+
+Example
+```c
+/* define grammar */
+cleri_object_t * ref = cleri_ref();
+cleri_object_t * choice = cleri_choice(
+    0, 0, 2, cleri_keyword(0, "ni", 0), ref);
+
+cleri_ref_set(ref, cleri_sequence(
+    0,
+    3,
+    cleri_token(0, "["),
+    cleri_list(0, choice, cleri_token(0, ","), 0, 0, 0),
+    cleri_token(0, "]")));
+
+/* create grammar */
+cleri_grammar_t * grammar = cleri_grammar(ref, NULL);
+
+/* parse some test string */
+cleri_parse_t * pr = cleri_parse(grammar, "[ni, ni, [ni, [], [ni, ni]]]");
+printf("Valid: %s\n", pr->is_valid ? "true" : "false"); // true
+
+/* cleanup */
+cleri_parse_free(pr);
+cleri_grammar_free(grammar);
+```
+
+### `cleri_dup_t`
+Duplicate an object. The type is an extension to `cleri_object_t`.
+
+#### `cleri_object_t * cleri_dup(uint32_t gid, cleri_object_t * cl_obj)`
+Duplicate a libcleri object with a different gid but using the same element.
+
+>Note: Only the object is duplicated. The element (`cleri_object_via_t via`)
+>is a pointer to the original object.
+
+The following [pyleri](https://github.com/transceptor-technology/pyleri) code
+will use `cleri_dup()` when exported to c:
+```python
+elem = Repeat(obj, mi=1, ma=1)
+```
+
+Use the code below if you want similar behavior without duplication:
+```python
+elem = Sequence(obj)
 ```
 
 ### Miscellaneous functions

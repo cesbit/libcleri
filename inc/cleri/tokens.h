@@ -23,23 +23,21 @@ typedef struct cleri_tlist_s cleri_tlist_t;
 typedef struct cleri_tokens_s cleri_tokens_t;
 
 /* public functions */
-cleri_object_t * cleri_tokens(
-        uint32_t gid,
-        const char * tokens);
+cleri_object_t * cleri_tokens(uint32_t gid, const char * tokens);
 
 /* structs */
 struct cleri_tlist_s
 {
     const char * token;
     size_t len;
-    struct cleri_tlist_s * next;
+    cleri_tlist_t * next;
 };
 
 struct cleri_tokens_s
 {
     char * tokens;
     char * spaced;
-    struct cleri_tlist_s * tlist;
+    cleri_tlist_t * tlist;
 };
 
 #endif /* CLERI_TOKENS_H_ */

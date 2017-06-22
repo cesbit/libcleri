@@ -26,9 +26,7 @@ static cleri_node_t * TOKEN_parse(
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_object_t * cleri_token(
-        uint32_t gid,
-        const char * token)
+cleri_object_t * cleri_token(uint32_t gid, const char * token)
 {
     cleri_object_t * cl_object = cleri_object_new(
             gid,
