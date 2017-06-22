@@ -31,6 +31,8 @@ Languange parser for the C program language.
 
 ## Installation
 >Note: libcleri requires [pcre](http://www.pcre.org/)
+>On Ubuntu:
+>`sudo apt install libpcre3-dev`
 
 Install debug or release version, in this example we will install the release version.
 ```
