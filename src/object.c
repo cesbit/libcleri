@@ -20,15 +20,6 @@ static cleri_object_t end_of_statement = {
         .parse_object=NULL,
         .tp=CLERI_TP_END_OF_STATEMENT,
         .via={.dummy=NULL}};
-static void OBJECT_dup_free(cleri_object_t * cl_object);
-
-typedef struct cleri_dup_s cleri_dup_t;
-struct cleri_dup_s
-{
-    cleri_object_t * dup;
-};
-
-
 cleri_object_t * CLERI_END_OF_STATEMENT = &end_of_statement;
 
 /*
@@ -114,29 +105,5 @@ int cleri_object_free(cleri_object_t * cl_object)
     return -1;
 }
 
-/*
- * Duplicate a libcleri object.
- * Note: a pointer to the original object->via (element) is used.
- */
-cleri_object_t * cleri_object_dup(cleri_object_t * cl_obj, uint32_t gid)
-{
-    cleri_object_t * cl_object;
 
-    cl_object = (cleri_object_t *) malloc(sizeof(cleri_object_t));
-    if (cl_object != NULL)
-    {
-        cl_object->gid = gid;
-        cl_object->tp = cl_obj->tp;
-        cl_object->ref = 1;
-        cl_object->via = cl_obj->via;
-        cl_object->free_object = &OBJECT_dup_free;
-        cl_object->parse_object = cl_obj->parse_object;
-    }
-    return cl_object;
-}
-
-static void OBJECT_dup_free(cleri_object_t * cl_object)
-{
-    /* dummy function for ducplicated objects */
-}
 

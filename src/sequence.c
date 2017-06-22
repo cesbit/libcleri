@@ -15,7 +15,6 @@
 #include <stdio.h>
 
 static void SEQUENCE_free(cleri_object_t * cl_object);
-
 static cleri_node_t * SEQUENCE_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,

@@ -13,8 +13,7 @@
 #include <stdlib.h>
 
 static void LIST_free(cleri_object_t * cl_object);
-
-static cleri_node_t *  LIST_parse(
+static cleri_node_t * LIST_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,

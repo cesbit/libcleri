@@ -186,22 +186,22 @@ cleri_grammar_t * compile_grammar(void)
 >chain the final grammar returns NULL in case somewhere an error has occurred.
 >In this case you should usually abort the program.
 
-#### `cleri_object_t * cleri_object_dup(cleri_object_t * cl_obj, uint32_t gid)`
-Duplicate a libcleri object.
+### `cleri_dup_t`
+Duplicate an object. The type is an extension to `cleri_object_t`.
+
+#### `cleri_object_t * cleri_dup(uint32_t gid, cleri_object_t * cl_obj)`
+Duplicate a libcleri object with a different gid but using the same element.
 
 >Note: Only the object is duplicated. The element (`cleri_object_via_t via`)
->is a pointer to the original object. Make sure the original object will be
->destroyed when and only when the duplicated object can be destroyed too.
->(this is usually done automatically, as long as the original object is
->somewhere used inside the grammar)
+>is a pointer to the original object.
 
 The following [pyleri](https://github.com/transceptor-technology/pyleri) code
-will use `cleri_object_dup()` when exported:
+will use `cleri_dup()` when exported to c:
 ```python
 elem = Repeat(obj, mi=1, ma=1)
 ```
 
-Use the code below if you do not want duplication:
+Use the code below if you want similar behavior without duplication:
 ```python
 elem = Sequence(obj)
 ```

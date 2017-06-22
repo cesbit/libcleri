@@ -24,9 +24,6 @@ typedef struct cleri_dup_s cleri_dup_t;
 cleri_object_t * cleri_dup(uint32_t gid, cleri_object_t * cl_obj);
 
 /* structs */
-struct cleri_dup_s
-{
-    cleri_object_t * dup;
-};
+// cleri_dup_t is defined in object.h
 
 #endif /* CLERI_DUP_H_ */

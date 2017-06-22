@@ -17,7 +17,6 @@
 #include <string.h>
 
 static void TOKEN_free(cleri_object_t * cl_object);
-
 static cleri_node_t * TOKEN_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,

@@ -6,6 +6,7 @@
 C_SRCS += \
 ../src/children.c \
 ../src/choice.c \
+../src/dup.c \
 ../src/expecting.c \
 ../src/grammar.c \
 ../src/keyword.c \
@@ -29,6 +30,7 @@ C_SRCS += \
 OBJS += \
 ./src/children.o \
 ./src/choice.o \
+./src/dup.o \
 ./src/expecting.o \
 ./src/grammar.o \
 ./src/keyword.o \
@@ -52,6 +54,7 @@ OBJS += \
 C_DEPS += \
 ./src/children.d \
 ./src/choice.d \
+./src/dup.d \
 ./src/expecting.d \
 ./src/grammar.d \
 ./src/keyword.d \

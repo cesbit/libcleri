@@ -17,6 +17,7 @@
 #include <cleri/sequence.h>
 #include <cleri/optional.h>
 #include <cleri/choice.h>
+#include <cleri/dup.h>
 #include <cleri/list.h>
 #include <cleri/regex.h>
 #include <cleri/repeat.h>
@@ -48,8 +49,8 @@ typedef struct cleri_rule_store_s cleri_rule_store_t;
 typedef struct cleri_node_s cleri_node_t;
 typedef struct cleri_parse_s cleri_parse_t;
 typedef struct cleri_ref_s cleri_ref_t;
-typedef struct cleri_dup_s cleri_dup_t;
 typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_dup_s cleri_dup_t;
 
 typedef enum cleri_object_e cleri_object_tp;
 typedef union cleri_object_u cleri_object_via_t;
@@ -94,6 +95,7 @@ union cleri_object_u
     cleri_tokens_t * tokens;
     cleri_prio_t * prio;
     cleri_rule_t * rule;
+    cleri_dup_t * dup;
     void * dummy; /* place holder */
 };
 
@@ -106,20 +108,29 @@ cleri_object_t * cleri_object_new(
 void cleri_object_incref(cleri_object_t * cl_object);
 void cleri_object_decref(cleri_object_t * cl_object);
 int cleri_object_free(cleri_object_t * cl_object);
-cleri_object_t * cleri_object_dup(cleri_object_t * cl_obj, uint32_t gid);
 
 /* fixed end of statement object */
 extern cleri_object_t * CLERI_END_OF_STATEMENT;
 
 /* structs */
+
+#define CLERI_OBJECT_FIELDS                 \
+    uint32_t gid;                           \
+    uint32_t ref;                           \
+    cleri_free_object_t free_object;        \
+    cleri_parse_object_t parse_object;      \
+    cleri_object_tp tp;                     \
+    cleri_object_via_t via;
+
 struct cleri_object_s
 {
-    uint32_t gid;
-    uint32_t ref;
-    cleri_free_object_t free_object;
-    cleri_parse_object_t parse_object;
-    cleri_object_tp tp;
-    cleri_object_via_t via;
+    CLERI_OBJECT_FIELDS
+};
+
+struct cleri_dup_s
+{
+    CLERI_OBJECT_FIELDS
+    cleri_object_t * dup;
 };
 
 #endif /* CLERI_OBJECT_H_ */

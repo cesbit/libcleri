@@ -18,18 +18,15 @@
 #include <assert.h>
 
 static void TOKENS_free(cleri_object_t * cl_object);
-
 static cleri_node_t * TOKENS_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_object_t * cl_obj,
         cleri_rule_store_t * rule);
-
 static int TOKENS_list_append(
         cleri_tlist_t * tlist,
         const char * token,
         size_t len);
-
 static void TOKENS_list_free(cleri_tlist_t * tlist);
 
 /*
