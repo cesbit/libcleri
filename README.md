@@ -13,6 +13,7 @@ Languange parser for the C program language.
     * [cleri_children_t](#cleri_children_t)
   * [Elements](#elements)
     * [Forward reference](#forward-reference)
+    * [cleri_dup_t](#cleri_dup_t)
     * [cleri_keyword_t](#cleri_keyword_t)
     * [cleri_regex_t](#cleri_regex_t)
     * [cleri_choice_t](#cleri_choice_t)
@@ -186,26 +187,6 @@ cleri_grammar_t * compile_grammar(void)
 >chain the final grammar returns NULL in case somewhere an error has occurred.
 >In this case you should usually abort the program.
 
-### `cleri_dup_t`
-Duplicate an object. The type is an extension to `cleri_object_t`.
-
-#### `cleri_object_t * cleri_dup(uint32_t gid, cleri_object_t * cl_obj)`
-Duplicate a libcleri object with a different gid but using the same element.
-
->Note: Only the object is duplicated. The element (`cleri_object_via_t via`)
->is a pointer to the original object.
-
-The following [pyleri](https://github.com/transceptor-technology/pyleri) code
-will use `cleri_dup()` when exported to c:
-```python
-elem = Repeat(obj, mi=1, ma=1)
-```
-
-Use the code below if you want similar behavior without duplication:
-```python
-elem = Sequence(obj)
-```
-
 ### `cleri_grammar_t`
 Compiled libcleri grammar.
 
@@ -354,8 +335,30 @@ cleri_parse_free(pr);
 cleri_grammar_free(grammar);
 ```
 
+### `cleri_dup_t`
+Duplicate an object. The type is an extension to `cleri_object_t`.
+
+#### `cleri_object_t * cleri_dup(uint32_t gid, cleri_object_t * cl_obj)`
+Duplicate a libcleri object with a different gid but using the same element.
+
+>Note: Only the object is duplicated. The element (`cleri_object_via_t via`)
+>is a pointer to the original object.
+
+The following [pyleri](https://github.com/transceptor-technology/pyleri) code
+will use `cleri_dup()` when exported to c:
+```python
+elem = Repeat(obj, mi=1, ma=1)
+```
+
+Use the code below if you want similar behavior without duplication:
+```python
+elem = Sequence(obj)
+```
+
 ### `cleri_keyword_t`
 Keyword element. The parser needs a match with the keyword.
+
+Type (`cleri_object_t.tp`): `CLERI_TP_KEYWORD`
 
 *Public members*
 - `const char * cleri_keyword_t.keyword`: Contains the keyword string. (readonly)
