@@ -4,6 +4,6 @@ libcleri (0.9.0)
     * fixed largets token first.
     * added cleri_dup().
     * added header guards.
-    * added forward reference element.
+    * added forward reference element. (issue #2)
 
  -- Jeroen van der Heijden <jeroen@transceptor.technology>  22 Jun 2017
