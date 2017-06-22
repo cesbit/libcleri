@@ -539,7 +539,7 @@ List element. Like [repeat](#cleri_repeat_t) but with an delimiter.
 - `int cleri_list_t.opt_closing`: Allow or disallow ending with a delimiter.
 
 
-#### `cleri_object_t * cleri_list(uint32_t gid, cleri_object_t * cl_obj, cleri_object_t * delimiter, size_t min, size_t max, int opt_closing)
+#### `cleri_object_t * cleri_list(uint32_t gid, cleri_object_t * cl_obj, cleri_object_t * delimiter, size_t min, size_t max, int opt_closing)`
 Create and return a new [object](#cleri_object_t) containing a list element.
 Argument `max` should be greater or equal to `min` or 0. Argument `opt_closing`
 can be 1 (TRUE) to allow or 0 (FALSE) to disallow a list to end with a delimiter.
