@@ -21,9 +21,7 @@ typedef struct cleri_children_s cleri_children_t;
 /* private functions */
 cleri_children_t * cleri__children_new(void);
 void cleri__children_free(cleri_children_t * children);
-int cleri__children_add(
-        cleri_children_t * children,
-        cleri_node_t * node);
+int cleri__children_add(cleri_children_t * children, cleri_node_t * node);
 
 /* structs */
 struct cleri_children_s
