@@ -29,7 +29,7 @@ all: libcleri.so
 libcleri.so: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	gcc -shared -o "libcleri.so" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -shared -o "libcleri.so" $(OBJS) $(USER_OBJS) $(LIBS) $(LDFLAGS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
