@@ -9,7 +9,7 @@
 
 #define LIBCLERI_VERSION_MAJOR 0
 #define LIBCLERI_VERSION_MINOR 9
-#define LIBCLERI_VERSION_PATCH 0
+#define LIBCLERI_VERSION_PATCH 1
 
 #define LIBCLERI_STRINGIFY(num) #num
 #define LIBCLERI_VERSION_STR(major,minor,patch)    \
