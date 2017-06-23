@@ -34,11 +34,11 @@ Languange parser for the C program language.
 >
 >On Ubuntu: 
 >
->    `sudo apt install libpcre3-dev`
+>`sudo apt install libpcre3-dev`
 >
 >On MacOs:
 >
->    `brew install pcre`
+>`brew install pcre`
 >
 Install debug or release version, in this example we will install the release version.
 ```
@@ -46,6 +46,10 @@ $ cd Release
 ```
 
 Compile libcleri
+>Note: On MacOs you might need to set environment variables:
+>
+>`export CFLAGS="-I/usr/local/include" && export LDFLAGS="-L/usr/local/lib"`
+>
 ```
 $ make all
 ```
