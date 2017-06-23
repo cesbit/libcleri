@@ -15,12 +15,12 @@
 #include <string.h>
 #include <assert.h>
 
-static void REGEX_free(cleri_object_t * cl_object);
+static void REGEX_free(cleri_t * cl_object);
 
 static cleri_node_t *  REGEX_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule);
 
 /*
@@ -32,15 +32,15 @@ static cleri_node_t *  REGEX_parse(
  * Warning: this function could write to stderr in case the pattern could not
  * be compiled.
  */
-cleri_object_t * cleri_regex(uint32_t gid, const char * pattern)
+cleri_t * cleri_regex(uint32_t gid, const char * pattern)
 {
-    cleri_object_t * cl_object;
+    cleri_t * cl_object;
     const char * pcre_error_str;
     int pcre_error_offset;
 
     assert (pattern[0] == '^');
 
-    cl_object = cleri_object_new(
+    cl_object = cleri_new(
             gid,
             CLERI_TP_REGEX,
             &REGEX_free,
@@ -101,7 +101,7 @@ cleri_object_t * cleri_regex(uint32_t gid, const char * pattern)
 /*
  * Destroy regex object.
  */
-static void REGEX_free(cleri_object_t * cl_object)
+static void REGEX_free(cleri_t * cl_object)
 {
     free(cl_object->via.regex->regex);
     free(cl_object->via.regex->regex_extra);
@@ -114,7 +114,7 @@ static void REGEX_free(cleri_object_t * cl_object)
 static cleri_node_t *  REGEX_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule)
 {
     int pcre_exec_ret;

@@ -15,11 +15,11 @@
 
 #include <stddef.h>
 #include <inttypes.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 #include <cleri/children.h>
 
 /* typedefs */
-typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_s cleri_t;
 typedef struct cleri_children_s cleri_children_t;
 typedef struct cleri_node_s cleri_node_t;
 
@@ -29,7 +29,7 @@ typedef struct cleri_node_s cleri_node_t;
 
 /* pricate functions */
 cleri_node_t * cleri__node_new(
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         const char * str,
         size_t len);
 void cleri__node_free(cleri_node_t * node);
@@ -43,7 +43,7 @@ struct cleri_node_s
     /* public */
     const char * str;
     size_t len;
-    cleri_object_t * cl_obj;
+    cleri_t * cl_obj;
     cleri_children_t * children;
 
     /* private */

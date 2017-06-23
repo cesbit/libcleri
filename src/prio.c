@@ -19,21 +19,21 @@
 
 #define PRIO_MAX_RECURSION_DEPTH 200
 
-static void PRIO_free(cleri_object_t * cl_obj);
+static void PRIO_free(cleri_t * cl_obj);
 
 static cleri_node_t *  PRIO_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule);
 
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_object_t * cleri_prio(uint32_t gid, size_t len, ...)
+cleri_t * cleri_prio(uint32_t gid, size_t len, ...)
 {
     va_list ap;
-    cleri_object_t * cl_object = cleri_object_new(
+    cleri_t * cl_object = cleri_new(
             0,
             CLERI_TP_PRIO,
             &PRIO_free,
@@ -57,7 +57,7 @@ cleri_object_t * cleri_prio(uint32_t gid, size_t len, ...)
 
     if (cl_object->via.prio->olist == NULL)
     {
-        cleri_object_free(cl_object);
+        cleri_free(cl_object);
         return NULL;
     }
 
@@ -66,10 +66,10 @@ cleri_object_t * cleri_prio(uint32_t gid, size_t len, ...)
     {
         if (cleri__olist_append(
                 cl_object->via.prio->olist,
-                va_arg(ap, cleri_object_t *)))
+                va_arg(ap, cleri_t *)))
         {
             cleri__olist_cancel(cl_object->via.prio->olist);
-            cleri_object_free(cl_object);
+            cleri_free(cl_object);
             cl_object = NULL;
         }
     }
@@ -81,7 +81,7 @@ cleri_object_t * cleri_prio(uint32_t gid, size_t len, ...)
 /*
  * Destroy prio object.
  */
-static void PRIO_free(cleri_object_t * cl_object)
+static void PRIO_free(cleri_t * cl_object)
 {
     cleri__olist_free(cl_object->via.prio->olist);
     free(cl_object->via.prio);
@@ -93,7 +93,7 @@ static void PRIO_free(cleri_object_t * cl_object)
 static cleri_node_t *  PRIO_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule)
 {
     cleri_olist_t * olist;

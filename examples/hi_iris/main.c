@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 void test_str(cleri_grammar_t * grammar, const char * str)
 {
@@ -11,9 +11,9 @@ void test_str(cleri_grammar_t * grammar, const char * str)
 int main(void)
 {
     /* define grammar */
-    cleri_object_t * k_hi = cleri_keyword(0, "hi", 0);
-    cleri_object_t * r_name = cleri_regex(0, "^(?:\"(?:[^\"]*)\")+");
-    cleri_object_t * start = cleri_sequence(0, 2, k_hi, r_name);
+    cleri_t * k_hi = cleri_keyword(0, "hi", 0);
+    cleri_t * r_name = cleri_regex(0, "^(?:\"(?:[^\"]*)\")+");
+    cleri_t * start = cleri_sequence(0, 2, k_hi, r_name);
 
     /* compile grammar */
     cleri_grammar_t * my_grammar = cleri_grammar(start, NULL);

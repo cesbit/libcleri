@@ -1,12 +1,12 @@
 #include <stdio.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 const char * TestList = "ni, ni, ni, ni, ni";
 
 int main(void)
 {
     /* define grammar */
-    cleri_object_t * list = cleri_list(
+    cleri_t * list = cleri_list(
         0,                          // gid, not used in this example
         cleri_keyword(0, "ni", 0),  // repeated element
         cleri_token(0, ","),        // delimiter element
@@ -19,7 +19,7 @@ int main(void)
 
     /* parse some test string */
     cleri_parse_t * pr = cleri_parse(grammar, TestList);
-    printf("Test '%s': %s\n", TestList, pr->is_valid ? "true" : "false");
+    printf("Test: %s, '%s'\n", pr->is_valid ? "true" : "false", TestList);
 
     /* cleanup */
     cleri_parse_free(pr);

@@ -15,15 +15,15 @@
 
 #include <stddef.h>
 #include <inttypes.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 /* typedefs */
-typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_s cleri_t;
 typedef struct cleri_tlist_s cleri_tlist_t;
 typedef struct cleri_tokens_s cleri_tokens_t;
 
 /* public functions */
-cleri_object_t * cleri_tokens(uint32_t gid, const char * tokens);
+cleri_t * cleri_tokens(uint32_t gid, const char * tokens);
 
 /* structs */
 struct cleri_tlist_s

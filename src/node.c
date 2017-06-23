@@ -25,10 +25,7 @@ cleri_node_t * CLERI_EMPTY_NODE = &CLERI__EMPTY_NODE;
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_node_t * cleri__node_new(
-        cleri_object_t * cl_obj,
-        const char * str,
-        size_t len)
+cleri_node_t * cleri__node_new(cleri_t * cl_obj, const char * str, size_t len)
 {
     cleri_node_t * node;
     node = (cleri_node_t *) malloc(sizeof(cleri_node_t));

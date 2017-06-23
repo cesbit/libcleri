@@ -15,17 +15,17 @@
 
 #include <stddef.h>
 #include <inttypes.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 #include <cleri/olist.h>
 #include <cleri/rule.h>
 
 /* typedefs */
-typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_s cleri_t;
 typedef struct cleri_olist_s cleri_olist_t;
 typedef struct cleri_prio_s cleri_prio_t;
 
 /* public functions */
-cleri_object_t * cleri_prio(uint32_t gid, size_t len, ...);
+cleri_t * cleri_prio(uint32_t gid, size_t len, ...);
 
 /* structs */
 struct cleri_prio_s

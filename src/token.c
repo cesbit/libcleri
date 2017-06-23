@@ -16,19 +16,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void TOKEN_free(cleri_object_t * cl_object);
+static void TOKEN_free(cleri_t * cl_object);
 static cleri_node_t * TOKEN_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule);
 
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_object_t * cleri_token(uint32_t gid, const char * token)
+cleri_t * cleri_token(uint32_t gid, const char * token)
 {
-    cleri_object_t * cl_object = cleri_object_new(
+    cleri_t * cl_object = cleri_new(
             gid,
             CLERI_TP_TOKEN,
             &TOKEN_free,
@@ -58,7 +58,7 @@ cleri_object_t * cleri_token(uint32_t gid, const char * token)
 /*
  * Destroy token object.
  */
-static void TOKEN_free(cleri_object_t * cl_object)
+static void TOKEN_free(cleri_t * cl_object)
 {
     free(cl_object->via.token);
 }
@@ -69,7 +69,7 @@ static void TOKEN_free(cleri_object_t * cl_object)
 static cleri_node_t * TOKEN_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule)
 {
     cleri_node_t * node = NULL;

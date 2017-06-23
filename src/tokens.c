@@ -17,11 +17,11 @@
 #include <ctype.h>
 #include <assert.h>
 
-static void TOKENS_free(cleri_object_t * cl_object);
+static void TOKENS_free(cleri_t * cl_object);
 static cleri_node_t * TOKENS_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule);
 static int TOKENS_list_add(
         cleri_tlist_t ** tlist,
@@ -32,13 +32,13 @@ static void TOKENS_list_free(cleri_tlist_t * tlist);
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_object_t * cleri_tokens(uint32_t gid, const char * tokens)
+cleri_t * cleri_tokens(uint32_t gid, const char * tokens)
 {
     size_t len;
     char * pt;
-    cleri_object_t * cl_object;
+    cleri_t * cl_object;
 
-    cl_object = cleri_object_new(
+    cl_object = cleri_new(
             gid,
             CLERI_TP_TOKENS,
             &TOKENS_free,
@@ -71,7 +71,7 @@ cleri_object_t * cleri_tokens(uint32_t gid, const char * tokens)
             cl_object->via.tokens->spaced == NULL ||
             cl_object->via.tokens->tlist == NULL)
     {
-        cleri_object_free(cl_object);
+        cleri_free(cl_object);
         return NULL;
     }
 
@@ -92,7 +92,7 @@ cleri_object_t * cleri_tokens(uint32_t gid, const char * tokens)
                         pt - len,
                         len))
                 {
-                    cleri_object_free(cl_object);
+                    cleri_free(cl_object);
                     return NULL;
                 }
                 len = 0;
@@ -121,7 +121,7 @@ cleri_object_t * cleri_tokens(uint32_t gid, const char * tokens)
 /*
  * Destroy token object.
  */
-static void TOKENS_free(cleri_object_t * cl_object)
+static void TOKENS_free(cleri_t * cl_object)
 {
     TOKENS_list_free(cl_object->via.tokens->tlist);
     free(cl_object->via.tokens->tokens);
@@ -135,7 +135,7 @@ static void TOKENS_free(cleri_object_t * cl_object)
 static cleri_node_t * TOKENS_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule)
 {
     cleri_node_t * node = NULL;

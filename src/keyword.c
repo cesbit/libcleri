@@ -13,23 +13,20 @@
 #include <string.h>
 #include <cleri/keyword.h>
 
-static void KEYWORD_free(cleri_object_t * cl_object);
+static void KEYWORD_free(cleri_t * cl_object);
 
 static cleri_node_t * KEYWORD_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule);
 
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_object_t * cleri_keyword(
-        uint32_t gid,
-        const char * keyword,
-        int ign_case)
+cleri_t * cleri_keyword(uint32_t gid, const char * keyword, int ign_case)
 {
-    cleri_object_t * cl_object = cleri_object_new(
+    cleri_t * cl_object = cleri_new(
             gid,
             CLERI_TP_KEYWORD,
             &KEYWORD_free,
@@ -59,7 +56,7 @@ cleri_object_t * cleri_keyword(
 /*
  * Destroy keyword object.
  */
-static void KEYWORD_free(cleri_object_t * cl_object)
+static void KEYWORD_free(cleri_t * cl_object)
 {
     free(cl_object->via.keyword);
 }
@@ -70,7 +67,7 @@ static void KEYWORD_free(cleri_object_t * cl_object)
 static cleri_node_t * KEYWORD_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule)
 {
     ssize_t match_len;

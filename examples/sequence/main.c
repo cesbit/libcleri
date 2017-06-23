@@ -1,12 +1,12 @@
 #include <stdio.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 const char * TestSequence = "Tic Tac Toe";
 
 int main(void)
 {
     /* define grammar */
-    cleri_object_t * sequence = cleri_sequence(
+    cleri_t * sequence = cleri_sequence(
         0,                              // gid, not used in the example
         3,                              // number of elements
         cleri_keyword(0, "Tic", 0),     // first element
@@ -18,7 +18,7 @@ int main(void)
 
     /* parse some test string */
     cleri_parse_t * pr = cleri_parse(grammar, TestSequence);
-    printf("Test '%s': %s\n", TestSequence, pr->is_valid ? "true" : "false");
+    printf("Test: %s, '%s'\n", pr->is_valid ? "true" : "false", TestSequence);
 
     /* cleanup */
     cleri_parse_free(pr);

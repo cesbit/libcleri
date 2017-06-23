@@ -12,11 +12,11 @@
 #include <cleri/list.h>
 #include <stdlib.h>
 
-static void LIST_free(cleri_object_t * cl_object);
+static void LIST_free(cleri_t * cl_object);
 static cleri_node_t * LIST_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule);
 
 /*
@@ -30,10 +30,10 @@ static cleri_node_t * LIST_parse(
  * opt_closing  :   when set to true (1) the list can be closed with a
  *                  delimiter. when false (0) this is not allowed.
  */
-cleri_object_t * cleri_list(
+cleri_t * cleri_list(
         uint32_t gid,
-        cleri_object_t * cl_obj,
-        cleri_object_t * delimiter,
+        cleri_t * cl_obj,
+        cleri_t * delimiter,
         size_t min,
         size_t max,
         int opt_closing)
@@ -43,7 +43,7 @@ cleri_object_t * cleri_list(
         return NULL;
     }
 
-    cleri_object_t * cl_object = cleri_object_new(
+    cleri_t * cl_object = cleri_new(
             gid,
             CLERI_TP_LIST,
             &LIST_free,
@@ -69,8 +69,8 @@ cleri_object_t * cleri_list(
     cl_object->via.list->max = max;
     cl_object->via.list->opt_closing = opt_closing;
 
-    cleri_object_incref(cl_obj);
-    cleri_object_incref(delimiter);
+    cleri_incref(cl_obj);
+    cleri_incref(delimiter);
 
     return cl_object;
 }
@@ -78,10 +78,10 @@ cleri_object_t * cleri_list(
 /*
  * Destroy list object.
  */
-static void LIST_free(cleri_object_t * cl_object)
+static void LIST_free(cleri_t * cl_object)
 {
-    cleri_object_free(cl_object->via.list->cl_obj);
-    cleri_object_free(cl_object->via.list->delimiter);
+    cleri_free(cl_object->via.list->cl_obj);
+    cleri_free(cl_object->via.list->delimiter);
     free(cl_object->via.list);
 }
 
@@ -91,7 +91,7 @@ static void LIST_free(cleri_object_t * cl_object)
 static cleri_node_t *  LIST_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule)
 {
     cleri_node_t * node;

@@ -9,31 +9,31 @@
  *  - initial version, 08-03-2016
  *
  */
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 #include <stdlib.h>
 #include <assert.h>
 
-static cleri_object_t end_of_statement = {
+static cleri_t end_of_statement = {
         .gid=0,
         .ref=1,
         .free_object=NULL,
         .parse_object=NULL,
         .tp=CLERI_TP_END_OF_STATEMENT,
         .via={.dummy=NULL}};
-cleri_object_t * CLERI_END_OF_STATEMENT = &end_of_statement;
+cleri_t * CLERI_END_OF_STATEMENT = &end_of_statement;
 
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_object_t * cleri_object_new(
+cleri_t * cleri_new(
         uint32_t gid,
-        cleri_object_tp tp,
+        cleri_tp tp,
         cleri_free_object_t free_object,
         cleri_parse_object_t parse_object)
 {
-    cleri_object_t * cl_object;
+    cleri_t * cl_object;
 
-    cl_object = (cleri_object_t *) malloc(sizeof(cleri_object_t));
+    cl_object = (cleri_t *) malloc(sizeof(cleri_t));
     if (cl_object != NULL)
     {
         cl_object->gid = gid;
@@ -49,7 +49,7 @@ cleri_object_t * cleri_object_new(
 /*
  * Increment reference counter on cleri object.
  */
-inline void cleri_object_incref(cleri_object_t * cl_object)
+inline void cleri_incref(cleri_t * cl_object)
 {
     cl_object->ref++;
 }
@@ -58,7 +58,7 @@ inline void cleri_object_incref(cleri_object_t * cl_object)
  * Decrement reference counter.
  * If no references are left the object is destoryed. (never the element)
  */
-void cleri_object_decref(cleri_object_t * cl_object)
+void cleri_decref(cleri_t * cl_object)
 {
     if (!--cl_object->ref)
     {
@@ -72,7 +72,7 @@ void cleri_object_decref(cleri_object_t * cl_object)
  * is not destroyed and this function will return -1. If successful
  * cleaned the return value is 0.
  */
-int cleri_object_free(cleri_object_t * cl_object)
+int cleri_free(cleri_t * cl_object)
 {
     if (cl_object->tp == CLERI_TP_THIS)
     {

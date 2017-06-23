@@ -14,16 +14,16 @@
 
 #include <stddef.h>
 #include <inttypes.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 /* typedefs */
-typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_s cleri_t;
 typedef struct cleri_dup_s cleri_dup_t;
 
 /* public functions */
-cleri_object_t * cleri_dup(uint32_t gid, cleri_object_t * cl_obj);
+cleri_t * cleri_dup(uint32_t gid, cleri_t * cl_obj);
 
 /* structs */
-// cleri_dup_t is defined in object.h
+// cleri_dup_t is defined in cleri.h
 
 #endif /* CLERI_DUP_H_ */

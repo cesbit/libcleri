@@ -17,14 +17,14 @@
 
 #include <stddef.h>
 #include <inttypes.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 /* typedefs */
-typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_s cleri_t;
 typedef struct cleri_token_s cleri_token_t;
 
 /* public functions */
-cleri_object_t * cleri_token(uint32_t gid, const char * token);
+cleri_t * cleri_token(uint32_t gid, const char * token);
 
 /* structs */
 struct cleri_token_s

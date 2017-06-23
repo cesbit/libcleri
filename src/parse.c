@@ -135,7 +135,7 @@ void cleri_parse_expect_start(cleri_parse_t * pr)
 cleri_node_t * cleri__parse_walk(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule,
         int mode)
 {

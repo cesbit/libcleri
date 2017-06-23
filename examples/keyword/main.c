@@ -1,12 +1,12 @@
 #include <stdio.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 const char * TestKeyword = "Tic-Tac-Toe";
 
 int main(void)
 {
     /* define keyword */
-    cleri_object_t * k_tictactoe = cleri_keyword(
+    cleri_t * k_tictactoe = cleri_keyword(
         0,                  // gid, not used in this example
         "tic-tac-toe",      // keyword
         1);                 // case insensitive
@@ -16,7 +16,7 @@ int main(void)
 
     /* parse some test string */
     cleri_parse_t * pr = cleri_parse(grammar, TestKeyword);
-    printf("Test '%s': %s\n", TestKeyword, pr->is_valid ? "true" : "false");
+    printf("Test: %s, '%s'\n", pr->is_valid ? "true" : "false", TestKeyword);
 
     /* cleanup */
     cleri_parse_free(pr);

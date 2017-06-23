@@ -15,12 +15,12 @@
 
 #include <stddef.h>
 #include <inttypes.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 #include <cleri/node.h>
 #include <cleri/expecting.h>
 
 /* typedefs */
-typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_s cleri_t;
 typedef struct cleri_node_s cleri_node_t;
 typedef struct cleri_rule_tested_s cleri_rule_tested_t;
 typedef struct cleri_rule_store_s cleri_rule_store_t;
@@ -36,7 +36,7 @@ enum cleri_rule_test_e
 };
 
 /* private functions */
-cleri_object_t * cleri__rule(uint32_t gid, cleri_object_t * cl_obj);
+cleri_t * cleri__rule(uint32_t gid, cleri_t * cl_obj);
 cleri_rule_test_t cleri__rule_init(
         cleri_rule_tested_t ** target,
         cleri_rule_tested_t * tested,
@@ -53,13 +53,13 @@ struct cleri_rule_tested_s
 struct cleri_rule_store_s
 {
     cleri_rule_tested_t * tested;
-    cleri_object_t * root_obj;
+    cleri_t * root_obj;
     size_t depth;
 };
 
 struct cleri_rule_s
 {
-    cleri_object_t * cl_obj;
+    cleri_t * cl_obj;
 };
 
 #endif /* CLERI_RULE_H_ */

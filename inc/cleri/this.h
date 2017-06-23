@@ -16,12 +16,12 @@
 #define CLERI_THIS_H_
 
 #include <cleri/expecting.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 /* typedefs */
-typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_s cleri_t;
 
 /* public THIS */
-extern cleri_object_t * CLERI_THIS;
+extern cleri_t * CLERI_THIS;
 
 #endif /* CLERI_THIS_H_ */

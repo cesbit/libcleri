@@ -13,25 +13,25 @@
 #include <cleri/rule.h>
 #include <stdlib.h>
 
-static void RULE_free(cleri_object_t * cl_object);
+static void RULE_free(cleri_t * cl_object);
 static cleri_node_t * RULE_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule);
 static void RULE_tested_free(cleri_rule_tested_t * tested);
 
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_object_t * cleri__rule(uint32_t gid, cleri_object_t * cl_obj)
+cleri_t * cleri__rule(uint32_t gid, cleri_t * cl_obj)
 {
     if (cl_obj == NULL)
     {
         return NULL;
     }
 
-    cleri_object_t * cl_object = cleri_object_new(
+    cleri_t * cl_object = cleri_new(
             gid,
             CLERI_TP_RULE,
             &RULE_free,
@@ -50,7 +50,7 @@ cleri_object_t * cleri__rule(uint32_t gid, cleri_object_t * cl_obj)
         else
         {
             cl_object->via.rule->cl_obj = cl_obj;
-            cleri_object_incref(cl_obj);
+            cleri_incref(cl_obj);
         }
     }
 
@@ -106,9 +106,9 @@ cleri_rule_test_t cleri__rule_init(
     return CLERI_RULE_TRUE;
 }
 
-static void RULE_free(cleri_object_t * cl_object)
+static void RULE_free(cleri_t * cl_object)
 {
-    cleri_object_free(cl_object->via.rule->cl_obj);
+    cleri_free(cl_object->via.rule->cl_obj);
     free(cl_object->via.rule);
 }
 
@@ -118,7 +118,7 @@ static void RULE_free(cleri_object_t * cl_object)
 static cleri_node_t * RULE_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * __rule)
 {
     cleri_node_t * node;

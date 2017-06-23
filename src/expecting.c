@@ -64,7 +64,7 @@ cleri_expecting_t * cleri__expecting_new(const char * str)
  */
 int cleri__expecting_update(
         cleri_expecting_t * expecting,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         const char * str)
 {
     int rc = 0;

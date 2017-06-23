@@ -14,7 +14,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 #include <cleri/grammar.h>
 #include <cleri/node.h>
 #include <cleri/expecting.h>
@@ -22,7 +22,7 @@
 #include <cleri/rule.h>
 
 /* typedefs */
-typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_s cleri_t;
 typedef struct cleri_grammar_s cleri_grammar_t;
 typedef struct cleri_node_s cleri_node_t;
 typedef struct cleri_expecting_s cleri_expecting_t;
@@ -39,7 +39,7 @@ void cleri_parse_expect_start(cleri_parse_t * pr);
 cleri_node_t * cleri__parse_walk(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule,
         int mode);
 

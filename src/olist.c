@@ -32,7 +32,7 @@ cleri_olist_t * cleri__olist_new(void)
  * The list remains unchanged in case of an error and the object reference
  * counter will be incremented when successful.
  */
-int cleri__olist_append(cleri_olist_t * olist, cleri_object_t * cl_object)
+int cleri__olist_append(cleri_olist_t * olist, cleri_t * cl_object)
 {
     if (cl_object == NULL)
     {
@@ -41,7 +41,7 @@ int cleri__olist_append(cleri_olist_t * olist, cleri_object_t * cl_object)
 
     if (olist->cl_obj == NULL)
     {
-        cleri_object_incref(cl_object);
+        cleri_incref(cl_object);
         olist->cl_obj = cl_object;
         olist->next = NULL;
         return 0;
@@ -59,7 +59,7 @@ int cleri__olist_append(cleri_olist_t * olist, cleri_object_t * cl_object)
         return -1;
     }
 
-    cleri_object_incref(cl_object);
+    cleri_incref(cl_object);
     olist->next->cl_obj = cl_object;
     olist->next->next = NULL;
 
@@ -70,7 +70,7 @@ int cleri__olist_append(cleri_olist_t * olist, cleri_object_t * cl_object)
  * Exactly the same as cleri__olist_append, except the reference counter
  * will not be incremented.
  */
-int cleri__olist_append_nref(cleri_olist_t * olist, cleri_object_t * cl_object)
+int cleri__olist_append_nref(cleri_olist_t * olist, cleri_t * cl_object)
 {
     if (cl_object == NULL)
     {
@@ -112,7 +112,7 @@ void cleri__olist_free(cleri_olist_t * olist)
     while (olist != NULL)
     {
         next = olist->next;
-        cleri_object_free(olist->cl_obj);
+        cleri_free(olist->cl_obj);
         free(olist);
         olist = next;
     }

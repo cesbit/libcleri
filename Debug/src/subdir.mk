@@ -13,7 +13,7 @@ C_SRCS += \
 ../src/kwcache.c \
 ../src/list.c \
 ../src/node.c \
-../src/object.c \
+../src/cleri.c \
 ../src/olist.c \
 ../src/optional.c \
 ../src/parse.c \
@@ -37,7 +37,7 @@ OBJS += \
 ./src/kwcache.o \
 ./src/list.o \
 ./src/node.o \
-./src/object.o \
+./src/cleri.o \
 ./src/olist.o \
 ./src/optional.o \
 ./src/parse.o \
@@ -61,7 +61,7 @@ C_DEPS += \
 ./src/kwcache.d \
 ./src/list.d \
 ./src/node.d \
-./src/object.d \
+./src/cleri.d \
 ./src/olist.d \
 ./src/optional.d \
 ./src/parse.d \

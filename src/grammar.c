@@ -21,9 +21,7 @@
  * Warning: this function could write to stderr in case the re_keywords could
  * not be compiled.
  */
-cleri_grammar_t * cleri_grammar(
-        cleri_object_t * start,
-        const char * re_keywords)
+cleri_grammar_t * cleri_grammar(cleri_t * start, const char * re_keywords)
 {
     const char * re_kw = (re_keywords == NULL) ?
             CLERI_DEFAULT_RE_KEYWORDS : re_keywords;
@@ -80,7 +78,7 @@ cleri_grammar_t * cleri_grammar(
 
     /* bind root element and increment the reference counter */
     grammar->start = start;
-    cleri_object_incref(start);
+    cleri_incref(start);
 
     return grammar;
 }
@@ -94,6 +92,6 @@ void cleri_grammar_free(cleri_grammar_t * grammar)
         free(grammar->re_kw_extra);
     }
 
-    cleri_object_free(grammar->start);
+    cleri_free(grammar->start);
     free(grammar);
 }

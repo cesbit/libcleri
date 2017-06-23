@@ -15,23 +15,19 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <inttypes.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 /* typedefs */
-typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_s cleri_t;
 typedef struct cleri_repeat_s cleri_repeat_t;
 
 /* public functions */
-cleri_object_t * cleri_repeat(
-        uint32_t gid,
-        cleri_object_t * cl_obj,
-        size_t min,
-        size_t max);
+cleri_t * cleri_repeat(uint32_t gid, cleri_t * cl_obj, size_t min, size_t max);
 
 /* structs */
 struct cleri_repeat_s
 {
-    cleri_object_t * cl_obj;
+    cleri_t * cl_obj;
     size_t min;
     size_t max;
 };

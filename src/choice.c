@@ -16,38 +16,34 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static void CHOICE_free(cleri_object_t * cl_object);
+static void CHOICE_free(cleri_t * cl_object);
 
 static cleri_node_t * CHOICE_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule);
 
 static cleri_node_t * CHOICE_parse_most_greedy(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule);
 
 static cleri_node_t * CHOICE_parse_first_match(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule);
 
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_object_t * cleri_choice(
-        uint32_t gid,
-        int most_greedy,
-        size_t len,
-        ...)
+cleri_t * cleri_choice(uint32_t gid, int most_greedy, size_t len, ...)
 {
     va_list ap;
 
-    cleri_object_t * cl_object = cleri_object_new(
+    cleri_t * cl_object = cleri_new(
             gid,
             CLERI_TP_CHOICE,
             &CHOICE_free,
@@ -72,7 +68,7 @@ cleri_object_t * cleri_choice(
 
     if (cl_object->via.choice->olist == NULL)
     {
-        cleri_object_free(cl_object);
+        cleri_free(cl_object);
         return NULL;
     }
 
@@ -81,10 +77,10 @@ cleri_object_t * cleri_choice(
     {
         if (cleri__olist_append(
                 cl_object->via.choice->olist,
-                va_arg(ap, cleri_object_t *)))
+                va_arg(ap, cleri_t *)))
         {
             cleri__olist_cancel(cl_object->via.choice->olist);
-            cleri_object_free(cl_object);
+            cleri_free(cl_object);
             cl_object = NULL;
             break;
         }
@@ -97,7 +93,7 @@ cleri_object_t * cleri_choice(
 /*
  * Destroy choice object.
  */
-static void CHOICE_free(cleri_object_t * cl_object)
+static void CHOICE_free(cleri_t * cl_object)
 {
     cleri__olist_free(cl_object->via.choice->olist);
     free(cl_object->via.choice);
@@ -109,7 +105,7 @@ static void CHOICE_free(cleri_object_t * cl_object)
 static cleri_node_t * CHOICE_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule)
 {
     return (cl_obj->via.choice->most_greedy) ?
@@ -123,7 +119,7 @@ static cleri_node_t * CHOICE_parse(
 static cleri_node_t * CHOICE_parse_most_greedy(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule)
 {
     cleri_olist_t * olist;
@@ -178,7 +174,7 @@ static cleri_node_t * CHOICE_parse_most_greedy(
 static cleri_node_t * CHOICE_parse_first_match(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule)
 {
     cleri_olist_t * olist;

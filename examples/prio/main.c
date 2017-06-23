@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 const char * TestPrio = "(ni or ni) and (ni or ni)";
 
@@ -12,7 +12,7 @@ int main(void)
     *       element at the same position in the string as the prio element.
     *       This is why a forward reference cannot be used for this example.
     */
-    cleri_object_t * prio = cleri_prio(
+    cleri_t * prio = cleri_prio(
         0,                              // gid, not used in the example
         4,                              // number of elements
         cleri_keyword(0, "ni", 0),      // first element
@@ -34,7 +34,7 @@ int main(void)
 
     /* parse some test string */
     cleri_parse_t * pr = cleri_parse(grammar, TestPrio);
-    printf("Test '%s': %s\n", TestPrio, pr->is_valid ? "true" : "false");
+    printf("Test: %s, '%s'\n", pr->is_valid ? "true" : "false", TestPrio);
 
     /* cleanup */
     cleri_parse_free(pr);

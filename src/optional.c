@@ -13,25 +13,25 @@
 #include <cleri/expecting.h>
 #include <stdlib.h>
 
-static void OPTIONAL_free(cleri_object_t * cl_object);
+static void OPTIONAL_free(cleri_t * cl_object);
 
 static cleri_node_t * OPTIONAL_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule);
 
 /*
  * Returns NULL and in case an error has occurred.
  */
-cleri_object_t * cleri_optional(uint32_t gid, cleri_object_t * cl_obj)
+cleri_t * cleri_optional(uint32_t gid, cleri_t * cl_obj)
 {
     if (cl_obj == NULL)
     {
         return NULL;
     }
 
-    cleri_object_t * cl_object = cleri_object_new(
+    cleri_t * cl_object = cleri_new(
             gid,
             CLERI_TP_OPTIONAL,
             &OPTIONAL_free,
@@ -53,7 +53,7 @@ cleri_object_t * cleri_optional(uint32_t gid, cleri_object_t * cl_obj)
 
     cl_object->via.optional->cl_obj = cl_obj;
 
-    cleri_object_incref(cl_obj);
+    cleri_incref(cl_obj);
 
     return cl_object;
 }
@@ -61,9 +61,9 @@ cleri_object_t * cleri_optional(uint32_t gid, cleri_object_t * cl_obj)
 /*
  * Destroy optional object.
  */
-static void OPTIONAL_free(cleri_object_t * cl_object)
+static void OPTIONAL_free(cleri_t * cl_object)
 {
-    cleri_object_free(cl_object->via.optional->cl_obj);
+    cleri_free(cl_object->via.optional->cl_obj);
     free(cl_object->via.optional);
 }
 
@@ -73,7 +73,7 @@ static void OPTIONAL_free(cleri_object_t * cl_object)
 static cleri_node_t * OPTIONAL_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule)
 {
     cleri_node_t * node;

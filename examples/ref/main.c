@@ -1,13 +1,13 @@
 #include <stdio.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 const char * TestRef = "[ni, ni, [ni, [], [ni, ni]]]";
 
 int main(void)
 {
     /* define grammar */
-    cleri_object_t * ref = cleri_ref();
-    cleri_object_t * choice = cleri_choice(
+    cleri_t * ref = cleri_ref();
+    cleri_t * choice = cleri_choice(
         0, 0, 2, cleri_keyword(0, "ni", 0), ref);
 
     cleri_ref_set(ref, cleri_sequence(
@@ -22,7 +22,7 @@ int main(void)
 
     /* parse some test string */
     cleri_parse_t * pr = cleri_parse(grammar, TestRef);
-    printf("Test '%s': %s\n", TestRef, pr->is_valid ? "true" : "false");
+    printf("Test: %s, '%s'\n", pr->is_valid ? "true" : "false", TestRef);
 
     /* cleanup */
     cleri_parse_free(pr);

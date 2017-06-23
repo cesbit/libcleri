@@ -1,5 +1,5 @@
 /*
- * object.h - each cleri element is a cleri object.
+ * cleri.h - each cleri element is a cleri object.
  *
  * author       : Jeroen van der Heijden
  * email        : jeroen@transceptor.technology
@@ -32,7 +32,7 @@
 #include <cleri/ref.h>
 
 /* typedefs */
-typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_s cleri_t;
 typedef struct cleri_grammar_s cleri_grammar_t;
 typedef struct cleri_keyword_s cleri_keyword_t;
 typedef struct cleri_sequence_s cleri_sequence_t;
@@ -49,21 +49,21 @@ typedef struct cleri_rule_store_s cleri_rule_store_t;
 typedef struct cleri_node_s cleri_node_t;
 typedef struct cleri_parse_s cleri_parse_t;
 typedef struct cleri_ref_s cleri_ref_t;
-typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_s cleri_t;
 typedef struct cleri_dup_s cleri_dup_t;
 
-typedef enum cleri_object_e cleri_object_tp;
-typedef union cleri_object_u cleri_object_via_t;
+typedef enum cleri_e cleri_tp;
+typedef union cleri_u cleri_via_t;
 
-typedef void (*cleri_free_object_t)(cleri_object_t *);
+typedef void (*cleri_free_object_t)(cleri_t *);
 typedef cleri_node_t * (*cleri_parse_object_t)(
         cleri_parse_t *,
         cleri_node_t *,
-        cleri_object_t *,
+        cleri_t *,
         cleri_rule_store_t *);
 
 /* enums */
-enum cleri_object_e {
+enum cleri_e {
     CLERI_TP_SEQUENCE,
     CLERI_TP_OPTIONAL,
     CLERI_TP_CHOICE,
@@ -82,7 +82,7 @@ enum cleri_object_e {
 };
 
 /* unions */
-union cleri_object_u
+union cleri_u
 {
     cleri_keyword_t * keyword;
     cleri_sequence_t * sequence;
@@ -100,17 +100,17 @@ union cleri_object_u
 };
 
 /* public functions */
-cleri_object_t * cleri_object_new(
+cleri_t * cleri_new(
         uint32_t gid,
-        cleri_object_tp tp,
+        cleri_tp tp,
         cleri_free_object_t free_object,
         cleri_parse_object_t parse_object);
-void cleri_object_incref(cleri_object_t * cl_object);
-void cleri_object_decref(cleri_object_t * cl_object);
-int cleri_object_free(cleri_object_t * cl_object);
+void cleri_incref(cleri_t * cl_object);
+void cleri_decref(cleri_t * cl_object);
+int cleri_free(cleri_t * cl_object);
 
 /* fixed end of statement object */
-extern cleri_object_t * CLERI_END_OF_STATEMENT;
+extern cleri_t * CLERI_END_OF_STATEMENT;
 
 /* structs */
 
@@ -119,10 +119,10 @@ extern cleri_object_t * CLERI_END_OF_STATEMENT;
     uint32_t ref;                           \
     cleri_free_object_t free_object;        \
     cleri_parse_object_t parse_object;      \
-    cleri_object_tp tp;                     \
-    cleri_object_via_t via;
+    cleri_tp tp;                            \
+    cleri_via_t via;
 
-struct cleri_object_s
+struct cleri_s
 {
     CLERI_OBJECT_FIELDS
 };
@@ -130,7 +130,7 @@ struct cleri_object_s
 struct cleri_dup_s
 {
     CLERI_OBJECT_FIELDS
-    cleri_object_t * dup;
+    cleri_t * dup;
 };
 
 #endif /* CLERI_OBJECT_H_ */

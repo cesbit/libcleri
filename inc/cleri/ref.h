@@ -14,13 +14,13 @@
 
 #include <stddef.h>
 #include <inttypes.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 /* typedefs */
-typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_s cleri_t;
 
 /* public functions */
-cleri_object_t * cleri_ref(void);
-void cleri_ref_set(cleri_object_t * ref, cleri_object_t * cl_obj);
+cleri_t * cleri_ref(void);
+void cleri_ref_set(cleri_t * ref, cleri_t * cl_obj);
 
 #endif /* CLERI_REF_H_ */

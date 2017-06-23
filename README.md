@@ -6,7 +6,7 @@ Languange parser for the C program language.
   * [Related projects](#related-projects)
   * [Quick usage](#quick-usage)
   * [API](#api)
-    * [cleri_object_t](#cleri_object_t)
+    * [cleri_t](#cleri_t)
     * [cleri_grammar_t](#cleri_grammar_t)
     * [cleri_parse_t](#cleri_parse_t)
     * [cleri_node_t](#cleri_node_t)
@@ -32,7 +32,7 @@ Languange parser for the C program language.
 ## Installation
 >Note: libcleri requires [pcre](http://www.pcre.org/)
 >
->On Ubuntu: 
+>On Ubuntu:
 >
 >`sudo apt install libpcre3-dev`
 >
@@ -73,7 +73,7 @@ $ sudo make install
 This is a simple example using libcleri:
 ```c
 #include <stdio.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 void test_str(cleri_grammar_t * grammar, const char * str)
 {
@@ -85,9 +85,9 @@ void test_str(cleri_grammar_t * grammar, const char * str)
 int main(void)
 {
     /* define grammar */
-    cleri_object_t * k_hi = cleri_keyword(0, "hi", 0);
-    cleri_object_t * r_name = cleri_regex(0, "^(?:\"(?:[^\"]*)\")+");
-    cleri_object_t * start = cleri_sequence(0, 2, k_hi, r_name);
+    cleri_t * k_hi = cleri_keyword(0, "hi", 0);
+    cleri_t * r_name = cleri_regex(0, "^(?:\"(?:[^\"]*)\")+");
+    cleri_t * start = cleri_sequence(0, 2, k_hi, r_name);
 
     /* compile grammar */
     cleri_grammar_t * my_grammar = cleri_grammar(start, NULL);
@@ -105,15 +105,15 @@ int main(void)
 
 ## API
 
-### `cleri_object_t`
-Cleri object is the base object for each element.
+### `cleri_t`
+Cleri type is the base object for each element.
 
 *Public members*
 - `uint32_t gid`: Global Identifier for the element. This GID is not required and
 as a rule it should be set to 0 if not used. You can use the GID for identifiying
 an element in a parse result. When exporting a Pyleri grammar, each named element
 will have set the GID be default. (readonly)
-- `cleri_object_tp tp`: Type for the object. (readonly)
+- `cleri_tp tp`: Type for the cleri object. (readonly)
     - `CLERI_TP_SEQUENCE`
     - `CLERI_TP_OPTIONAL`
     - `CLERI_TP_CHOICE`
@@ -127,7 +127,7 @@ will have set the GID be default. (readonly)
     - `CLERI_TP_TOKENS`
     - `CLERI_TP_REGEX`
     - `CLERI_TP_END_OF_STATEMENT`
-- `cleri_object_via_t via`: Object. (readonly)
+- `cleri_via_t via`: Element. (readonly)
     - `cleri_sequence_t * sequence`
     - `cleri_optional_t * optional`
     - `cleri_choice_t * choice`
@@ -141,23 +141,23 @@ will have set the GID be default. (readonly)
     - `cleri_tokens_t * tokens`
     - `void * dummy` (place holder, this, eof)
 
-#### `cleri_object_t * cleri_object_new(uint32_t gid, cleri_object_tp tp, cleri_free_object_t free_object, cleri_parse_object_t parse_object)`
+#### `cleri_t * cleri_new(uint32_t gid, cleri_tp tp, cleri_free_object_t free_object, cleri_parse_object_t parse_object)`
 Create and return a new cleri object. A unique gid is not required but can help
 you wih identifiying the element in a [parse result](#cleri_parse_t). As a rule
 you should assign 0 in case no specific  This function should only be used in case
 you want to create your own custom element.
 
-#### `void cleri_object_incref(cleri_object_t * cl_object)`
-Increment the reference counter for an object. Should only be used in case you
+#### `void cleri_incref(cleri_t * cl_object)`
+Increment the reference counter for a cleri object. Should only be used in case you
 want to write your own custom element.
 
-#### `void cleri_object_decref(cleri_object_t * cl_object)`
-Decrement the reference counter for an object. If no references are left the
+#### `void cleri_decref(cleri_t * cl_object)`
+Decrement the reference counter for a cleri object. If no references are left the
 object will be destroyed. Do not use this function after the element has
 successfully been added to another element or grammar. Should only be used in
 case you want to write your own custom element.
 
-#### `int cleri_object_free(cleri_object_t * cl_object)`
+#### `int cleri_free(cleri_t * cl_object)`
 Decrement referenct counter for a cleri object. When the no more references are
 left the object will be destroyed. Use this function to cleanup after errors
 have occurred. Do not use this function after the element has successfully been
@@ -167,31 +167,31 @@ Example strict error handling:
 ```c
 cleri_grammar_t * compile_grammar(void)
 {
-    cleri_object_t * k_hello = cleri_keyword(0, "hello", 0);
+    cleri_t * k_hello = cleri_keyword(0, "hello", 0);
     if (k_hello == NULL) {
         return NULL;
     }
-    cleri_object_t * k_world = cleri_keyword(0, "world", 0);
+    cleri_t * k_world = cleri_keyword(0, "world", 0);
     if (k_world == NULL) {
-        cleri_object_free(k_hello); // must cleanup k_hello
+        cleri_free(k_hello); // must cleanup k_hello
         return NULL;
     }
-    cleri_object_t * hello_world = cleri_sequence(0, 2, k_hello, k_world);
+    cleri_t * hello_world = cleri_sequence(0, 2, k_hello, k_world);
     if (start == NULL) {
-        cleri_object_free(k_hello);
-        cleri_object_free(k_world);
+        cleri_free(k_hello);
+        cleri_free(k_world);
         return NULL;
     }
-    cleri_object_t * opt = cleri_optional(0, hello_world);
+    cleri_t * opt = cleri_optional(0, hello_world);
     if (opt == NULL) {
         /* we now must only cleanup hello_world since this sequence will
         * cleanup both keywords too. */
-        cleri_object_free(hello_world);
+        cleri_free(hello_world);
         return NULL;
     }
     cleri_grammar_t * grammar = cleri_grammar(opt, NULL);
     if (grammar == NULL) {
-        cleri_object_free(opt);
+        cleri_free(opt);
     }
     /* when your program has finished, the grammar including all elements can
      * be destroyed using cleri_grammar_free() */
@@ -210,7 +210,7 @@ Compiled libcleri grammar.
 
 *No public members*
 
-#### `cleri_grammar_t * cleri_grammar(cleri_object_t * start, const char * re_keywords)`
+#### `cleri_grammar_t * cleri_grammar(cleri_t * start, const char * re_keywords)`
 Create and return a compiled grammar. Argument `start` must be the entry element
 for the grammar. Argument `re_keywords` should be a regular expression starting
 with character `^` for matching keywords in a grammar. When a grammar is created,
@@ -255,7 +255,7 @@ may have children.
 *Public members*
 - `const char * cleri_node_t.str`: Pointer to the position in the parse string where this node starts. (readonly)
 - `size_t cleri_node_t.len`: Length of the string which is applicable for this node. (readonly)
-- `cleri_object_t * cleri_node_t.cl_obj`: Element from the grammar which matches this node. (readonly)
+- `cleri_t * cleri_node_t.cl_obj`: Element from the grammar which matches this node. (readonly)
 - `cleri_children_t * cleri_node_t.children`: Optional children for this node. (readonly)
 
 #### `bool cleri_node_has_children(cleri_node_t * node)`
@@ -285,7 +285,7 @@ Linked list holding libcleri objects. A `cleri_olist_t` type is used for
 expected elements in a parse result.
 
 *Public members*
-- `cleri_object_t * cl_obj`: Object (holding an element, readonly)
+- `cleri_t * cl_obj`: Object (holding an element, readonly)
 - `cleri_olist_t * next`: Next object. (readonly)
 
 Example looping over `cleri_parse_t.expect`:
@@ -307,21 +307,21 @@ Elements are objects used to define a grammar.
 ### `cleri_keyword_t`
 Keyword element. The parser needs a match with the keyword.
 
-*Type (`cleri_object_t.tp`)*: `CLERI_TP_KEYWORD`
+*Type (`cleri_t.tp`)*: `CLERI_TP_KEYWORD`
 
 *Public members*
 - `const char * cleri_keyword_t.keyword`: Contains the keyword string. (readonly)
 - `int cleri_keyword_t.ign_case`: Boolean. (readonly)
 - `size_t cleri_keyword_t.len`: Length of the keyword string. (readonly)
 
-#### `cleri_object_t * cleri_keyword(uint32_t gid, const char * keyword, int ign_case)`
-Create and return a new [object](#cleri_object_t) containing a keyword element.
+#### `cleri_t * cleri_keyword(uint32_t gid, const char * keyword, int ign_case)`
+Create and return a new [object](#cleri_t) containing a keyword element.
 Argument `ign_case` can be set to 1 for a case insensitive keyword match.
 
 Example:
 ```c
 /* define case insensitive keyword */
-cleri_object_t * k_tictactoe = cleri_keyword(
+cleri_t * k_tictactoe = cleri_keyword(
     0,                  // gid, not used in this example
     "tic-tac-toe",      // keyword
     1);                 // case insensitive
@@ -344,8 +344,8 @@ expression.
 
 *No public members*
 
-#### `cleri_object_t * cleri_regex(uint32_t gid, const char * pattern)`
-Create and return a new [object](#cleri_object_t) containing a regular
+#### `cleri_t * cleri_regex(uint32_t gid, const char * pattern)`
+Create and return a new [object](#cleri_t) containing a regular
 expression element. Argument `pattern` should contain the regular expression.
 Each pattern must start with character `^` and the pattern should be checked
 before calling this function.
@@ -359,17 +359,17 @@ Choice element. The parser must choose one of the child elements.
 - `int cleri_choice_t.most_greedy`: Boolean. (readonly)
 - `cleri_olist_t * cleri_choice_t.olist`: Children. (readonly)
 
-#### `cleri_object_t * cleri_choice(uint32_t gid, int most_greedy, size_t len, ...)`
-Create and return a new [object](#cleri_object_t) containing a choice element.
+#### `cleri_t * cleri_choice(uint32_t gid, int most_greedy, size_t len, ...)`
+Create and return a new [object](#cleri_t) containing a choice element.
 Argument `most_greedy` can be set to 1 in which case the parser will select the
 most greedy match. When 0 the parser will select the first match.
 
 Example:
 ```c
 /* define grammar */
-cleri_object_t * k_hello = cleri_keyword(0, "hello", 0);
-cleri_object_t * k_goodbye = cleri_keyword(0, "goodbye", 0);
-cleri_object_t * choice = cleri_choice(
+cleri_t * k_hello = cleri_keyword(0, "hello", 0);
+cleri_t * k_goodbye = cleri_keyword(0, "goodbye", 0);
+cleri_t * choice = cleri_choice(
     0,                      // gid, not used in this example
     0,                      // stop at first match
     2,                      // number of elements
@@ -393,12 +393,12 @@ Sequence element. The parser must match each element in the specified order.
 *Public members*
 - `cleri_olist_t * cleri_sequence_t.olist`: Elements. (readonly)
 
-#### `cleri_object_t * cleri_sequence(uint32_t gid, size_t len, ...)`
-Create and return a new [object](#cleri_object_t) containing a sequence element.
+#### `cleri_t * cleri_sequence(uint32_t gid, size_t len, ...)`
+Create and return a new [object](#cleri_t) containing a sequence element.
 
 Example:
 ```c
-cleri_object_t * sequence = cleri_sequence(
+cleri_t * sequence = cleri_sequence(
     0,                              // gid, not used in the example
     3,                              // number of elements
     cleri_keyword(0, "Tic", 0),     // first element
@@ -421,20 +421,20 @@ cleri_grammar_free(grammar);
 Optional element. The parser looks for an optional element.
 
 *Public members*
-- `cleri_object_t * cleri_optional_t.cl_obj`: Optional element. (readonly)
+- `cleri_t * cleri_optional_t.cl_obj`: Optional element. (readonly)
 
-#### `cleri_object_t * cleri_optional(uint32_t gid, cleri_object_t * cl_obj)`
-Create and return a new [object](#cleri_object_t) containing an optional element.
+#### `cleri_t * cleri_optional(uint32_t gid, cleri_t * cl_obj)`
+Create and return a new [object](#cleri_t) containing an optional element.
 
 Example:
 ```c
 /* define grammar */
-cleri_object_t * k_hello = cleri_keyword(0, "hello", 0);
-cleri_object_t * k_there = cleri_keyword(0, "there", 0);
-cleri_object_t * optional = cleri_optional(
+cleri_t * k_hello = cleri_keyword(0, "hello", 0);
+cleri_t * k_there = cleri_keyword(0, "there", 0);
+cleri_t * optional = cleri_optional(
     0,                  // gid, not used in this example
     k_there);           // optional element
-cleri_object_t * greet = cleri_sequence(
+cleri_t * greet = cleri_sequence(
     0,                  // gid, not used in this example
     2,                  // number of elements
     k_hello, optional); // elements
@@ -462,8 +462,8 @@ is possible to use `CLERI_THIS` which is a reference to itself.
 *Public members*
 - `cleri_olist_t * cleri_sequence_t.olist`: Elements. (readonly)
 
-#### `cleri_object_t * cleri_prio(uint32_t gid, size_t len, ...)`
-Create and return a new [object](#cleri_object_t) containing a prio element.
+#### `cleri_t * cleri_prio(uint32_t gid, size_t len, ...)`
+Create and return a new [object](#cleri_t) containing a prio element.
 
 Example:
 ```c
@@ -474,7 +474,7 @@ Example:
  *       element at the same position in the string as the prio element.
  *       This is why a forward reference cannot be used for this example.
  */
-cleri_object_t * prio = cleri_prio(
+cleri_t * prio = cleri_prio(
     0,                              // gid, not used in the example
     4,                              // number of elements
     cleri_keyword(0, "ni", 0),      // first element
@@ -509,18 +509,18 @@ at most `cleri_repeat_t.max`. An unlimited amount is allowed in case `cleri_repe
 is set to 0 (zero).
 
 *Public members*
-- `cleri_object_t * cleri_repeat_t.cl_obj`: Element to repeat. (readonly)
+- `cleri_t * cleri_repeat_t.cl_obj`: Element to repeat. (readonly)
 - `size_t cleri_repeat_t.min`: Minimum times an element is expected. (readonly)
 - `size_t cleri_repeat_t.max`: Maximum times an element is expected or 0 for unlimited. (readonly)
 
-#### `cleri_object_t * cleri_repeat(uint32_t gid, cleri_object_t * cl_obj, size_t min, size_t max)`
-Create and return a new [object](#cleri_object_t) containing a repeat element.
+#### `cleri_t * cleri_repeat(uint32_t gid, cleri_t * cl_obj, size_t min, size_t max)`
+Create and return a new [object](#cleri_t) containing a repeat element.
 Argument `max` should be greater or equal to `min` or 0.
 
 Example:
 ```c
 /* define grammar */
-cleri_object_t * repeat = cleri_repeat(
+cleri_t * repeat = cleri_repeat(
     0,                          // gid, not used in this example
     cleri_keyword(0, "ni", 0),  // repeated element
     0,                          // min n times
@@ -542,22 +542,22 @@ cleri_grammar_free(grammar);
 List element. Like [repeat](#cleri_repeat_t) but with an delimiter.
 
 *Public members*
-- `cleri_object_t * cleri_list_t.cl_obj`: Element to repeat. (readonly)
-- `cleri_object_t * cleri_list_t.delimiter`: Delimiter between repeating element. (readonly)
+- `cleri_t * cleri_list_t.cl_obj`: Element to repeat. (readonly)
+- `cleri_t * cleri_list_t.delimiter`: Delimiter between repeating element. (readonly)
 - `size_t cleri_list_t.min`: Minimum times an element is expected. (readonly)
 - `size_t cleri_list_t.max`: Maximum times an element is expected or 0 for unlimited. (readonly)
 - `int cleri_list_t.opt_closing`: Allow or disallow ending with a delimiter.
 
 
-#### `cleri_object_t * cleri_list(uint32_t gid, cleri_object_t * cl_obj, cleri_object_t * delimiter, size_t min, size_t max, int opt_closing)`
-Create and return a new [object](#cleri_object_t) containing a list element.
+#### `cleri_t * cleri_list(uint32_t gid, cleri_t * cl_obj, cleri_t * delimiter, size_t min, size_t max, int opt_closing)`
+Create and return a new [object](#cleri_t) containing a list element.
 Argument `max` should be greater or equal to `min` or 0. Argument `opt_closing`
 can be 1 (TRUE) to allow or 0 (FALSE) to disallow a list to end with a delimiter.
 
 Example:
 ```c
 /* define grammar */
-cleri_object_t * list = cleri_list(
+cleri_t * list = cleri_list(
     0,                          // gid, not used in this example
     cleri_keyword(0, "ni", 0),  // repeated element
     cleri_token(0, ","),        // delimiter element
@@ -585,18 +585,18 @@ characters and is usually used to match operators like `+`, `-`, `*` etc.
 - `const char * cleri_token_t.token`: Token string. (readonly)
 - `size_t cleri_token_t.len`: Length of the token string. (readonly)
 
-#### `cleri_object_t * cleri_token(uint32_t gid, const char * token)`
-Create and return a new [object](#cleri_object_t) containing a token element.
+#### `cleri_t * cleri_token(uint32_t gid, const char * token)`
+Create and return a new [object](#cleri_t) containing a token element.
 
 Example:
 ```c
 /* define grammar */
-cleri_object_t * token = cleri_token(
+cleri_t * token = cleri_token(
     0,          // gid, not used in this example
     "-");       // token string (dash)
 
-cleri_object_t * ni =  cleri_keyword(0, "ni", 0);
-cleri_object_t * list = cleri_list(0, ni, token, 0, 0, 0);
+cleri_t * ni =  cleri_keyword(0, "ni", 0);
+cleri_t * list = cleri_list(0, ni, token, 0, 0, 0);
 
 /* create grammar */
 cleri_grammar_t * grammar = cleri_grammar(list, NULL);
@@ -613,8 +613,8 @@ cleri_grammar_free(grammar);
 ### `cleri_tokens_t`
 Tokens element. Can be used to register multiple tokens at once.
 
-#### `cleri_object_t * cleri_tokens(uint32_t gid, const char * tokens)`
-Create and return a new [object](#cleri_object_t) containing a tokens element.
+#### `cleri_t * cleri_tokens(uint32_t gid, const char * tokens)`
+Create and return a new [object](#cleri_t) containing a tokens element.
 Argument `tokens` must be a string with tokens seperated by spaces. If given
 tokens are different in size the parser will try to match the longest tokens
 first.
@@ -622,12 +622,12 @@ first.
 Example:
 ```c
 /* define grammar */
-cleri_object_t * tokens = cleri_tokens(
+cleri_t * tokens = cleri_tokens(
     0,              // gid, not used in this example
     "+ - -=");      // tokens string '+', '-' and '-='
 
-cleri_object_t * ni =  cleri_keyword(0, "ni", 0);
-cleri_object_t * list = cleri_list(0, ni, tokens, 0, 0, 0);
+cleri_t * ni =  cleri_keyword(0, "ni", 0);
+cleri_t * list = cleri_list(0, ni, tokens, 0, 0, 0);
 
 /* create grammar */
 cleri_grammar_t * grammar = cleri_grammar(list, NULL);
@@ -653,12 +653,12 @@ reference.
 >```
 >Use [prio](#cleri_prio_t) if such recursive constrution is required.
 
-#### `cleri_object_t * cleri_ref(void)`
-Create and return a new [object](#cleri_object_t) as reference element.
+#### `cleri_t * cleri_ref(void)`
+Create and return a new [object](#cleri_t) as reference element.
 Once the reference is created, it can be used as element in you grammar. Do not
 forget to actualle set the reference using `cleri_ref_set()`.
 
-#### `void cleri_ref_set(cleri_object_t * ref, cleri_object_t * cl_obj)`
+#### `void cleri_ref_set(cleri_t * ref, cleri_t * cl_obj)`
 Set a reference. For every created forward reference, this function must be
 called exactly once. Argument `ref` must be created with `cleri_ref()`. Argument
 `cl_obj` cannot be used outside the reference. Since the reference becomes
@@ -667,8 +667,8 @@ the `cl_obj`, it is the reference you should use.
 Example
 ```c
 /* define grammar */
-cleri_object_t * ref = cleri_ref();
-cleri_object_t * choice = cleri_choice(
+cleri_t * ref = cleri_ref();
+cleri_t * choice = cleri_choice(
     0, 0, 2, cleri_keyword(0, "ni", 0), ref);
 
 cleri_ref_set(ref, cleri_sequence(
@@ -691,12 +691,12 @@ cleri_grammar_free(grammar);
 ```
 
 ### `cleri_dup_t`
-Duplicate an object. The type is an extension to `cleri_object_t`.
+Duplicate an object. The type is an extension to `cleri_t`.
 
-#### `cleri_object_t * cleri_dup(uint32_t gid, cleri_object_t * cl_obj)`
+#### `cleri_t * cleri_dup(uint32_t gid, cleri_t * cl_obj)`
 Duplicate a libcleri object with a different gid but using the same element.
 
->Note: Only the object is duplicated. The element (`cleri_object_via_t via`)
+>Note: Only the object is duplicated. The element (`cleri_via_t via`)
 >is a pointer to the original object.
 
 The following [pyleri](https://github.com/transceptor-technology/pyleri) code

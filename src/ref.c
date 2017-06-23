@@ -13,14 +13,14 @@
 #include <assert.h>
 #include <cleri/ref.h>
 
-static void REF_free(cleri_object_t * cl_object);
+static void REF_free(cleri_t * cl_object);
 
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_object_t * cleri_ref(void)
+cleri_t * cleri_ref(void)
 {
-    cleri_object_t * cl_object = cleri_object_new(
+    cleri_t * cl_object = cleri_new(
             0,
             CLERI_TP_REF,
             &REF_free,
@@ -32,7 +32,7 @@ cleri_object_t * cleri_ref(void)
 /*
  * Both ref and cl_obj are not allowed to be NULL.
  */
-void cleri_ref_set(cleri_object_t * ref, cleri_object_t * cl_obj)
+void cleri_ref_set(cleri_t * ref, cleri_t * cl_obj)
 {
     /* cl_obj should have no other refs */
     assert (ref != NULL &&
@@ -55,7 +55,7 @@ void cleri_ref_set(cleri_object_t * ref, cleri_object_t * cl_obj)
 /*
  * Destroy ref object. (only used when ref is not set)
  */
-static void REF_free(cleri_object_t * cl_object)
+static void REF_free(cleri_t * cl_object)
 {
     /* nothing todo */
 }

@@ -14,20 +14,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static void SEQUENCE_free(cleri_object_t * cl_object);
+static void SEQUENCE_free(cleri_t * cl_object);
 static cleri_node_t * SEQUENCE_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule);
 
 /*
  * Returns NULL and in case an error has occurred.
  */
-cleri_object_t * cleri_sequence(uint32_t gid, size_t len, ...)
+cleri_t * cleri_sequence(uint32_t gid, size_t len, ...)
 {
     va_list ap;
-    cleri_object_t * cl_object = cleri_object_new(
+    cleri_t * cl_object = cleri_new(
             gid,
             CLERI_TP_SEQUENCE,
             &SEQUENCE_free,
@@ -51,7 +51,7 @@ cleri_object_t * cleri_sequence(uint32_t gid, size_t len, ...)
 
     if (cl_object->via.sequence->olist == NULL)
     {
-        cleri_object_free(cl_object);
+        cleri_free(cl_object);
         return NULL;
     }
 
@@ -60,10 +60,10 @@ cleri_object_t * cleri_sequence(uint32_t gid, size_t len, ...)
     {
         if (cleri__olist_append(
                 cl_object->via.sequence->olist,
-                va_arg(ap, cleri_object_t *)))
+                va_arg(ap, cleri_t *)))
         {
             cleri__olist_cancel(cl_object->via.sequence->olist);
-            cleri_object_free(cl_object);
+            cleri_free(cl_object);
             cl_object = NULL;
             break;
         }
@@ -76,7 +76,7 @@ cleri_object_t * cleri_sequence(uint32_t gid, size_t len, ...)
 /*
  * Destroy sequence object.
  */
-static void SEQUENCE_free(cleri_object_t * cl_object)
+static void SEQUENCE_free(cleri_t * cl_object)
 {
     cleri__olist_free(cl_object->via.sequence->olist);
     free(cl_object->via.sequence);
@@ -88,7 +88,7 @@ static void SEQUENCE_free(cleri_object_t * cl_object)
 static cleri_node_t * SEQUENCE_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         cleri_rule_store_t * rule)
 {
     cleri_olist_t * olist;

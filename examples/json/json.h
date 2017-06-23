@@ -10,7 +10,7 @@
 #ifndef CLERI_EXPORT_JSON_H_
 #define CLERI_EXPORT_JSON_H_
 
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 cleri_grammar_t * compile_grammar(void);
 

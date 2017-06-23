@@ -16,13 +16,13 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <cleri/olist.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 #define CLERI__EXP_MODE_OPTIONAL 0
 #define CLERI__EXP_MODE_REQUIRED 1
 
 /* typedefs */
-typedef struct cleri_object_s cleri_object_t;
+typedef struct cleri_s cleri_t;
 typedef struct cleri_olist_s cleri_olist_t;
 typedef struct cleri_expecting_modes_s cleri_exp_modes_t;
 typedef struct cleri_expecting_s cleri_expecting_t;
@@ -31,7 +31,7 @@ typedef struct cleri_expecting_s cleri_expecting_t;
 cleri_expecting_t * cleri__expecting_new(const char * str);
 int cleri__expecting_update(
         cleri_expecting_t * expecting,
-        cleri_object_t * cl_obj,
+        cleri_t * cl_obj,
         const char * str);
 int cleri__expecting_set_mode(
         cleri_expecting_t * expecting,

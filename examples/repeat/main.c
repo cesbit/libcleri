@@ -1,12 +1,12 @@
 #include <stdio.h>
-#include <cleri/object.h>
+#include <cleri/cleri.h>
 
 const char * TestRepeat = "ni ni ni ni ni";
 
 int main(void)
 {
     /* define grammar */
-    cleri_object_t * repeat = cleri_repeat(
+    cleri_t * repeat = cleri_repeat(
         0,                          // gid, not used in this example
         cleri_keyword(0, "ni", 0),  // repeated element
         0,                          // min n times
@@ -17,7 +17,7 @@ int main(void)
 
     /* parse some test string */
     cleri_parse_t * pr = cleri_parse(grammar, TestRepeat);
-    printf("Test '%s': %s\n", TestRepeat, pr->is_valid ? "true" : "false");
+    printf("Test: %s, '%s'\n", pr->is_valid ? "true" : "false", TestRepeat);
 
     /* cleanup */
     cleri_parse_free(pr);
