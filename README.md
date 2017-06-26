@@ -144,8 +144,8 @@ will have set the GID be default. (readonly)
 #### `cleri_t * cleri_new(uint32_t gid, cleri_tp tp, cleri_free_object_t free_object, cleri_parse_object_t parse_object)`
 Create and return a new cleri object. A unique gid is not required but can help
 you with identifiying the element in a [parse result](#cleri_parse_t). As a rule
-you should assign 0 in case no specific. This function should only be used in case
-you want to create your own custom element.
+you should assign 0 in case no specific gid is required. This function should only
+be used in case you want to create your own custom element.
 
 #### `void cleri_incref(cleri_t * cl_object)`
 Increment the reference counter for a cleri object. Should only be used in case you
