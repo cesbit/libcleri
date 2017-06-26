@@ -711,5 +711,5 @@ elem = Sequence(obj)
 ```
 
 ### Miscellaneous functions
-#### `const char * siridb_version(void)`
-Returns the version of libsiridb.
+#### `const char * cleri_version(void)`
+Returns the version of libcleri.
