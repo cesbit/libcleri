@@ -143,9 +143,9 @@ will have set the GID be default. (readonly)
 
 #### `cleri_t * cleri_new(uint32_t gid, cleri_tp tp, cleri_free_object_t free_object, cleri_parse_object_t parse_object)`
 Create and return a new cleri object. A unique gid is not required but can help
-you wih identifiying the element in a [parse result](#cleri_parse_t). As a rule
-you should assign 0 in case no specific  This function should only be used in case
-you want to create your own custom element.
+you with identifiying the element in a [parse result](#cleri_parse_t). As a rule
+you should assign 0 in case no specific gid is required. This function should only
+be used in case you want to create your own custom element.
 
 #### `void cleri_incref(cleri_t * cl_object)`
 Increment the reference counter for a cleri object. Should only be used in case you
@@ -158,7 +158,7 @@ successfully been added to another element or grammar. Should only be used in
 case you want to write your own custom element.
 
 #### `int cleri_free(cleri_t * cl_object)`
-Decrement referenct counter for a cleri object. When the no more references are
+Decrement reference counter for a cleri object. When there are no more references
 left the object will be destroyed. Use this function to cleanup after errors
 have occurred. Do not use this function after the element has successfully been
 added to another element or grammar.
@@ -202,7 +202,7 @@ cleri_grammar_t * compile_grammar(void)
 >memory allocation errors during the grammar creation are unlikely to occur.
 >If NULL is parsed as an argument instead of an element, then the function
 >to which the argument is parsed to, will return NULL. Following this
->chain the final grammar returns NULL in case somewhere an error has occurred.
+>chain the final grammar returns NULL in case an error has occurred somewhere.
 >In this case you should usually abort the program.
 
 ### `cleri_grammar_t`
@@ -249,7 +249,7 @@ Can be used to reset the expect list to start. Usually you are not required to
 use this function since the expect list is already at the start position.
 
 ### `cleri_node_t`
-Node obeject. A parse result has a parse tree which consists of nodes. Each node
+Node object. A parse result has a parse tree which consists of nodes. Each node
 may have children.
 
 *Public members*
@@ -290,7 +290,7 @@ expected elements in a parse result.
 
 Example looping over `cleri_parse_t.expect`:
 ```c
-/* we asume having a pr (cleri_parse_t*)
+/* we assume having a pr (cleri_parse_t*)
  *
  * Notes:
  *    pr->expect is NULL if nothing is expected and it is save to
@@ -362,7 +362,7 @@ Choice element. The parser must choose one of the child elements.
 #### `cleri_t * cleri_choice(uint32_t gid, int most_greedy, size_t len, ...)`
 Create and return a new [object](#cleri_t) containing a choice element.
 Argument `most_greedy` can be set to 1 in which case the parser will select the
-most greedy match. When 0 the parser will select the first match.
+most greedy match. When 0, the parser will select the first match.
 
 Example:
 ```c
@@ -539,7 +539,7 @@ cleri_grammar_free(grammar);
 ```
 
 ### `cleri_list_t`
-List element. Like [repeat](#cleri_repeat_t) but with an delimiter.
+List element. Like [repeat](#cleri_repeat_t) but with a delimiter.
 
 *Public members*
 - `cleri_t * cleri_list_t.cl_obj`: Element to repeat. (readonly)
@@ -616,7 +616,7 @@ Tokens element. Can be used to register multiple tokens at once.
 #### `cleri_t * cleri_tokens(uint32_t gid, const char * tokens)`
 Create and return a new [object](#cleri_t) containing a tokens element.
 Argument `tokens` must be a string with tokens seperated by spaces. If given
-tokens are different in size the parser will try to match the longest tokens
+tokens are different in size, the parser will try to match the longest tokens
 first.
 
 Example:
@@ -651,12 +651,12 @@ reference.
 >```c
 >cleri_ref_set(ref, cleri_optional(0, ref)); // DON'T DO THIS
 >```
->Use [prio](#cleri_prio_t) if such recursive constrution is required.
+>Use [prio](#cleri_prio_t) if such recursive construction is required.
 
 #### `cleri_t * cleri_ref(void)`
 Create and return a new [object](#cleri_t) as reference element.
 Once the reference is created, it can be used as element in you grammar. Do not
-forget to actualle set the reference using `cleri_ref_set()`.
+forget to actually set the reference using `cleri_ref_set()`.
 
 #### `void cleri_ref_set(cleri_t * ref, cleri_t * cl_obj)`
 Set a reference. For every created forward reference, this function must be
