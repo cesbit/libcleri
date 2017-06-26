@@ -111,8 +111,8 @@ Cleri type is the base object for each element.
 *Public members*
 - `uint32_t gid`: Global Identifier for the element. This GID is not required and
 as a rule it should be set to 0 if not used. You can use the GID for identifiying
-an element in a parse result. When exporting a Pyleri grammar, each named element
-will have set the GID be default. (readonly)
+an element in a parse result. When exporting a Pyleri grammar, each *named* element 
+automatically gets a unique GID assigned. (readonly)
 - `cleri_tp tp`: Type for the cleri object. (readonly)
     - `CLERI_TP_SEQUENCE`
     - `CLERI_TP_OPTIONAL`
