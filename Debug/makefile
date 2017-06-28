@@ -20,22 +20,31 @@ endif
 
 -include ../makefile.defs
 
+ifeq ($(OS),Darwin)
+FN := "libcleri.dylib"
+INSTALL_PATH = /usr/local
+else
+FN := "libcleri.so"
+INSTALL_PATH = /usr
+endif
+
+
 # Add inputs and outputs from these tool invocations to the build variables
 
 # All Target
-all: libcleri.so
+all: libcleri
 
 # Tool invocations
-libcleri.so: $(OBJS) $(USER_OBJS)
+libcleri: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	gcc -shared -o "libcleri.so" $(OBJS) $(USER_OBJS) $(LIBS) $(LDFLAGS)
+	gcc -shared -o $(FN) $(OBJS) $(USER_OBJS) $(LIBS) $(LDFLAGS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(LIBRARIES)$(OBJS)$(C_DEPS) libcleri.so
+	-$(RM) $(LIBRARIES)$(OBJS)$(C_DEPS) $(FN)
 	-@echo ' '
 
 .PHONY: all clean dependents
