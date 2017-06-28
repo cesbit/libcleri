@@ -19,7 +19,7 @@ typedef struct cleri_s cleri_t;
 typedef struct cleri_olist_s cleri_olist_t;
 typedef struct cleri_olist_s cleri_olist_t;
 
-/* pricate functions */
+/* private functions */
 cleri_olist_t * cleri__olist_new(void);
 int cleri__olist_append(cleri_olist_t * olist, cleri_t * cl_object);
 int cleri__olist_append_nref(cleri_olist_t * olist, cleri_t * cl_object);

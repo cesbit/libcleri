@@ -27,7 +27,7 @@ typedef struct cleri_node_s cleri_node_t;
 #define cleri_node_has_children(__node) \
     (__node->children != NULL && __node->children->node != NULL)
 
-/* pricate functions */
+/* private functions */
 cleri_node_t * cleri__node_new(cleri_t * cl_obj, const char * str, size_t len);
 void cleri__node_free(cleri_node_t * node);
 
