@@ -20,12 +20,13 @@ endif
 
 -include ../makefile.defs
 
+OS := $(shell uname)
 ifeq ($(OS),Darwin)
 FN := libcleri.dylib
-INSTALL_PATH = /usr/local
+INSTALL_PATH := /usr/local
 else
 FN := libcleri.so
-INSTALL_PATH = /usr
+INSTALL_PATH := /usr
 endif
 
 # Add inputs and outputs from these tool invocations to the build variables
