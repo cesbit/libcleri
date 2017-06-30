@@ -24,8 +24,8 @@ typedef struct cleri_list_s cleri_list_t;
 /* public functions */
 cleri_t * cleri_list(
         uint32_t gid,
-		cleri_t * cl_obj,
-		cleri_t * delimiter,
+        cleri_t * cl_obj,
+        cleri_t * delimiter,
         size_t min,
         size_t max,
         int opt_closing);
