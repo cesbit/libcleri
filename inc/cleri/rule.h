@@ -47,7 +47,7 @@ struct cleri_rule_tested_s
 {
     const char * str;
     cleri_node_t * node;
-    struct cleri_rule_tested_s * next;
+    cleri_rule_tested_t * next;
 } ;
 
 struct cleri_rule_store_s

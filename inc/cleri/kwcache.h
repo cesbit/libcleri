@@ -30,7 +30,7 @@ struct cleri_kwcache_s
 {
     size_t len;
     const char * str;
-    struct cleri_kwcache_s * next;
+    cleri_kwcache_t * next;
 };
 
 #endif /* CLERI_KWCACHE_H_ */
