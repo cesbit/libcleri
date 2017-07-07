@@ -27,7 +27,7 @@ int cleri__children_add(cleri_children_t * children, cleri_node_t * node);
 struct cleri_children_s
 {
     cleri_node_t * node;
-    struct cleri_children_s * next;
+    cleri_children_t * next;
 };
 
 #endif /* CLERI_CHILDREN_H_ */
