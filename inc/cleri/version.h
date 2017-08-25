@@ -9,7 +9,7 @@
 
 #define LIBCLERI_VERSION_MAJOR 0
 #define LIBCLERI_VERSION_MINOR 9
-#define LIBCLERI_VERSION_PATCH 1
+#define LIBCLERI_VERSION_PATCH 2
 
 #define LIBCLERI_STRINGIFY(num) #num
 #define LIBCLERI_VERSION_STR(major,minor,patch)    \
@@ -22,6 +22,15 @@
         LIBCLERI_VERSION_MINOR,                    \
         LIBCLERI_VERSION_PATCH)
 
+/* public funtion */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 const char * cleri_version(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CLERI_VERSION_H_ */

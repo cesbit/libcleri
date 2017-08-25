@@ -52,7 +52,6 @@ typedef struct cleri_ref_s cleri_ref_t;
 typedef struct cleri_s cleri_t;
 typedef struct cleri_dup_s cleri_dup_t;
 
-typedef enum cleri_e cleri_tp;
 typedef union cleri_u cleri_via_t;
 
 typedef void (*cleri_free_object_t)(cleri_t *);
@@ -63,7 +62,7 @@ typedef cleri_node_t * (*cleri_parse_object_t)(
         cleri_rule_store_t *);
 
 /* enums */
-enum cleri_e {
+typedef enum cleri_e {
     CLERI_TP_SEQUENCE,
     CLERI_TP_OPTIONAL,
     CLERI_TP_CHOICE,
@@ -79,7 +78,7 @@ enum cleri_e {
     CLERI_TP_REGEX,
     CLERI_TP_REF,
     CLERI_TP_END_OF_STATEMENT
-};
+} cleri_tp;
 
 /* unions */
 union cleri_u
@@ -100,6 +99,10 @@ union cleri_u
 };
 
 /* public functions */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 cleri_t * cleri_new(
         uint32_t gid,
         cleri_tp tp,
@@ -108,6 +111,10 @@ cleri_t * cleri_new(
 void cleri_incref(cleri_t * cl_object);
 void cleri_decref(cleri_t * cl_object);
 int cleri_free(cleri_t * cl_object);
+
+#ifdef __cplusplus
+}
+#endif
 
 /* fixed end of statement object */
 extern cleri_t * CLERI_END_OF_STATEMENT;

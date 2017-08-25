@@ -25,15 +25,14 @@ typedef struct cleri_node_s cleri_node_t;
 typedef struct cleri_rule_tested_s cleri_rule_tested_t;
 typedef struct cleri_rule_store_s cleri_rule_store_t;
 typedef struct cleri_rule_s cleri_rule_t;
-typedef enum cleri_rule_test_e cleri_rule_test_t;
 
 /* enums */
-enum cleri_rule_test_e
+typedef enum cleri_rule_test_e
 {
     CLERI_RULE_ERROR=-1,
     CLERI_RULE_FALSE,
     CLERI_RULE_TRUE
-};
+} cleri_rule_test_t;
 
 /* private functions */
 cleri_t * cleri__rule(uint32_t gid, cleri_t * cl_obj);

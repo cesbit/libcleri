@@ -22,6 +22,10 @@ typedef struct cleri_s cleri_t;
 typedef struct cleri_list_s cleri_list_t;
 
 /* public functions */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 cleri_t * cleri_list(
         uint32_t gid,
         cleri_t * cl_obj,
@@ -29,6 +33,10 @@ cleri_t * cleri_list(
         size_t min,
         size_t max,
         int opt_closing);
+
+#ifdef __cplusplus
+}
+#endif
 
 /* structs */
 struct cleri_list_s

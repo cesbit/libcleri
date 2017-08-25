@@ -25,7 +25,15 @@ typedef struct cleri_olist_s cleri_olist_t;
 typedef struct cleri_prio_s cleri_prio_t;
 
 /* public functions */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 cleri_t * cleri_prio(uint32_t gid, size_t len, ...);
+
+#ifdef __cplusplus
+}
+#endif
 
 /* structs */
 struct cleri_prio_s

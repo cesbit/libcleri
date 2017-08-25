@@ -23,8 +23,16 @@ typedef struct cleri_s cleri_t;
 typedef struct cleri_grammar_s cleri_grammar_t;
 
 /* public functions */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 cleri_grammar_t * cleri_grammar(cleri_t * start, const char * re_keywords);
 void cleri_grammar_free(cleri_grammar_t * grammar);
+
+#ifdef __cplusplus
+}
+#endif
 
 /* structs */
 struct cleri_grammar_s

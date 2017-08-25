@@ -31,9 +31,17 @@ typedef struct cleri_rule_store_s cleri_rule_store_t;
 typedef struct cleri_parse_s cleri_parse_t;
 
 /* public functions */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str);
 void cleri_parse_free(cleri_parse_t * pr);
 void cleri_parse_expect_start(cleri_parse_t * pr);
+
+#ifdef __cplusplus
+}
+#endif
 
 /* private functions */
 cleri_node_t * cleri__parse_walk(
