@@ -1,5 +1,5 @@
 # C Left-Right Parser (libcleri)
-Language parser for the C programming language. Initially created for [SiriDB](https://github.com/transceptor-technology/siridb-server).
+Language parser for the C/C++ programming language. Initially created for [SiriDB](https://github.com/transceptor-technology/siridb-server).
 
 ---------------------------------------
   * [Installation](#installation)
@@ -103,6 +103,40 @@ int main(void)
 }
 ```
 
+Although libcleri is written for C, it can be used with C++ too:
+```c++
+#include <iostream>
+#include <cleri/cleri.h>
+
+void test_str(cleri_grammar_t * grammar, const char * str)
+{
+    cleri_parse_t * pr = cleri_parse(grammar, str);
+    std::cout << "Test string " << str << ": " <<
+            (pr->is_valid ? "true" : "false") << std::endl;
+    cleri_parse_free(pr);
+}
+
+int main()
+{
+    /* define grammar */
+    cleri_t * k_hi = cleri_keyword(0, "hi", 0);
+    cleri_t * r_name = cleri_regex(0, "^(?:\"(?:[^\"]*)\")+");
+    cleri_t * start = cleri_sequence(0, 2, k_hi, r_name);
+
+    /* compile grammar */
+    cleri_grammar_t * my_grammar = cleri_grammar(start, NULL);
+
+    /* test some strings */
+    test_str(my_grammar, "hi \"Iris\"");  // true
+    test_str(my_grammar, "bye \"Iris\""); // false
+
+    /* cleanup grammar */
+    cleri_grammar_free(my_grammar);
+
+    return 0;
+}
+```
+
 ## API
 
 ### `cleri_t`
@@ -111,7 +145,7 @@ Cleri type is the base object for each element.
 *Public members*
 - `uint32_t gid`: Global Identifier for the element. This GID is not required and
 as a rule it should be set to 0 if not used. You can use the GID for identifiying
-an element in a parse result. When exporting a Pyleri grammar, each *named* element 
+an element in a parse result. When exporting a Pyleri grammar, each *named* element
 automatically gets a unique GID assigned. (readonly)
 - `cleri_tp tp`: Type for the cleri object. (readonly)
     - `CLERI_TP_SEQUENCE`
