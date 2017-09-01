@@ -80,7 +80,8 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
     }
 
     pr->is_valid = at_end;
-    pr->pos = (pr->is_valid) ? pr->tree->len : pr->expecting->str - pr->str;
+    pr->pos = (pr->is_valid) ?
+            pr->tree->len : (size_t) (pr->expecting->str - pr->str);
 
     if (!at_end && pr->expecting->required->cl_obj == NULL)
     {

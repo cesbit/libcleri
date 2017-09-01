@@ -1,3 +1,9 @@
+libcleri (0.9.3)
+
+  * Fixed compiler warnings.
+
+ -- Jeroen van der Heijden <jeroen@transceptor.technology>  01 Sep 2017
+
 libcleri (0.9.2)
 
   * Added __cplusplus macros for c++ compatibility.

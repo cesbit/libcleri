@@ -55,7 +55,7 @@ void cleri_ref_set(cleri_t * ref, cleri_t * cl_obj)
 /*
  * Destroy ref object. (only used when ref is not set)
  */
-static void REF_free(cleri_t * cl_object)
+static void REF_free(cleri_t * cl_object __attribute__((unused)))
 {
     /* nothing todo */
 }

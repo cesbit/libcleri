@@ -49,7 +49,7 @@ cleri_t * cleri_new(
 /*
  * Increment reference counter on cleri object.
  */
-inline void cleri_incref(cleri_t * cl_object)
+void cleri_incref(cleri_t * cl_object)
 {
     cl_object->ref++;
 }

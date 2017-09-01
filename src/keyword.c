@@ -68,7 +68,7 @@ static cleri_node_t * KEYWORD_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
-        cleri_rule_store_t * rule)
+        cleri_rule_store_t * rule __attribute__((unused)))
 {
     ssize_t match_len;
     cleri_node_t * node = NULL;
@@ -80,7 +80,7 @@ static cleri_node_t * KEYWORD_parse(
         return NULL;
     }
 
-    if (match_len == cl_obj->via.keyword->len &&
+    if (match_len == (ssize_t) cl_obj->via.keyword->len &&
        (
            strncmp(cl_obj->via.keyword->keyword, str, match_len) == 0 ||
            (

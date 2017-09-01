@@ -119,7 +119,7 @@ static cleri_node_t * RULE_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
-        cleri_rule_store_t * __rule)
+        cleri_rule_store_t * __rule __attribute__((unused)))
 {
     cleri_node_t * node;
     cleri_node_t * rnode;

@@ -70,7 +70,7 @@ static cleri_node_t * TOKEN_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
-        cleri_rule_store_t * rule)
+        cleri_rule_store_t * rule __attribute__((unused)))
 {
     cleri_node_t * node = NULL;
     const char * str = parent->str + parent->len;

@@ -115,7 +115,7 @@ static cleri_node_t *  REGEX_parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
-        cleri_rule_store_t * rule)
+        cleri_rule_store_t * rule __attribute__((unused)))
 {
     int pcre_exec_ret;
     int sub_str_vec[2];

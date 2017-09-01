@@ -6,7 +6,7 @@
 
  #include <cleri/version.h>
 
-inline const char * cleri_version(void)
+const char * cleri_version(void)
 {
     return LIBCLERI_VERSION;
 }
