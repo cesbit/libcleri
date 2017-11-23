@@ -2,7 +2,9 @@
 install:
 	@mkdir $(INSTALL_PATH)/include/cleri
 	@cp ../inc/cleri/*.h $(INSTALL_PATH)/include/cleri/
-	@cp $(FN) $(INSTALL_PATH)/lib/$(FN)
+	@cp $(FN) $(INSTALL_PATH)/lib/$(FN).$(VERSION)
+	@ln -s $(INSTALL_PATH)/lib/$(FN).$(VERSION) $(INSTALL_PATH)/lib/$(FN).$(MAJOR)
+	@ln -s $(INSTALL_PATH)/lib/$(FN).$(VERSION) $(INSTALL_PATH)/lib/$(FN)
 
 
 .PHONY: uninstall
@@ -10,4 +12,6 @@ uninstall:
 	@rm -f $(INSTALL_PATH)/include/cleri/*.h
 	@rmdir $(INSTALL_PATH)/include/cleri/
 	@rm -f $(INSTALL_PATH)/lib/$(FN)
+	@rm -f $(INSTALL_PATH)/lib/$(FN).$(MAJOR)
+	@rm -f $(INSTALL_PATH)/lib/$(FN).$(VERSION)
 
