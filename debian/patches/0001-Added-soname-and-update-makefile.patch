@@ -1,0 +1,72 @@
+From 19b37b9ee5054f734590c218e3062ed95302311a Mon Sep 17 00:00:00 2001
+From: Jeroen van der Heijden <jeroen@transceptor.technology>
+Date: Thu, 23 Nov 2017 14:52:14 +0100
+Subject: [PATCH] Added soname and update makefile
+
+---
+ Debug/makefile      | 53 ---------------------------------
+ Debug/objects.mk    |  7 -----
+ Debug/sources.mk    | 17 -----------
+ Debug/src/subdir.mk | 86 -----------------------------------------------------
+ Debug/subdir.mk     |  8 -----
+ Release/makefile    |  3 +-
+ makefile.init       |  4 +++
+ makefile.targets    |  6 +++-
+ 8 files changed, 11 insertions(+), 173 deletions(-)
+ delete mode 100644 Debug/makefile
+ delete mode 100644 Debug/objects.mk
+ delete mode 100644 Debug/sources.mk
+ delete mode 100644 Debug/src/subdir.mk
+ delete mode 100644 Debug/subdir.mk
+ create mode 100644 makefile.init
+
+diff --git a/Release/makefile b/Release/makefile
+index 1d7e418..b77879a 100644
+--- a/Release/makefile
++++ b/Release/makefile
+@@ -38,7 +38,8 @@ all: libcleri
+ libcleri: $(OBJS) $(USER_OBJS)
+ 	@echo 'Building target: $@'
+ 	@echo 'Invoking: Cross GCC Linker'
+-	gcc -shared -o $(FN) $(OBJS) $(USER_OBJS) $(LIBS) $(LDFLAGS)
++	gcc -shared -Wl,-soname,$(FN).$(MAJOR) -o $(FN) $(OBJS) $(USER_OBJS) $(LIBS) $(LDFLAGS)
++	@chmod -x $(FN)
+ 	@echo 'Finished building target: $@'
+ 	@echo ' '
+ 
+diff --git a/makefile.init b/makefile.init
+new file mode 100644
+index 0000000..d5cd768
+--- /dev/null
++++ b/makefile.init
+@@ -0,0 +1,4 @@
++MAJOR := 0
++MINOR := 9
++PATCH := 3
++VERSION := $(MAJOR).$(MINOR).$(PATCH)
+\ No newline at end of file
+diff --git a/makefile.targets b/makefile.targets
+index f0069fe..e0af2be 100644
+--- a/makefile.targets
++++ b/makefile.targets
+@@ -2,7 +2,9 @@
+ install:
+ 	@mkdir $(INSTALL_PATH)/include/cleri
+ 	@cp ../inc/cleri/*.h $(INSTALL_PATH)/include/cleri/
+-	@cp $(FN) $(INSTALL_PATH)/lib/$(FN)
++	@cp $(FN) $(INSTALL_PATH)/lib/$(FN).$(VERSION)
++	@ln -s $(INSTALL_PATH)/lib/$(FN).$(VERSION) $(INSTALL_PATH)/lib/$(FN).$(MAJOR)
++	@ln -s $(INSTALL_PATH)/lib/$(FN).$(VERSION) $(INSTALL_PATH)/lib/$(FN)
+ 
+ 
+ .PHONY: uninstall
+@@ -10,4 +12,6 @@ uninstall:
+ 	@rm -f $(INSTALL_PATH)/include/cleri/*.h
+ 	@rmdir $(INSTALL_PATH)/include/cleri/
+ 	@rm -f $(INSTALL_PATH)/lib/$(FN)
++	@rm -f $(INSTALL_PATH)/lib/$(FN).$(MAJOR)
++	@rm -f $(INSTALL_PATH)/lib/$(FN).$(VERSION)
+ 
+-- 
+2.15.0
+

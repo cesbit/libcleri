@@ -1,0 +1,2 @@
+0001-Added-soname-and-update-makefile.patch
+fix-makefiles-to-honor-CPPFLAGS.patch

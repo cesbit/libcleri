@@ -1,0 +1,2 @@
+#! /usr/bin/dh-exec
+usr/lib/${DEB_HOST_MULTIARCH}/libcleri.so.${SONAME} usr/lib/${DEB_HOST_MULTIARCH}/libcleri.so

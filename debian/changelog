@@ -1,0 +1,5 @@
+libcleri (0.9.3-1) UNRELEASED; urgency=medium
+
+  * Initial release. (Closes: #xxx)
+
+ -- Paul Gevers <elbrus@debian.org>  Fri, 24 Nov 2017 15:51:37 +0100
