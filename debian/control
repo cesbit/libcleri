@@ -18,8 +18,12 @@ Architecture: any
 Depends:
  ${misc:Depends},
  ${shlibs:Depends},
-Description: C Left-Right Parser
- Language parser for the C/C++.
+Description: language parser library
+ Libcleri is a powerful tool to build languages. From a built language,
+ libcleri can automatically create parse trees, which are data structures
+ representing how a grammar matches input. It also provides feedback in case
+ the input does not match the language. This can be useful for auto-completion,
+ suggestions or error handling.
 
 Package: libcleri-dev
 Section: libdevel
@@ -27,7 +31,11 @@ Architecture: any
 Depends:
  libcleri0 (= ${binary:Version}),
  ${misc:Depends},
-Description: C Left-Right Parser - development files
- Language parser for the C/C++.
+Description: language parser library - development files
+ Libcleri is a powerful tool to build languages. From a built language,
+ libcleri can automatically create parse trees, which are data structures
+ representing how a grammar matches input. It also provides feedback in case
+ the input does not match the language. This can be useful for auto-completion,
+ suggestions or error handling.
  .
  This package contains the development files.
