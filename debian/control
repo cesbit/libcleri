@@ -11,6 +11,7 @@ Build-Depends:
  dh-exec,
  libpcre3-dev,
 Homepage: http://siridb.net/
+Vcs-Browser: https://github.com/paulgevers/libcleri/tree/debian-packaging
 Standards-Version: 4.1.1
 
 Package: libcleri0
