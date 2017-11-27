@@ -34,11 +34,11 @@ Language parser for the C/C++ programming language. Initially created for [SiriD
 >
 >On Ubuntu:
 >
->`sudo apt install libpcre3-dev`
+>`sudo apt install libpcre2-dev`
 >
 >On MacOs:
 >
->`brew install pcre`
+>`brew install pcre2`
 >
 Install debug or release version, in this example we will install the release version.
 ```

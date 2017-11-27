@@ -12,7 +12,7 @@
 #ifndef CLERI_GRAMMAR_H_
 #define CLERI_GRAMMAR_H_
 
-#include <pcre.h>
+#include <pcre2.h>
 #include <cleri/cleri.h>
 #include <cleri/olist.h>
 
@@ -38,8 +38,7 @@ void cleri_grammar_free(cleri_grammar_t * grammar);
 struct cleri_grammar_s
 {
     cleri_t * start;
-    pcre * re_keywords;
-    pcre_extra * re_kw_extra;
+    pcre2_code * re_keywords;
 };
 
 #endif /* CLERI_GRAMMAR_H_ */

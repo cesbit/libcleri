@@ -60,8 +60,7 @@ struct cleri_parse_s
     cleri_node_t * tree;
     const cleri_olist_t * expect;
     cleri_expecting_t * expecting;
-    pcre * re_keywords;
-    pcre_extra * re_kw_extra;
+    pcre2_code * re_keywords;
     cleri_kwcache_t * kwcache;
 };
 
