@@ -1,6 +1,6 @@
 ibcleri (0.9.4)
 
-  * Replaced pcre with pcre2.
+  * Replaced pcre with pcre2. (issue #5)
 
  -- Jeroen van der Heijden <jeroen@transceptor.technology> 28 Nov 2017
 
