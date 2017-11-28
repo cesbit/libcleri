@@ -81,6 +81,20 @@ cleri_t * cleri_regex(uint32_t gid, const char * pattern)
         return NULL;
     }
 
+    cl_object->via.regex->match_data = pcre2_match_data_create_from_pattern(
+            cl_object->via.regex->regex,
+            NULL);
+
+    if (cl_object->via.regex->match_data == NULL)
+    {
+        pcre2_code_free(cl_object->via.regex->regex);
+        fprintf(stderr, "error: cannot create matsch data\n");
+        free(cl_object->via.regex);
+        free(cl_object);
+        return NULL;
+        return NULL;
+    }
+
     return cl_object;
 }
 
@@ -89,6 +103,7 @@ cleri_t * cleri_regex(uint32_t gid, const char * pattern)
  */
 static void REGEX_free(cleri_t * cl_object)
 {
+    pcre2_match_data_free(cl_object->via.regex->match_data);
     pcre2_code_free(cl_object->via.regex->regex);
     free(cl_object->via.regex);
 }
@@ -103,11 +118,7 @@ static cleri_node_t *  REGEX_parse(
         cleri_rule_store_t * rule __attribute__((unused)))
 {
     int pcre_exec_ret;
-    pcre2_match_data * match_data;
     PCRE2_SIZE * ovector;
-    match_data = pcre2_match_data_create_from_pattern(
-        cl_obj->via.regex->regex,
-        NULL);
     const char * str = parent->str + parent->len;
     cleri_node_t * node;
 
@@ -117,19 +128,18 @@ static cleri_node_t *  REGEX_parse(
             strlen(str),
             0,                     // start looking at this point
             0,                     // OPTIONS
-            match_data,
+            cl_obj->via.regex->match_data,
             NULL);
 
     if (pcre_exec_ret < 0)
     {
-        pcre2_match_data_free(match_data);
         if (cleri__expecting_update(pr->expecting, cl_obj, str) == -1)
         {
             pr->is_valid = -1; /* error occurred */
         }
         return NULL;
     }
-    ovector = pcre2_get_ovector_pointer(match_data);
+    ovector = pcre2_get_ovector_pointer(cl_obj->via.regex->match_data);
 
     /* since each regex pattern should start with ^ we now sub_str_vec[0]
      * should be 0. sub_str_vec[1] contains the end position in the sting
@@ -151,6 +161,5 @@ static cleri_node_t *  REGEX_parse(
         pr->is_valid = -1; /* error occurred */
     }
 
-    pcre2_match_data_free(match_data);
     return node;
 }

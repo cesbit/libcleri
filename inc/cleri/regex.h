@@ -38,6 +38,7 @@ cleri_t * cleri_regex(uint32_t gid, const char * pattern);
 struct cleri_regex_s
 {
     pcre2_code * regex;
+    pcre2_match_data * match_data;
 };
 
 #endif /* CLERI_REGEX_H_ */

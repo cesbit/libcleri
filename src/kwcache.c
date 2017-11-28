@@ -99,27 +99,25 @@ static void KWCACHE_kw_match(
         const char * str)
 {
     int pcre_exec_ret;
-    pcre2_match_data * match_data;
+
     PCRE2_SIZE * ovector;
 
-    match_data = pcre2_match_data_create_from_pattern(pr->re_keywords, NULL);
     pcre_exec_ret = pcre2_match(
                 pr->re_keywords,
                 (PCRE2_SPTR8) str,
                 strlen(str),
                 0,                     // start looking at this point
                 0,                     // OPTIONS
-                match_data,
+                pr->match_data,
                 NULL);
 
     if (pcre_exec_ret < 0)
     {
-        pcre2_match_data_free(match_data);
         return;
     }
 
-    ovector = pcre2_get_ovector_pointer(match_data);
+    ovector = pcre2_get_ovector_pointer(pr->match_data);
     kwcache->len = ovector[1];
 
-    pcre2_match_data_free(match_data);
+
 }

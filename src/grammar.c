@@ -66,6 +66,17 @@ cleri_grammar_t * cleri_grammar(cleri_t * start, const char * re_keywords)
         return NULL;
     }
 
+    grammar->match_data = \
+        pcre2_match_data_create_from_pattern(grammar->re_keywords, NULL);
+
+    if (grammar->match_data == NULL)
+    {
+        pcre2_code_free(grammar->re_keywords);
+        fprintf(stderr, "error: cannot create matsch data\n");
+        free(grammar);
+        return NULL;
+    }
+
     /* bind root element and increment the reference counter */
     grammar->start = start;
     cleri_incref(start);
@@ -75,6 +86,7 @@ cleri_grammar_t * cleri_grammar(cleri_t * start, const char * re_keywords)
 
 void cleri_grammar_free(cleri_grammar_t * grammar)
 {
+    pcre2_match_data_free(grammar->match_data);
     pcre2_code_free(grammar->re_keywords);
     cleri_free(grammar->start);
     free(grammar);

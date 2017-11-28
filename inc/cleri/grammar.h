@@ -39,6 +39,7 @@ struct cleri_grammar_s
 {
     cleri_t * start;
     pcre2_code * re_keywords;
+    pcre2_match_data * match_data;
 };
 
 #endif /* CLERI_GRAMMAR_H_ */

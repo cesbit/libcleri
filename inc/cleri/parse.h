@@ -61,6 +61,7 @@ struct cleri_parse_s
     const cleri_olist_t * expect;
     cleri_expecting_t * expecting;
     pcre2_code * re_keywords;
+    pcre2_match_data * match_data;
     cleri_kwcache_t * kwcache;
 };
 
