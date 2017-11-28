@@ -24,9 +24,11 @@ OS := $(shell uname)
 ifeq ($(OS),Darwin)
 FN := libcleri.dylib
 INSTALL_PATH := /usr/local
+SO_NAME := install_name
 else
 FN := libcleri.so
 INSTALL_PATH := /usr
+SO_NAME := soname
 endif
 
 # Add inputs and outputs from these tool invocations to the build variables
@@ -38,7 +40,7 @@ all: libcleri
 libcleri: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	gcc -shared -Wl,-soname,$(FN).$(MAJOR) -o $(FN) $(OBJS) $(USER_OBJS) $(LIBS) $(LDFLAGS)
+	gcc -shared -Wl,-$(SO_NAME),$(FN).$(MAJOR) -o $(FN) $(OBJS) $(USER_OBJS) $(LIBS) $(LDFLAGS)
 	@chmod -x $(FN)
 	@echo 'Finished building target: $@'
 	@echo ' '

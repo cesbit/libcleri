@@ -40,7 +40,7 @@ Language parser for the C/C++ programming language. Initially created for [SiriD
 >
 >`brew install pcre2`
 >
-Install debug or release version, in this example we will install the release version.
+Install the release version.
 ```
 $ cd Release
 ```
