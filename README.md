@@ -30,7 +30,7 @@ Language parser for the C/C++ programming language. Initially created for [SiriD
 ---------------------------------------
 
 ## Installation
->Note: libcleri requires [pcre](http://www.pcre.org/)
+>Note: libcleri requires [pcre2](http://www.pcre.org/)
 >
 >On Ubuntu:
 >
