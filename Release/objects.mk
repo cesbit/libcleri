@@ -4,4 +4,4 @@
 
 USER_OBJS :=
 
-LIBS := -lpcre
+LIBS := -lpcre2-8

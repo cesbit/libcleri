@@ -49,7 +49,7 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
     }
 
     pr->re_keywords = grammar->re_keywords;
-    pr->re_kw_extra = grammar->re_kw_extra;
+    pr->match_data = grammar->match_data;
 
     /* do the actual parsing */
     cleri__parse_walk(

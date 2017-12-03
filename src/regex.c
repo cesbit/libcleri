@@ -35,8 +35,8 @@ static cleri_node_t *  REGEX_parse(
 cleri_t * cleri_regex(uint32_t gid, const char * pattern)
 {
     cleri_t * cl_object;
-    const char * pcre_error_str;
-    int pcre_error_offset;
+    int pcre_error_num;
+    PCRE2_SIZE pcre_error_offset;
 
     assert (pattern[0] == '^');
 
@@ -59,39 +59,39 @@ cleri_t * cleri_regex(uint32_t gid, const char * pattern)
         return NULL;
     }
 
-    cl_object->via.regex->regex = pcre_compile(
-            pattern,
+    cl_object->via.regex->regex = pcre2_compile(
+            (PCRE2_SPTR8) pattern,
+            PCRE2_ZERO_TERMINATED,
             0,
-            &pcre_error_str,
+            &pcre_error_num,
             &pcre_error_offset,
             NULL);
 
     if(cl_object->via.regex->regex == NULL)
     {
+        PCRE2_UCHAR buffer[256];
+        pcre2_get_error_message(pcre_error_num, buffer, sizeof(buffer));
+
         fprintf(stderr,
                 "error: cannot compile '%s' (%s)\n",
                 pattern,
-                pcre_error_str);
+                buffer);
         free(cl_object->via.regex);
         free(cl_object);
         return NULL;
     }
 
-    cl_object->via.regex->regex_extra =
-            pcre_study(cl_object->via.regex->regex, 0, &pcre_error_str);
+    cl_object->via.regex->match_data = pcre2_match_data_create_from_pattern(
+            cl_object->via.regex->regex,
+            NULL);
 
-    /* pcre_study() returns NULL for both errors and when it can not
-     * optimize the regex.  The last argument is how one checks for
-     * errors (it is NULL if everything works, and points to an error
-     * string otherwise. */
-    if(pcre_error_str != NULL)
+    if (cl_object->via.regex->match_data == NULL)
     {
-        fprintf(stderr,
-                "error: cannot compile '%s' (%s)\n",
-                pattern,
-                pcre_error_str);
-        REGEX_free(cl_object);
+        pcre2_code_free(cl_object->via.regex->regex);
+        fprintf(stderr, "error: cannot create matsch data\n");
+        free(cl_object->via.regex);
         free(cl_object);
+        return NULL;
         return NULL;
     }
 
@@ -103,8 +103,8 @@ cleri_t * cleri_regex(uint32_t gid, const char * pattern)
  */
 static void REGEX_free(cleri_t * cl_object)
 {
-    free(cl_object->via.regex->regex);
-    free(cl_object->via.regex->regex_extra);
+    pcre2_match_data_free(cl_object->via.regex->match_data);
+    pcre2_code_free(cl_object->via.regex->regex);
     free(cl_object->via.regex);
 }
 
@@ -118,19 +118,19 @@ static cleri_node_t *  REGEX_parse(
         cleri_rule_store_t * rule __attribute__((unused)))
 {
     int pcre_exec_ret;
-    int sub_str_vec[2];
+    PCRE2_SIZE * ovector;
     const char * str = parent->str + parent->len;
     cleri_node_t * node;
 
-    pcre_exec_ret = pcre_exec(
+    pcre_exec_ret = pcre2_match(
             cl_obj->via.regex->regex,
-            cl_obj->via.regex->regex_extra,
-            str,
+            (PCRE2_SPTR8) str,
             strlen(str),
             0,                     // start looking at this point
             0,                     // OPTIONS
-            sub_str_vec,
-            2);                    // length of sub_str_vec
+            cl_obj->via.regex->match_data,
+            NULL);
+
     if (pcre_exec_ret < 0)
     {
         if (cleri__expecting_update(pr->expecting, cl_obj, str) == -1)
@@ -139,10 +139,12 @@ static cleri_node_t *  REGEX_parse(
         }
         return NULL;
     }
+    ovector = pcre2_get_ovector_pointer(cl_obj->via.regex->match_data);
+
     /* since each regex pattern should start with ^ we now sub_str_vec[0]
      * should be 0. sub_str_vec[1] contains the end position in the sting
      */
-    if ((node = cleri__node_new(cl_obj, str, (size_t) sub_str_vec[1])) != NULL)
+    if ((node = cleri__node_new(cl_obj, str, (size_t) ovector[1])) != NULL)
     {
         parent->len += node->len;
         if (cleri__children_add(parent->children, node))
@@ -158,5 +160,6 @@ static cleri_node_t *  REGEX_parse(
     {
         pr->is_valid = -1; /* error occurred */
     }
+
     return node;
 }

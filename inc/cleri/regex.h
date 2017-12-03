@@ -12,7 +12,9 @@
 #ifndef CLERI_REGEX_H_
 #define CLERI_REGEX_H_
 
-#include <pcre.h>
+#define PCRE2_CODE_UNIT_WIDTH 8
+
+#include <pcre2.h>
 #include <stddef.h>
 #include <inttypes.h>
 #include <cleri/cleri.h>
@@ -35,8 +37,8 @@ cleri_t * cleri_regex(uint32_t gid, const char * pattern);
 /* structs */
 struct cleri_regex_s
 {
-    pcre * regex;
-    pcre_extra * regex_extra;
+    pcre2_code * regex;
+    pcre2_match_data * match_data;
 };
 
 #endif /* CLERI_REGEX_H_ */

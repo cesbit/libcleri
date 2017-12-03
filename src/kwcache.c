@@ -9,8 +9,10 @@
  *  - initial version, 08-03-2016
  *
  */
+#define PCRE2_CODE_UNIT_WIDTH 8
+
 #include <stdlib.h>
-#include <pcre.h>
+#include <pcre2.h>
 #include <string.h>
 #include <cleri/kwcache.h>
 
@@ -97,21 +99,25 @@ static void KWCACHE_kw_match(
         const char * str)
 {
     int pcre_exec_ret;
-    int sub_str_vec[2];
 
-    pcre_exec_ret = pcre_exec(
+    PCRE2_SIZE * ovector;
+
+    pcre_exec_ret = pcre2_match(
                 pr->re_keywords,
-                pr->re_kw_extra,
-                str,
+                (PCRE2_SPTR8) str,
                 strlen(str),
                 0,                     // start looking at this point
                 0,                     // OPTIONS
-                sub_str_vec,
-                2);                    // length of sub_str_vec
-    if (pcre_exec_ret != 1)
+                pr->match_data,
+                NULL);
+
+    if (pcre_exec_ret < 0)
     {
         return;
     }
 
-    kwcache->len = sub_str_vec[1];
+    ovector = pcre2_get_ovector_pointer(pr->match_data);
+    kwcache->len = ovector[1];
+
+
 }

@@ -9,10 +9,12 @@
  *  - initial version, 08-03-2016
  *
  */
+#define PCRE2_CODE_UNIT_WIDTH 8
+
 #include <cleri/grammar.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <pcre.h>
+#include <pcre2.h>
 #include <assert.h>
 
 /*
@@ -40,38 +42,37 @@ cleri_grammar_t * cleri_grammar(cleri_t * start, const char * re_keywords)
         return NULL;
     }
 
-    const char * pcre_error_str;
-    int pcre_error_offset;
-    grammar->re_keywords = pcre_compile(
-            re_kw,
+    int pcre_error_num;
+    PCRE2_SIZE pcre_error_offset;
+
+    grammar->re_keywords = pcre2_compile(
+            (PCRE2_SPTR8) re_kw,
+            PCRE2_ZERO_TERMINATED,
             0,
-            &pcre_error_str,
+            &pcre_error_num,
             &pcre_error_offset,
             NULL);
     if(grammar->re_keywords == NULL)
     {
+
+        PCRE2_UCHAR buffer[256];
+        pcre2_get_error_message(pcre_error_num, buffer, sizeof(buffer));
         /* this is critical and unexpected, memory is not cleaned */
         fprintf(stderr,
                 "error: cannot compile '%s' (%s)\n",
                 re_kw,
-                pcre_error_str);
+                buffer);
         free(grammar);
         return NULL;
     }
-    grammar->re_kw_extra =
-            pcre_study(grammar->re_keywords, 0, &pcre_error_str);
 
-    /* pcre_study() returns NULL for both errors and when it can not
-     * optimize the regex.  The last argument is how one checks for
-     * errors (it is NULL if everything works, and points to an error
-     * string otherwise. */
-    if(pcre_error_str != NULL)
+    grammar->match_data = \
+        pcre2_match_data_create_from_pattern(grammar->re_keywords, NULL);
+
+    if (grammar->match_data == NULL)
     {
-        fprintf(stderr,
-                "error: cannot compile '%s' (%s)\n",
-                re_kw,
-                pcre_error_str);
-        free(grammar->re_keywords);
+        pcre2_code_free(grammar->re_keywords);
+        fprintf(stderr, "error: cannot create matsch data\n");
         free(grammar);
         return NULL;
     }
@@ -85,13 +86,8 @@ cleri_grammar_t * cleri_grammar(cleri_t * start, const char * re_keywords)
 
 void cleri_grammar_free(cleri_grammar_t * grammar)
 {
-    free(grammar->re_keywords);
-
-    if (grammar->re_kw_extra != NULL)
-    {
-        free(grammar->re_kw_extra);
-    }
-
+    pcre2_match_data_free(grammar->match_data);
+    pcre2_code_free(grammar->re_keywords);
     cleri_free(grammar->start);
     free(grammar);
 }
