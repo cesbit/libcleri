@@ -34,3 +34,6 @@
 
 # Visual Studio Code
 .vscode/
+
+# Folder for build artifacts
+[Bb]uild/
