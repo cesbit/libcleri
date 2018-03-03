@@ -3,12 +3,18 @@ project(cleri VERSION 0.9.4)
 
 option(BUILD_EXAMPLES "Build examples" OFF)
 
-if (NOT DEFINED ${CMAKE_BUILD_TYPE})
+if(NOT DEFINED CMAKE_BUILD_TYPE)
 	set (CMAKE_BUILD_TYPE Release)
 endif()
 
+set(CMAKE_DEBUG_POSTFIX _d)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package(PCRE2 REQUIRED)
+
+configure_file(
+	"${CMAKE_SOURCE_DIR}/cmake/version.h.in"
+	"${CMAKE_SOURCE_DIR}/inc/cleri/version.h"
+)	
 
 set(cleri_src_dir "${CMAKE_SOURCE_DIR}/src")
 file(GLOB cleri_src ${cleri_src_dir}/*.c)
@@ -87,12 +93,12 @@ write_basic_package_version_file(
 export(EXPORT cleri-targets FILE ${CMAKE_BINARY_DIR}/cleri-targets.cmake)
 
 configure_package_config_file(
-	"${CMAKE_SOURCE_DIR}/cleri-config.cmake.in"
+	"${CMAKE_MODULE_PATH}/cleri-config.cmake.in"
 	"${CMAKE_BINARY_DIR}/cleri-config.cmake"
 	INSTALL_DESTINATION ${CONF_INSTALL_DIR}
 	PATH_VARS CMAKE_INSTALL_FULL_INCLUDEDIR CMAKE_INSTALL_FULL_LIBDIR
 )
 
-install(EXPORT cleri-targets FILE cleri-targets.cmake DESTINATION ${CONF_INSTALL_DIR} CONFIGURATIONS ${CMAKE_BUILD_TYPE})
+install(EXPORT cleri-targets FILE cleri-targets.cmake DESTINATION ${CONF_INSTALL_DIR})
 
-install(FILES ${CMAKE_BINARY_DIR}/cleri-config.cmake ${CMAKE_BINARY_DIR}/cleri-config-version.cmake DESTINATION ${CONF_INSTALL_DIR} CONFIGURATIONS ${CMAKE_BUILD_TYPE})
+install(FILES ${CMAKE_BINARY_DIR}/cleri-config.cmake ${CMAKE_BINARY_DIR}/cleri-config-version.cmake DESTINATION ${CONF_INSTALL_DIR})
