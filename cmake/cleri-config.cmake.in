@@ -3,6 +3,6 @@
 set_and_check(cleri_INCLUDE_DIRS "@CMAKE_INSTALL_FULL_INCLUDEDIR@")
 set_and_check(cleri_LIBRARY_DIRS "@CMAKE_INSTALL_FULL_LIBDIR@")
 
-message(STATUS "Found libcleri: ${cleri_INCLUDE_DIRS}")
+message(STATUS "Found libcleri: ${cleri_INCLUDE_DIRS} (found version ${cleri_VERSION})")
 
 include("${CMAKE_CURRENT_LIST_DIR}/cleri-targets.cmake")
