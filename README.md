@@ -1,5 +1,5 @@
 # C Left-Right Parser (libcleri)
-Language parser for the C/C++ programming language. Initially created for [SiriDB](https://github.com/transceptor-technology/siridb-server).
+Language parser for the C/C++ programming language. Initially created for [SiriDB](https://github.com/SiriDB/siridb-server).
 
 ---------------------------------------
   * [Installation](#installation)
