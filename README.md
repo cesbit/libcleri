@@ -249,7 +249,7 @@ Create and return a compiled grammar. Argument `start` must be the entry element
 for the grammar. Argument `re_keywords` should be a regular expression starting
 with character `^` for matching keywords in a grammar. When a grammar is created,
 each defined [keyword](#cleri_keyword_t) should match this regular expression.
-`re_keywords` is allowed to be `NULL` in which case the defualt
+`re_keywords` is allowed to be `NULL` in which case the default
 `CLERI_DEFAULT_RE_KEYWORDS` is used.
 
 #### `void cleri_grammar_free(cleri_grammar_t * grammar)`
@@ -300,7 +300,7 @@ Children from a node in a linked list.
 
 *Public members*
 - `cleri_node_t * cleri_children_t.node`: Child node. (readonly)
-- `struct cleri_children_s * cleri_children_t.next`: Next child node or `NULL` if there are no other childs. (readonly)
+- `struct cleri_children_s * cleri_children_t.next`: Next child node or `NULL` if there are no other children. (readonly)
 
 Example looping over all children within a node:
 ```c
