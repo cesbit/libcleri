@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <cleri/cleri.h>
-#include <string.h>
-#include <ctype.h>
-//int view_children(cleri_children_t * child, const char * orig, int n);
-//void test_str(cleri_grammar_t * grammar, const char * str);
-#define JTAB 8
+#include "buffer.h"
+
+#define JTAB 4
 
 const char * strtp(cleri_tp tp)
 {
@@ -24,38 +22,95 @@ const char * strtp(cleri_tp tp)
     case CLERI_TP_REGEX: return "regex";
     case CLERI_TP_REF: return "ref";
     case CLERI_TP_END_OF_STATEMENT: return "end of statement";
+    default: return "unknown type";
     }
 }
 
-int view_children(cleri_children_t * child, const char * orig, int n)
+int prt_JSON(char * string)
+{
+    int indent = 0;
+    int i;
+
+    for (i=0; string[i+1] != '\0'; i++) {
+        switch(string[i])
+        {
+            case '[':
+                ++indent;
+                if (string[i+1] == ']')
+                    printf("[");
+                else
+                    printf("[\n%*.s", indent*JTAB, "");
+                break;
+            case '{':
+                ++indent;
+                if (string[i+1] == '}')
+                    printf("{");
+                else
+                    printf("{\n%*.s", indent*JTAB, "");
+                break;
+            case '}':
+                --indent;
+                printf("\n%*.s}", indent*JTAB, "");
+                break;
+            case ']':
+                --indent;
+                if (string[i-1] == '[')
+                    printf("]");
+                else
+                    printf("\n%*.s]", indent*JTAB, "");
+                break;
+            case ',':
+                printf(",\n%*.s", indent*JTAB, "");
+                break;
+            case ':':
+                printf(": ");
+                break;
+            default:
+                printf("%c", string[i]);
+                break;
+        }
+    }
+    printf("\n%c\n", string[i]); // causes the last character to be printed as the "for" loop will stop before.
+    return 0;
+}
+
+
+int view_children(cleri_children_t * child, const char * orig, buffer_t * buf)
 {
     int count = 0;
+    int rc = 0;
     while (child != NULL)
     {
         cleri_node_t * node = child->node;
-        if (count++ == 0) printf("%*.s%s: [\n", n, "", "children");
-        printf("%*.s{\n\t%*.s%s: %s,\n\t%*.s%s: %.*s,\n\t%*.s%s: %ld,\n",
-                n,"",
-                n,"", "type",
-                strtp(node->cl_obj->tp),
-                n,"", "string",
-                (int)node->len,
-                node->str,
-                n,"", "position",
-                node->str - orig);
+        if (!count++)
+        {
+            rc += buffer_printf(buf, "children:[");
+        }
+        rc += buffer_printf(buf, "{%s:%s,%s:%.*s,%s:%ld,",
+            "type",
+            strtp(node->cl_obj->tp),
+            "string",
+            (int)node->len,
+            node->str,
+            "position",
+            node->str - orig);
+
         cleri_children_t * grandchild = node->children;
-        view_children(grandchild, orig, n+=JTAB);
-
-        printf("%*s}", (n-=JTAB), "");
+        rc += view_children(grandchild, orig, buf);
+        rc += buffer_printf(buf, "}");
         child = child->next;
-        if (child != NULL) printf(",\n");
-        else printf("\n");
-
-
+        if (child != NULL)
+            rc += buffer_printf(buf, ",");
     }
-    if (count == 0) printf("%*.s%s: []\n", n, "", "children");
-    else printf("%*s]\n", (n-=JTAB), "");;
-    return 0;
+    if (!count)
+    {
+        rc += buffer_printf(buf, "%s:[]", "children");
+    }
+    else
+    {
+        rc += buffer_printf(buf, "]");
+    }
+    return rc;
 }
 
 void test_str(cleri_grammar_t * grammar, const char * str)
@@ -63,123 +118,20 @@ void test_str(cleri_grammar_t * grammar, const char * str)
     cleri_parse_t * pr = cleri_parse(grammar, str);
     printf("Test string '%s': %s\n", str, pr->is_valid ? "true" : "false");
     cleri_node_t * tree = pr->tree;
-    int n;
-
+    buffer_t * buf = buffer_create();
+    //printf("\n\n\nhi there I reached line 189\n\n\n");
     if (cleri_node_has_children(tree))
     {
         cleri_children_t * child = tree->children;
-        view_children(child, pr->str, n=0);
+        int rc = view_children(child, pr->str, buf);
+        printf("\n\n\n rc: %d \n\n\n", rc);
+        prt_JSON(buf->buf);
+        printf("JSON: %s", buf->buf);
 
     }
+    buffer_destroy(buf);
     cleri_parse_free(pr);
 }
-
-// char * prt_JSON(char * string)
-// {
-//     int count = 0;
-//     int bracket_in = 0;
-//     int brace_in = 0;
-
-//     while(*string != '\0') {
-
-//         printf("%c", *string);
-//         switch(*string)
-//         {
-//             case '[':
-//                 printf("\n");
-//                 ++bracket_in;
-//                 printf("%*.s", bracket_in*JTAB, "");
-//                 break;
-
-//             case '{':
-//                 printf("\n");
-//                 ++brace_in;
-//                 printf("%*.s", brace_in*JTAB, "");
-//                 break;
-
-//             case '}':
-//                 printf("\n");
-//                 --brace_in;
-//                 printf("%*.s", brace_in*JTAB, "");
-//                 break;
-
-//             case ']':
-//                 printf("\n");
-//                 --bracket_in;
-//                 printf("%*.s", bracket_in*JTAB, "");
-//                 break;
-
-//             case ',':
-//                 printf("\n");
-//                 printf("%*.s", bracket_in*JTAB, "");
-//                 break;
-
-//             case ':':
-//                 printf(" ");
-//                 break;
-
-//             default:
-//                 break;
-
-//         }
-//         // move the ptr pointer to the next memory location
-
-
-//         string++;
-//         count++;
-//     }
-//     printf("count: %d  %d   %d", count, brace_in, bracket_in);
-//     return 0;
-// }
-
-
-// char * view_children(cleri_children_t * child, const char * orig, char string[600])
-// {
-//     int count = 0;
-//     while (child != NULL)
-//     {
-//         cleri_node_t * node = child->node;
-//         if (count++ == 0) sprintf(string == "0\0" ? string : string + strlen(string), "%s:[", "children");
-//         sprintf(string + strlen(string), "{%s:%s,%s:%.*s,%s:%ld,",
-//                 "type",
-//                 strtp(node->cl_obj->tp),
-//                 "string",
-//                 (int)node->len,
-//                 node->str,
-//                 "position",
-//                 node->str - orig);
-
-//         cleri_children_t * grandchild = node->children;
-//         view_children(grandchild, orig, string);
-//         sprintf(string + strlen(string), "}");
-//         child = child->next;
-//         if (child != NULL) sprintf(string + strlen(string), ",");
-//     }
-//     if (child == NULL && count ==0) sprintf(string + strlen(string), "%s:[]", "children");
-//     else sprintf(string + strlen(string), "]");
-
-//     return string;
-// }
-
-// void test_str(cleri_grammar_t * grammar, const char * str)
-// {
-//     cleri_parse_t * pr = cleri_parse(grammar, str);
-//     printf("Test string '%s': %s\n", str, pr->is_valid ? "true" : "false");
-//     cleri_node_t * tree = pr->tree;
-//     int n;
-//     char string[600];
-//     sprintf(string, "0");
-
-//     if (cleri_node_has_children(tree))
-//     {
-//         cleri_children_t * child = tree->children;
-//         char * s = view_children(child, pr->str, string);
-//         prt_JSON(s);
-//         printf("zooooooo: %s", s);
-
-//     }
-//     cleri_parse_free(pr);
-// }
 
 
 int main(void)
@@ -213,53 +165,6 @@ int main(void)
 }
 
 
-// int view_children(cleri_children_t * child, const char * orig, int n)
-// {
-//     int count = 0;
-//     while (child != NULL)
-//     {
-//         cleri_node_t * node = child->node;
-//         if (count++ == 0) printf("%*.s%s: [\n", n, "", "children");
-//         printf("%*.s{\n\t%*.s%s: %s,\n\t%*.s%s: %.*s,\n\t%*.s%s: %ld,\n",
-//                 n,"",
-//                 n,"", "type",
-//                 strtp(node->cl_obj->tp),
-//                 n,"", "string",
-//                 (int)node->len,
-//                 node->str,
-//                 n,"", "position",
-//                 node->str - orig);
-//         cleri_children_t * grandchild = node->children;
-//         view_children(grandchild, orig, n+=JTAB);
-
-//         printf("%*s}", (n-=JTAB), "");
-//         child = child->next;
-//         if (child != NULL) printf(",\n");
-//         else printf("\n");
-
-
-//     }
-//     if (count ==0) printf("%*.s%s: []\n", n, "", "children");
-//     else printf("%*s]\n", (n-=JTAB), "");;
-//     return 0;
-// }
-
-
-// void test_str(cleri_grammar_t * grammar, const char * str)
-// {
-//     cleri_parse_t * pr = cleri_parse(grammar, str);
-//     printf("Test string '%s': %s\n", str, pr->is_valid ? "true" : "false");
-//     cleri_node_t * tree = pr->tree;
-//     int n;
-
-//     if (cleri_node_has_children(tree))
-//     {
-//         cleri_children_t * child = tree->children;
-//         view_children(child, pr->str, n=0);
-
-//     }
-//     cleri_parse_free(pr);
-// }
 
 
 

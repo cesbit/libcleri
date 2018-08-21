@@ -5,18 +5,57 @@
 //void test_str(cleri_grammar_t * grammar, const char * str);
 
 
-enum cleri_grammar_ids {
-    CLERI_GID_R_COMMENT,
-    CLERI_GID_R_DOUBLEQ_STR,
-    CLERI_GID_R_FLOAT,
-    CLERI_GID_R_GRAVE_STR,
-    CLERI_GID_R_INTEGER,
-    CLERI_GID_R_REGEX,
-    CLERI_GID_R_SINGLEQ_STR,
-    CLERI_GID_R_TIME_STR,
-    CLERI_GID_R_UINTEGER,
-    CLERI_GID_R_UUID_STR,
-};
+// enum cleri_grammar_ids {
+//     CLERI_GID_R_COMMENT,
+//     CLERI_GID_R_DOUBLEQ_STR,
+//     CLERI_GID_R_FLOAT,
+//     CLERI_GID_R_GRAVE_STR,
+//     CLERI_GID_R_INTEGER,
+//     CLERI_GID_R_REGEX,
+//     CLERI_GID_R_SINGLEQ_STR,
+//     CLERI_GID_R_TIME_STR,
+//     CLERI_GID_R_UINTEGER,
+//     CLERI_GID_R_UUID_STR,
+// };
+
+// const char * re_to_str(uint32_t gid)
+// {
+//     const char * expect;
+//     switch (gid)
+//     {
+//         case CLERI_GID_R_COMMENT:       return expect = "comment";
+//         case CLERI_GID_R_DOUBLEQ_STR:   return expect = "double quote string";
+//         case CLERI_GID_R_FLOAT:         return expect = "float";
+//         case CLERI_GID_R_GRAVE_STR:     return expect = "grave string";
+//         case CLERI_GID_R_INTEGER:       return expect = "integer";
+//         case CLERI_GID_R_REGEX:         return expect = "regex";
+//         case CLERI_GID_R_SINGLEQ_STR:   return expect = "single quote string";
+//         case CLERI_GID_R_TIME_STR:      return expect = "date/time";
+//         case CLERI_GID_R_UINTEGER:      return expect = "unidentified integer";
+//         case CLERI_GID_R_UUID_STR:      return expect = "uuid";
+//         default:                        return expect = "Not a regex";
+
+//     }
+// }
+
+const char * re_to_str(uint32_t gid)
+{
+    const char * expect;
+    switch (gid)
+    {
+        case 0:   return expect = "comment";
+        case 1:   return expect = "double quote string";
+        case 2:   return expect = "float";
+        case 3:   return expect = "grave string";
+        case 4:   return expect = "integer";
+        case 5:   return expect = "regex";
+        case 6:   return expect = "single quote string";
+        case 7:   return expect = "date/time";
+        case 8:   return expect = "unidentified integer";
+        case 9:   return expect = "uuid";
+        default:  return expect = "Not a regex";
+    }
+}
 
 
 void test_str(cleri_grammar_t * grammar, const char * str)
@@ -60,43 +99,7 @@ void test_str(cleri_grammar_t * grammar, const char * str)
                 break;
 
             case CLERI_TP_REGEX:
-                expect = "regex";
-                switch (pr->expect->cl_obj->gid)
-                {
-                    case CLERI_GID_R_COMMENT:
-                        expect = "comment";
-                        break;
-                    case CLERI_GID_R_DOUBLEQ_STR:
-                        expect = "double quote string";
-                        break;
-                    case CLERI_GID_R_FLOAT:
-                        expect = "float";
-                        break;
-                    case CLERI_GID_R_GRAVE_STR:
-                        expect = "grave string";
-                        break;
-                    case CLERI_GID_R_INTEGER:
-                        expect = "integer";
-                        break;
-                    case CLERI_GID_R_REGEX:
-                        expect = "regex";
-                        break;
-                    case CLERI_GID_R_SINGLEQ_STR:
-                        expect = "single quote string";
-                        break;
-                    case CLERI_GID_R_TIME_STR:
-                        expect = "date/time";
-                        break;
-                    case CLERI_GID_R_UINTEGER:
-                        expect = "unidentified integer";
-                        break;
-                    case CLERI_GID_R_UUID_STR:
-                        expect = "uuid";
-                        break;
-                    default:
-                        expect = "Not a regex";
-                        break;
-                }
+                expect = re_to_str(pr->expect->cl_obj->gid);
                 break;
 
             default:
@@ -113,18 +116,23 @@ void test_str(cleri_grammar_t * grammar, const char * str)
 int main(void)
 {
     /* define grammar */
-    cleri_t * r_float = cleri_regex(CLERI_GID_R_FLOAT, "^[-+]?[0-9]*\\.?[0-9]+");
-    cleri_t * r_integer = cleri_regex(CLERI_GID_R_INTEGER, "^[-+]?[0-9]+");
-    // cleri_t * r_uinteger = cleri_regex(CLERI_GID_R_UINTEGER, "^[0-9]+");
-    cleri_t * r_time_str = cleri_regex(CLERI_GID_R_TIME_STR, "^[0-9]+[smhdw]");
-    cleri_t * r_singleq_str = cleri_regex(CLERI_GID_R_SINGLEQ_STR, "^(?:\'(?:[^\']*)\')+");
-    cleri_t * r_doubleq_str = cleri_regex(CLERI_GID_R_DOUBLEQ_STR, "^(?:\"(?:[^\"]*)\")+");
-    // cleri_t * r_grave_str = cleri_regex(CLERI_GID_R_GRAVE_STR, "^(?:`(?:[^`]*)`)+");
-    // cleri_t * r_uuid_str = cleri_regex(CLERI_GID_R_UUID_STR, "^[0-9a-f]{8}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{12}");
-    // cleri_t * r_regex = cleri_regex(CLERI_GID_R_REGEX, "^(/[^/\\\\]*(?:\\\\.[^/\\\\]*)*/i?)");
-    // cleri_t * r_comment = cleri_regex(CLERI_GID_R_COMMENT, "^#.*");
+    // cleri_t * r_float = cleri_regex(CLERI_GID_R_FLOAT, "^[-+]?[0-9]*\\.?[0-9]+");
+    // cleri_t * r_integer = cleri_regex(CLERI_GID_R_INTEGER, "^[-+]?[0-9]+");
+    // // cleri_t * r_uinteger = cleri_regex(CLERI_GID_R_UINTEGER, "^[0-9]+");
+    // cleri_t * r_time_str = cleri_regex(CLERI_GID_R_TIME_STR, "^[0-9]+[smhdw]");
+    // cleri_t * r_singleq_str = cleri_regex(CLERI_GID_R_SINGLEQ_STR, "^(?:\'(?:[^\']*)\')+");
+    // cleri_t * r_doubleq_str = cleri_regex(CLERI_GID_R_DOUBLEQ_STR, "^(?:\"(?:[^\"]*)\")+");
+    // // cleri_t * r_grave_str = cleri_regex(CLERI_GID_R_GRAVE_STR, "^(?:`(?:[^`]*)`)+");
+    // // cleri_t * r_uuid_str = cleri_regex(CLERI_GID_R_UUID_STR, "^[0-9a-f]{8}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{12}");
+    // // cleri_t * r_regex = cleri_regex(CLERI_GID_R_REGEX, "^(/[^/\\\\]*(?:\\\\.[^/\\\\]*)*/i?)");
+    // // cleri_t * r_comment = cleri_regex(CLERI_GID_R_COMMENT, "^#.*");
 
 
+    cleri_t * r_float = cleri_regex(2, "^[-+]?[0-9]*\\.?[0-9]+");
+    cleri_t * r_integer = cleri_regex(4, "^[-+]?[0-9]+");
+    cleri_t * r_time_str = cleri_regex(7, "^[0-9]+[smhdw]");
+    cleri_t * r_singleq_str = cleri_regex(6, "^(?:\'(?:[^\']*)\')+");
+    cleri_t * r_doubleq_str = cleri_regex(1, "^(?:\"(?:[^\"]*)\")+");
 
     cleri_t * k_hi = cleri_keyword(0, "hi", 0);
     cleri_t * k_bye = cleri_keyword(0, "bye", 0);
@@ -151,13 +159,28 @@ int main(void)
     cleri_grammar_t * my_grammar = cleri_grammar(start, NULL);
 
     /* test some strings */
-    char str[50];
-    scanf("%s", str);
-    test_str(my_grammar, str);  // true
+    char str[30];
+    fgets(str, sizeof(char) * 30, stdin);
+    test_str(my_grammar, (const char *)str);  // true
 
     /* cleanup grammar */
     cleri_grammar_free(my_grammar);
 
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
