@@ -5,6 +5,7 @@
 #include <cleri/cleri.h>
 #include <stdarg.h>
 
+#define SIZE 1024
 
 typedef struct buffer_s buffer_t;
 
