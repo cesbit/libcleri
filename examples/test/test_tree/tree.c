@@ -4,11 +4,11 @@
 
 #define JTAB 4
 
+/* Prints a JSON string including spaces, tabs and newlines  */
 int prt_JSON(char * string)
 {
     int indent = 0;
     int i;
-
     for (i=0; string[i+1] != '\0'; i++) {
         switch(string[i])
         {
@@ -32,10 +32,13 @@ int prt_JSON(char * string)
                 break;
             case ']':
                 --indent;
-                if (string[i-1] == '[')
+                if ((i-1) > 0)
+                {
+                    if (string[i-1] == '[')
                     printf("]");
-                else
+                    else
                     printf("\n%*.s]", indent*JTAB, "");
+                }
                 break;
             case ',':
                 printf(",\n%*.s", indent*JTAB, "");
@@ -48,11 +51,12 @@ int prt_JSON(char * string)
                 break;
         }
     }
-    printf("\n%c\n", string[i]); // causes the last character to be printed as the "for" loop will stop before.
+    /* Prints the last character as the "for" loop will stop before. */
+    printf("\n%c\n", string[i]);
     return 0;
 }
 
-
+/* Returns the object type as a string */
 const char * strtp(cleri_tp tp)
 {
     switch (tp)
@@ -75,7 +79,9 @@ const char * strtp(cleri_tp tp)
     }
 }
 
-
+/* Recursive function. Gets children in the parse tree and concatenates them
+by using the buffer_printf(). The end result is a JSON string without spaces,
+tabs and newlines.*/
 int get_children(cleri_children_t * child, const char * orig, buffer_t * buf)
 {
     int count = 0;
@@ -88,7 +94,7 @@ int get_children(cleri_children_t * child, const char * orig, buffer_t * buf)
 
         rc += buffer_printf(
             buf,
-            "{\"%s\":%s,\"%s\":%.*s,\"%s\":%ld,",
+            "{\"%s\":\"%s\",\"%s\":\"%.*s\",\"%s\":%ld,",
             "type",
             strtp(node->cl_obj->tp),
             "string",
@@ -110,9 +116,13 @@ int get_children(cleri_children_t * child, const char * orig, buffer_t * buf)
     else
         rc += buffer_printf(buf, "]");
 
+    /* When error occurred in the buffer_printf(), it returns -1. Something
+    went wrong when rc is not 0 */
     return rc;
 }
 
+/* Prints the parse tree in JSON format of parse object. Note that the cl_obj
+is NULL for the root node and the first can be found in its children. */
 void prt_tree(cleri_grammar_t * grammar, const char * str)
 {
     cleri_parse_t * pr = cleri_parse(grammar, str);
@@ -121,23 +131,30 @@ void prt_tree(cleri_grammar_t * grammar, const char * str)
 
     printf("Test string '%s': %s\n", str, pr->is_valid ? "true" : "false");
     cleri_node_t * tree = pr->tree;
+
+    /* Creates a dynamic buffer that will store the string to be parsed.
+    If error occurred NULL is returned and redirected to goto. */
     buffer_t * buf = buffer_create();
     if (buf == NULL)
-        goto end_test_str;
+        goto prt_tree;
 
+    /* Check if the tree node (root node) has children and if true
+    get_children() will be called. */
     if (cleri_node_has_children(tree))
     {
         cleri_children_t * child = tree->children;
         int rc = get_children(child, pr->str, buf);
+
+        /* Prints the end result collected in buf->buf in JSON format including
+        space, tabs and newlines */
         if (!rc)
         {
             prt_JSON(buf->buf);
-            printf("JSON: %s", buf->buf);
         }
     }
     buffer_destroy(buf);
 
-end_test_str:
+prt_tree:
     cleri_parse_free(pr);
 }
 

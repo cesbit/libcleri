@@ -5,10 +5,11 @@
 #define RETURN_REGEX_EXAMPLE 0
 #define RETURN_REGEX_TYPE 1
 
-/* prototyping of the user-defined function in the main.c */
+/* Prototype of the user-defined function in the main.c */
 const char * re_to_str(uint32_t gid, int choice);
 
-/* Gives the element name */
+
+/* Gives the element name. */
 const char * get_cleri_obj(cleri_t * object, int regex_choice)
 {
     const char * expect;
@@ -40,13 +41,14 @@ const char * prt_expected(cleri_parse_t * pr)
 {
     int rc;
     int count;
-    /* create a second buffer for the expect string. If something
-        goes wrong, redirection to only clean up the parse object.  */
+
+    /* Creates a second buffer for the expect string. If something goes wrong,
+    redirection to only clean up the parse object.  */
     buffer_t * expect_buf = buffer_create();
     if (expect_buf == NULL)
         goto end_prt_expected;
 
-    /* Form the expect string */
+    /* Gets the expect string */
     for (count = 0; pr->expect != NULL; count++)
     {
         const char * expect = get_cleri_obj(pr->expect->cl_obj, RETURN_REGEX_TYPE);
@@ -65,26 +67,31 @@ const char * prt_expected(cleri_parse_t * pr)
             goto end_prt_expected;
         }
     }
+    /* Prints all the expected objects and clean up the second buffer */
     printf("Expected at position %lu: %s.\n", pr->pos, expect_buf->buf);
     buffer_destroy(expect_buf);
 
+    /* If there are object in the olist, choose one and return this. */
     if (count > 0)
     {
-        /* choose a random object out of the expect olist and return it */
+        /* Chooses a random object out of the expect olist and returns it */
         int choice = (rand() * time(NULL)) % count; // seed
         cleri_parse_expect_start(pr);
 
         while (choice--)
         {
-            pr->expect = pr->expect->next; // takes choice.
+            /* Takes choice */
+            pr->expect = pr->expect->next;
             if (pr->expect->cl_obj->tp == CLERI_TP_END_OF_STATEMENT)
                 cleri_parse_expect_start(pr);
         }
 
         const char * expect = get_cleri_obj(pr->expect->cl_obj, RETURN_REGEX_EXAMPLE);
 
+        /* Return the randomly choosen object.*/
         return expect;
     }
+/* But if something went wrong, it returns NULL. */
 end_prt_expected:
     return NULL;
 }
@@ -93,22 +100,22 @@ end_prt_expected:
 /* Guided autocorrection */
 void test_autocor(cleri_grammar_t * grammar, const char * str, buffer_t * buf)
 {
-    /* if parse function returns NULL, somthing went wrong and
-        the program wil be aborted */
+    /* If parse function returns NULL, somthing went wrong and the program wil
+    be aborted */
     cleri_parse_t * pr = cleri_parse(grammar, str);
     if (pr == NULL)
         abort();
-
     printf("Your string: '%s'\n", str);
-    /* first time the buffer_printf() is used. Gets given string till 'pos'.
-        If error in buffer_printf() then it would give a -1, in that case
-        only clean up and leave the function. */
+
+    /* First time the buffer_printf() is used. Stores the string till 'pos'.
+    If error in buffer_printf() then it would give a -1. In that case clean
+    up and leave the function. */
     int rc = buffer_printf(buf, "%.*s ",(int)pr->pos, str);
     if (rc)
         goto test_autocor;
 
-    /* loops as long as the string turns out to be valid or if
-        10 iterations haved passed */
+    /* Loops as long as the string turns out to be valid or if 10 iterations
+    haved passed */
     int trial;
     for (trial = 0; !pr->is_valid && trial < 10; trial++)
     {
@@ -120,9 +127,10 @@ void test_autocor(cleri_grammar_t * grammar, const char * str, buffer_t * buf)
         else
             printf("But it's not quite right yet.\n");
 
-        /* print the expected object in the olist and get an expected object
-           which is randomly choosen and concatenate this to the buf string. */
+        /* Print the expected objects in the olist and get an expected object. */
         const char * expect = prt_expected(pr);
+
+        /* Concatenates the object to the buf string. */
         rc += buffer_printf(buf, "%s ", expect);
         if (rc)
             goto test_autocor;
@@ -131,7 +139,7 @@ void test_autocor(cleri_grammar_t * grammar, const char * str, buffer_t * buf)
         pr = cleri_parse(grammar, buf->buf);
     }
 
-    /* check if  */
+    /* Check if string is valid after the while loop. */
     if (pr->is_valid)
         printf("Yeah the string is valid!\n");
     else
@@ -141,65 +149,3 @@ test_autocor:
     if (pr)
         cleri_parse_free(pr);
 }
-
-
-
-
-
-/* Guided autocorrection */
-// char *  test_autocor2(cleri_grammar_t * grammar, const char * str, buffer_t * buf)
-// {
-//     cleri_parse_t * pr = cleri_parse(grammar, str);
-//     if (pr == NULL)
-//         abort();
-
-//     int rc = buffer_printf(buf, "%.*s ",(int)pr->pos, str);
-//     int trial;
-
-//     for (trial = 0; !pr->is_valid && trial < 10; trial++)
-//     {
-//         int count;
-//         for (count = 0; pr->expect != NULL; count++)
-//         {
-//             pr->expect = pr->expect->next;
-//         }
-//         if (!rc)
-//         {
-//             if (count > 0)
-//             {
-//                 int choice = (rand() * time(NULL)) % count; // seed
-//                 cleri_parse_expect_start(pr);
-
-//                 while (choice--)
-//                 {
-//                     pr->expect = pr->expect->next; // takes choice.
-//                     if (pr->expect->cl_obj->tp == CLERI_TP_END_OF_STATEMENT)
-//                         cleri_parse_expect_start(pr);
-//                 }
-//                 char * expect = get_cleri_obj(pr->expect->cl_obj, RETURN_REGEX_EXAMPLE);
-//                 rc += buffer_printf(buf, "%s ", expect);
-//             }
-//         }
-//         else
-//         {
-//             goto test_autocor;
-//         }
-//         cleri_parse_free(pr);
-//         pr = cleri_parse(grammar, buf->buf);
-//     }
-
-// test_autocor:
-//     if (pr)
-//         cleri_parse_free(pr);
-//     return buf->buf;
-// }
-
-
-
-/*
-
-Functie die alles aan elkaar plakt.
-functie die showt wat er allemaal geexpect wordt
-functie die een valid string creert
-
-*/

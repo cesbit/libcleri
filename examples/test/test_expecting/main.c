@@ -3,7 +3,8 @@
 #include <string.h>
 #include "expecting.h"
 
-/* predefined gids for regex elements for clarity in the re_to_str() and cleri_regex() */
+/* Predefined gids for regex elements. To improve clarity in the re_to_str()
+and cleri_regex() */
 enum cleri_grammar_ids {
     CLERI_GID_R_FLOAT,
     CLERI_GID_R_INTEGER,
@@ -15,11 +16,10 @@ enum cleri_grammar_ids {
     CLERI_GID_R_REGEX,
 };
 
-/* like create_grammar() this is a user-defined function
-    used in the show_cleri_obj(). Here the regex elemnts
-    are given a user-defined name based in the gid, "choice"
-    lets you choose between the explanation of the regex
-    or an example of the regex */
+/* User-defined function used in the show_cleri_obj(). Here the regex elemnts
+are given a user-defined name based on the gid.
+With "choice" you can return either the explanation of the regex or an example
+of the regex. */
 const char * re_to_str(uint32_t gid, int choice)
 {
     switch (gid)
@@ -47,7 +47,7 @@ const char * re_to_str(uint32_t gid, int choice)
 
 cleri_grammar_t * create_grammar(void)
 {
-    /* define grammar and if error occurred redirect to goto*/
+    /* Define grammar and if error occurred redirect to goto*/
     cleri_t * k_hi = cleri_keyword(0, "hi", 0);
     if (k_hi == NULL)
         goto end_create_grammar;
@@ -69,7 +69,7 @@ cleri_grammar_t * create_grammar(void)
 
     return cleri_grammar(start, NULL);
 
-/* on error: clean up the previous objects that were succesfully allocated */
+/* On error: clean up the previous objects that were succesfully allocated */
 end_create_grammar:
     if (k_hi)
         cleri_free(k_hi);
@@ -89,32 +89,31 @@ end_create_grammar:
 
 int main(void)
 {
-    /* create grammar.
-        If error occurred NULL is returned and the program will be aborted.
-    */
+    /* Creates grammar. If error occurred, NULL is returned and the program
+    will be aborted. */
     cleri_grammar_t * my_grammar = create_grammar();
     if (my_grammar == NULL)
         abort();
 
-    /* string given by user */
+    /* String given by user. */
     char str[30];
     fgets(str, sizeof(char) * 30, stdin);
 
-    /* replace newline character with a 0 terminator */
+    /* Replaces newline character with a 0 terminator. */
     int len=strlen(str);
     if(str[len-1]=='\n')
         str[len-1]='\0';
 
-    /* create a dynamic buffer that will store the string to be parsed.
-        If error occurred NULL is returned and redirected to goto.
-         */
+    /* Creates a dynamic buffer that will store the string to be parsed.
+    If error occurred NULL is returned and redirected to goto. */
     buffer_t * buf = buffer_create();
         if (buf == NULL)
             goto end_main;
-    /* given string will be parsed and if invalid autocorrected */
+
+    /* String will be parsed and if invalid autocorrected */
     test_autocor(my_grammar, (const char *)str, buf);
 
-    /* cleanup*/
+    /* Cleanup*/
     buffer_destroy(buf);
 end_main:
     cleri_grammar_free(my_grammar);
