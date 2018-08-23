@@ -2,8 +2,6 @@
 #include <cleri/cleri.h>
 #include "tree.h"
 
-#define JTAB 4
-
 /* Prints a JSON string including spaces, tabs and newlines  */
 int prt_JSON(char * string)
 {

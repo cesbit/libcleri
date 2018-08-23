@@ -2,6 +2,7 @@
 #include <cleri/cleri.h>
 #include "../buffer.h"
 
+#define JTAB 4
 
 // private
 int prt_JSON(char * string);
