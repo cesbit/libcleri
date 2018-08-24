@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <cleri/cleri.h>
 #include <string.h>
-#include "expecting.h"
+#include "expect.h"
 
 /* Predefined gids for regex elements. To improve clarity in the re_to_str()
 and cleri_regex() */

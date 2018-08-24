@@ -1,6 +1,6 @@
 #include <time.h>
 #include <string.h>
-#include "expecting.h"
+#include "expect.h"
 
 #define RETURN_REGEX_EXAMPLE 0
 #define RETURN_REGEX_TYPE 1
