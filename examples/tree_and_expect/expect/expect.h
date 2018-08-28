@@ -1,5 +1,5 @@
-#ifndef CLERI_TEST_EXPECTING_H_
-#define CLERI_TEST_EXPECTING_H_
+#ifndef CLERI_EXAMPLE_EXPECT_H_
+#define CLERI_EXAMPLE_EXPECT_H_
 
 
 #define CLERI_REGEXSTR_FLOAT "^[-+]?[0-9]*\\.?[0-9]+"
@@ -20,4 +20,4 @@
 const char * get_cleri_obj(cleri_t * object, int regex_choice);
 void test_autocor(cleri_grammar_t * grammar, const char * str, buffer_t * buf);
 
-#endif /* CLERI_TEST_EXPECTING_H_ */
+#endif /* CLERI_EXAMPLE_EXPECT_H_ */

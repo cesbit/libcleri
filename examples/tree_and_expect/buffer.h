@@ -1,5 +1,5 @@
-#ifndef CLERI_BUFFER_H_
-#define CLERI_BUFFER_H_
+#ifndef CLERI_EXAMPLE_BUFFER_H_
+#define CLERI_EXAMPLE_BUFFER_H_
 
 #include <stdio.h>
 #include <cleri/cleri.h>
@@ -20,4 +20,4 @@ struct buffer_s
     char * buf;
 };
 
-#endif /* CLERI_BUFFER_H_ */
+#endif /* CLERI_EXAMPLE_BUFFER_H_ */
