@@ -249,7 +249,7 @@ Create and return a compiled grammar. Argument `start` must be the entry element
 for the grammar. Argument `re_keywords` should be a regular expression starting
 with character `^` for matching keywords in a grammar. When a grammar is created,
 each defined [keyword](#cleri_keyword_t) should match this regular expression.
-`re_keywords` is allowed to be `NULL` in which case the defualt
+`re_keywords` is allowed to be `NULL` in which case the default
 `CLERI_DEFAULT_RE_KEYWORDS` is used.
 
 #### `void cleri_grammar_free(cleri_grammar_t * grammar)`
@@ -266,9 +266,8 @@ result.
 - `size_t cleri_parse_t.pos`: Position in the string to where the string was successfully parsed. This value is (readonly)
 equal to the length of the string in case `cleri_parse_t.is_valid` is TRUE. (readonly)
 - `const char * cleri_parse_t.str`: Pointer to the provided string. (readonly)
-- `cleri_node_t * tree`: Parse tree. (see [cleri_node_t](#cleri_node_t) and [cleri_children_t](#cleri_children_t)) (readonly)
-- `const cleri_olist_t * expect`: Linked list to possible elements at position `cleri_parse_t.pos` in `cleri_parse_t.str`.
-(see [cleri_olist_t](#cleri_olist_t) for more information)
+- `cleri_node_t * tree`: Parse tree. Even when `is_valid` is `False` the parse tree is returned but will only contain results as far as parsing has succeeded. The tree is the root node which can include several `children` nodes. The structure will be further clarified in the example that explains a way of visualizing the parse tree. This example can be found in the "examples/tree_and_expect/tree" folder. Run this code and it will output a parse tree in JSON format. (see also [cleri_node_t](#cleri_node_t) and [cleri_children_t](#cleri_children_t)) (readonly)
+- `const cleri_olist_t * expect`: Linked list to possible elements at position `cleri_parse_t.pos` in `cleri_parse_t.str`. Even if `is_valid` is true there might be elements in this set, for example when an `Optional()` element could be added to the string. Expecting is useful if you want to implement things like auto-completion, syntax error handling, auto-syntax-correction etc. An example of this can be found in the "examples/tree_and_expect/expect" folder. (see [cleri_olist_t](#cleri_olist_t) for more information)
 
 #### `cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)`
 Create and return a parse result. The parse result contains pointers to the
@@ -289,7 +288,7 @@ may have children.
 *Public members*
 - `const char * cleri_node_t.str`: Pointer to the position in the parse string where this node starts. (readonly)
 - `size_t cleri_node_t.len`: Length of the string which is applicable for this node. (readonly)
-- `cleri_t * cleri_node_t.cl_obj`: Element from the grammar which matches this node. (readonly)
+- `cleri_t * cleri_node_t.cl_obj`: Element from the grammar which matches this node. Note that the `cl_obj` is `NULL` for the root node and the first can be found in its children. (readonly)
 - `cleri_children_t * cleri_node_t.children`: Optional children for this node. (readonly)
 
 #### `bool cleri_node_has_children(cleri_node_t * node)`
@@ -300,7 +299,7 @@ Children from a node in a linked list.
 
 *Public members*
 - `cleri_node_t * cleri_children_t.node`: Child node. (readonly)
-- `struct cleri_children_s * cleri_children_t.next`: Next child node or `NULL` if there are no other childs. (readonly)
+- `struct cleri_children_s * cleri_children_t.next`: Next child node or `NULL` if there are no other children. (readonly)
 
 Example looping over all children within a node:
 ```c
@@ -335,6 +334,7 @@ while (pr->expect != NULL) {
     pr->expect = pr->expect->next;
 }
 ```
+
 ## Elements
 Elements are objects used to define a grammar.
 

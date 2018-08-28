@@ -88,7 +88,7 @@ cleri_t * cleri_regex(uint32_t gid, const char * pattern)
     if (cl_object->via.regex->match_data == NULL)
     {
         pcre2_code_free(cl_object->via.regex->regex);
-        fprintf(stderr, "error: cannot create matsch data\n");
+        fprintf(stderr, "error: cannot create match data\n");
         free(cl_object->via.regex);
         free(cl_object);
         return NULL;
