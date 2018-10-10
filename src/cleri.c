@@ -11,7 +11,6 @@
  */
 #include <cleri/cleri.h>
 #include <stdlib.h>
-#include <assert.h>
 
 static cleri_t end_of_statement = {
         .gid=0,

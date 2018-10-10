@@ -28,6 +28,7 @@ cleri_grammar_t * cleri_grammar(cleri_t * start, const char * re_keywords)
     const char * re_kw = (re_keywords == NULL) ?
             CLERI_DEFAULT_RE_KEYWORDS : re_keywords;
 
+    /* re_keywords should start with a ^ */
     assert (re_kw[0] == '^');
 
     if (start == NULL)

@@ -13,13 +13,13 @@
 #include <cleri/rule.h>
 #include <stdlib.h>
 
-static void RULE_free(cleri_t * cl_object);
-static cleri_node_t * RULE_parse(
+static void rule__free(cleri_t * cl_object);
+static cleri_node_t * rule__parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
         cleri_rule_store_t * rule);
-static void RULE_tested_free(cleri_rule_tested_t * tested);
+static void rule__tested_free(cleri_rule_tested_t * tested);
 
 /*
  * Returns NULL in case an error has occurred.
@@ -34,8 +34,8 @@ cleri_t * cleri__rule(uint32_t gid, cleri_t * cl_obj)
     cleri_t * cl_object = cleri_new(
             gid,
             CLERI_TP_RULE,
-            &RULE_free,
-            &RULE_parse);
+            &rule__free,
+            &rule__parse);
 
     if (cl_object != NULL)
     {
@@ -106,7 +106,7 @@ cleri_rule_test_t cleri__rule_init(
     return CLERI_RULE_TRUE;
 }
 
-static void RULE_free(cleri_t * cl_object)
+static void rule__free(cleri_t * cl_object)
 {
     cleri_free(cl_object->via.rule->cl_obj);
     free(cl_object->via.rule);
@@ -115,7 +115,7 @@ static void RULE_free(cleri_t * cl_object)
 /*
  * Returns a node or NULL. In case of an error pr->is_valid is set to -1.
  */
-static cleri_node_t * RULE_parse(
+static cleri_node_t * rule__parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
@@ -173,7 +173,7 @@ static cleri_node_t * RULE_parse(
     }
 
     /* cleanup rule */
-    RULE_tested_free(nrule.tested);
+    rule__tested_free(nrule.tested);
 
     return node;
 }
@@ -181,7 +181,7 @@ static cleri_node_t * RULE_parse(
 /*
  * Cleanup rule tested
  */
-static void RULE_tested_free(cleri_rule_tested_t * tested)
+static void rule__tested_free(cleri_rule_tested_t * tested)
 {
     cleri_rule_tested_t * next;
     while (tested != NULL)

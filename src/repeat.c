@@ -13,9 +13,9 @@
 #include <stdlib.h>
 #include <assert.h>
 
-static void REPEAT_free(cleri_t * cl_object);
+static void repeat__free(cleri_t * cl_object);
 
-static cleri_node_t * REPEAT_parse(
+static cleri_node_t * repeat__parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
@@ -26,7 +26,7 @@ static cleri_node_t * REPEAT_parse(
  *
  * cl_ob :      object to repeat
  * min :        should be equal to or higher then 0.
- * max :        should be equal to or higher then 0 but when 0 it means
+ * max :        should be equal to or higher then min, or 0 which means
  *              unlimited.
  */
 cleri_t * cleri_repeat(uint32_t gid, cleri_t * cl_obj, size_t min, size_t max)
@@ -41,8 +41,8 @@ cleri_t * cleri_repeat(uint32_t gid, cleri_t * cl_obj, size_t min, size_t max)
     cleri_t * cl_object = cleri_new(
             gid,
             CLERI_TP_REPEAT,
-            &REPEAT_free,
-            &REPEAT_parse);
+            &repeat__free,
+            &repeat__parse);
 
     if (cl_object == NULL)
     {
@@ -70,7 +70,7 @@ cleri_t * cleri_repeat(uint32_t gid, cleri_t * cl_obj, size_t min, size_t max)
 /*
  * Destroy repeat object.
  */
-static void REPEAT_free(cleri_t * cl_object)
+static void repeat__free(cleri_t * cl_object)
 {
     cleri_free(cl_object->via.repeat->cl_obj);
     free(cl_object->via.repeat);
@@ -79,7 +79,7 @@ static void REPEAT_free(cleri_t * cl_object)
 /*
  * Returns a node or NULL. In case of an error pr->is_valid is set to -1.
  */
-static cleri_node_t * REPEAT_parse(
+static cleri_node_t * repeat__parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,

@@ -22,6 +22,7 @@
  */
 cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
 {
+    cleri_node_t * nd;
     cleri_parse_t * pr;
     const char * end;
     const char * test;
@@ -52,7 +53,7 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
     pr->match_data = grammar->match_data;
 
     /* do the actual parsing */
-    cleri__parse_walk(
+    nd = cleri__parse_walk(
             pr,
             pr->tree,
             grammar->start,
@@ -66,6 +67,8 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
         return NULL;
     }
 
+    pr->is_valid = nd != NULL;
+
     /* process the parse result */
     end = pr->tree->str + pr->tree->len;
 
@@ -75,11 +78,11 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
         if (!isspace(*test))
         {
             at_end = false;
+            pr->is_valid = false;
             break;
         }
     }
 
-    pr->is_valid = at_end;
     pr->pos = (pr->is_valid) ?
             pr->tree->len : (size_t) (pr->expecting->str - pr->str);
 
@@ -126,6 +129,79 @@ void cleri_parse_free(cleri_parse_t * pr)
 void cleri_parse_expect_start(cleri_parse_t * pr)
 {
     pr->expect = pr->expecting->required;
+}
+
+/*
+ * Print parse result to a string. The return value is equal to the snprintf
+ * function. Argument `translate_cb` maybe NULL or a function which may return
+ * a string based on the `cleri_t`. This allows for returning nice strings for
+ * regular expressions. The function may return NULL if it has no translation
+ * for the given regular expression.
+ */
+int cleri_parse_strn(
+    char * s,
+    size_t n,
+    cleri_parse_t * pr,
+    cleri_translate_t * translate)
+{
+    int rc, count = 0;
+    size_t i, m;
+    cleri_t * o;
+    const char * expect;
+    const char * template;
+    if (pr->is_valid)
+    {
+        return snprintf(s, n, "successfully parsed");
+    }
+    /* make sure expecting is at start */
+    cleri_parse_expect_start(pr);
+
+    rc = snprintf(s, n, "error at position %zd, expecting ", pr->pos);
+    if (rc < 0)
+    {
+        return rc;
+    }
+    i = rc;
+
+    while (pr->expect)
+    {
+        o = pr->expect->cl_obj;
+        if (!translate || !(expect = (*translate)(o))) switch(o->tp)
+        {
+        case CLERI_TP_END_OF_STATEMENT:
+            expect = "end_of_statement";
+            break;
+        case CLERI_TP_KEYWORD:
+            expect = o->via.keyword->keyword;
+            break;
+        case CLERI_TP_TOKENS:
+            expect = o->via.tokens->spaced;
+            break;
+        case CLERI_TP_TOKEN:
+            expect = o->via.token->token;
+            break;
+        default:
+            pr->expect = pr->expect->next;
+            continue;
+        }
+
+        /* make sure len is not greater than the maximum size */
+        m = (i < n) ? n - i : 0;
+
+        /* we use count = 0 to print the first one, then for the others
+         * a comma prefix and the last with -or-
+         */
+        template = !count++ ? "%s" : pr->expect->next ? ", %s" : " or %s";
+        rc = snprintf(s + i, m, template, expect);
+        if (rc < 0)
+        {
+            return rc;
+        }
+        i += rc;
+
+        pr->expect = pr->expect->next;
+    }
+    return (int) i;
 }
 
 /*

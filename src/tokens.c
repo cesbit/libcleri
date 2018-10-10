@@ -17,17 +17,18 @@
 #include <ctype.h>
 #include <assert.h>
 
-static void TOKENS_free(cleri_t * cl_object);
-static cleri_node_t * TOKENS_parse(
+static void tokens__free(cleri_t * cl_object);
+static cleri_node_t * tokens__parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
         cleri_rule_store_t * rule);
-static int TOKENS_list_add(
+static int tokens__list_add(
         cleri_tlist_t ** tlist,
         const char * token,
         size_t len);
-static void TOKENS_list_free(cleri_tlist_t * tlist);
+static void tokens__list_str(cleri_tlist_t * tlist, char * s);
+static void tokens__list_free(cleri_tlist_t * tlist);
 
 /*
  * Returns NULL in case an error has occurred.
@@ -41,16 +42,15 @@ cleri_t * cleri_tokens(uint32_t gid, const char * tokens)
     cl_object = cleri_new(
             gid,
             CLERI_TP_TOKENS,
-            &TOKENS_free,
-            &TOKENS_parse);
+            &tokens__free,
+            &tokens__parse);
 
     if (cl_object == NULL)
     {
         return NULL;
     }
 
-    cl_object->via.tokens =
-            (cleri_tokens_t *) malloc(sizeof(cleri_tokens_t));
+    cl_object->via.tokens = malloc(sizeof(cleri_tokens_t));
 
     if (cl_object->via.tokens == NULL)
     {
@@ -61,11 +61,11 @@ cleri_t * cleri_tokens(uint32_t gid, const char * tokens)
     /* copy the sting twice, first one we set spaces to 0...*/
     cl_object->via.tokens->tokens = strdup(tokens);
 
-    /* ...and this one we keep for showing the original */
-    cl_object->via.tokens->spaced = strdup(tokens);
+    /* ...and this one we keep for showing a spaced version */
+    cl_object->via.tokens->spaced = malloc(strlen(tokens) + 1);
 
-    cl_object->via.tokens->tlist =
-            (cleri_tlist_t *) malloc(sizeof(cleri_tlist_t));
+    cl_object->via.tokens->tlist = malloc(sizeof(cleri_tlist_t));
+
 
     if (    cl_object->via.tokens->tokens == NULL ||
             cl_object->via.tokens->spaced == NULL ||
@@ -87,7 +87,7 @@ cleri_t * cleri_tokens(uint32_t gid, const char * tokens)
         {
             if (len)
             {
-                if (TOKENS_list_add(
+                if (tokens__list_add(
                         &cl_object->via.tokens->tlist,
                         pt - len,
                         len))
@@ -110,10 +110,12 @@ cleri_t * cleri_tokens(uint32_t gid, const char * tokens)
         }
     }
 
-#ifdef DEBUG
-    /* check for empty token list */
+    /* tlist->token is never empty */
     assert (cl_object->via.tokens->tlist->token != NULL);
-#endif
+
+    tokens__list_str(
+        cl_object->via.tokens->tlist,
+        cl_object->via.tokens->spaced);
 
     return cl_object;
 }
@@ -121,9 +123,9 @@ cleri_t * cleri_tokens(uint32_t gid, const char * tokens)
 /*
  * Destroy token object.
  */
-static void TOKENS_free(cleri_t * cl_object)
+static void tokens__free(cleri_t * cl_object)
 {
-    TOKENS_list_free(cl_object->via.tokens->tlist);
+    tokens__list_free(cl_object->via.tokens->tlist);
     free(cl_object->via.tokens->tokens);
     free(cl_object->via.tokens->spaced);
     free(cl_object->via.tokens);
@@ -132,7 +134,7 @@ static void TOKENS_free(cleri_t * cl_object)
 /*
  * Returns a node or NULL. In case of an error pr->is_valid is set to -1.
  */
-static cleri_node_t * TOKENS_parse(
+static cleri_node_t * tokens__parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
@@ -180,7 +182,7 @@ static cleri_node_t * TOKENS_parse(
  * The token will be placed in the list based on the length. Thus the token
  * list remains ordered on length. (largest first)
  */
-static int TOKENS_list_add(
+static int tokens__list_add(
         cleri_tlist_t ** tlist,
         const char * token,
         size_t len)
@@ -201,7 +203,6 @@ static int TOKENS_list_add(
     }
     tmp->len = len;
     tmp->token = token;
-
 
     while (current != NULL && len <= current->len)
     {
@@ -224,9 +225,30 @@ static int TOKENS_list_add(
 }
 
 /*
+ * Returns 0 if successful and -1 in case an error occurred.
+ * (the token list remains unchanged in case of an error)
+ *
+ * The token will be placed in the list based on the length. Thus the token
+ * list remains ordered on length. (largest first)
+ */
+static int tokens__list_str(cleri_tlist_t * tlist, char * s)
+{
+    assert (tlist->token != NULL);
+    cleri_tlist_t * next;
+    sprintf(s, "%s", tlist->token);
+
+    while (tlist != NULL)
+    {
+        next = tlist->next;
+        tlist->token
+        tlist = next;
+    }
+}
+
+/*
  * Destroy token list. (NULL can be parsed tlist argument)
  */
-static void TOKENS_list_free(cleri_tlist_t * tlist)
+static void tokens__list_free(cleri_tlist_t * tlist)
 {
     cleri_tlist_t * next;
     while (tlist != NULL)

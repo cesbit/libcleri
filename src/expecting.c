@@ -12,7 +12,6 @@
  */
 #include <cleri/expecting.h>
 #include <stdlib.h>
-#include <assert.h>
 
 static cleri_exp_modes_t * EXPECTING_modes_new(const char * str);
 static void EXPECTING_empty(cleri_expecting_t * expecting);

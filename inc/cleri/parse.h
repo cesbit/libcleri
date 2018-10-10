@@ -29,6 +29,7 @@ typedef struct cleri_expecting_s cleri_expecting_t;
 typedef struct cleri_kwcache_s cleri_kwcache_t;
 typedef struct cleri_rule_store_s cleri_rule_store_t;
 typedef struct cleri_parse_s cleri_parse_t;
+typedef const char * (*cleri_translate_t)(cleri_t *);
 
 /* public functions */
 #ifdef __cplusplus
@@ -38,6 +39,11 @@ extern "C" {
 cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str);
 void cleri_parse_free(cleri_parse_t * pr);
 void cleri_parse_expect_start(cleri_parse_t * pr);
+int cleri_parse_strn(
+    char * s,
+    size_t n,
+    cleri_parse_t * pr,
+    cleri_translate_t * translate);
 
 #ifdef __cplusplus
 }

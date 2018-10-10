@@ -281,6 +281,9 @@ Cleanup a parse result.
 Can be used to reset the expect list to start. Usually you are not required to
 use this function since the expect list is already at the start position.
 
+#### `void cleri_parse_strn(char * s, size_t n, cleri_parse_t * pr, cleri_translate_t * translate)`
+TODO: Explain with small example
+
 ### `cleri_node_t`
 Node object. A parse result has a parse tree which consists of nodes. Each node
 may have children.
