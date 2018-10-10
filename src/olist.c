@@ -17,8 +17,7 @@
  */
 cleri_olist_t * cleri__olist_new(void)
 {
-    cleri_olist_t * olist;
-    olist = (cleri_olist_t *) malloc(sizeof(cleri_olist_t));
+    cleri_olist_t * olist = cleri__malloc(cleri_olist_t);
     if (olist != NULL)
     {
         olist->cl_obj = NULL;
@@ -52,7 +51,7 @@ int cleri__olist_append(cleri_olist_t * olist, cleri_t * cl_object)
         olist = olist->next;
     }
 
-    olist->next = (cleri_olist_t *) malloc(sizeof(cleri_olist_t));
+    olist->next = cleri__malloc(cleri_olist_t);
 
     if (olist->next == NULL)
     {
@@ -89,7 +88,7 @@ int cleri__olist_append_nref(cleri_olist_t * olist, cleri_t * cl_object)
         olist = olist->next;
     }
 
-    olist->next = (cleri_olist_t *) malloc(sizeof(cleri_olist_t));
+    olist->next = cleri__malloc(cleri_olist_t);
 
     if (olist->next == NULL)
     {

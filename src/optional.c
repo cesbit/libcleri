@@ -42,8 +42,7 @@ cleri_t * cleri_optional(uint32_t gid, cleri_t * cl_obj)
         return NULL;
     }
 
-    cl_object->via.optional =
-            (cleri_optional_t *) malloc(sizeof(cleri_optional_t));
+    cl_object->via.optional = cleri__malloc(cleri_optional_t);
 
     if (cl_object->via.optional == NULL)
     {

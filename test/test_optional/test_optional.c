@@ -24,6 +24,12 @@ static int test_optional(void)
         "error at position 0, expecting hi or end_of_statement",
         NULL);
 
+    _assert_parse_str (
+        grammar,
+        "hi hi",
+        "error at position 2, expecting end_of_statement",
+        NULL);
+
     cleri_grammar_free(grammar);
 
     return test_end();

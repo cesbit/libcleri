@@ -50,7 +50,7 @@ cleri_t * cleri_tokens(uint32_t gid, const char * tokens)
         return NULL;
     }
 
-    cl_object->via.tokens = malloc(sizeof(cleri_tokens_t));
+    cl_object->via.tokens = cleri__malloc(cleri_tokens_t);
 
     if (cl_object->via.tokens == NULL)
     {
@@ -62,9 +62,9 @@ cleri_t * cleri_tokens(uint32_t gid, const char * tokens)
     cl_object->via.tokens->tokens = strdup(tokens);
 
     /* ...and this one we keep for showing a spaced version */
-    cl_object->via.tokens->spaced = malloc(strlen(tokens) + 1);
+    cl_object->via.tokens->spaced = (char *) malloc(strlen(tokens) + 1);
 
-    cl_object->via.tokens->tlist = malloc(sizeof(cleri_tlist_t));
+    cl_object->via.tokens->tlist = cleri__malloc(cleri_tlist_t);
 
 
     if (    cl_object->via.tokens->tokens == NULL ||
@@ -196,7 +196,7 @@ static int tokens__list_add(
         current->len = len;
         return 0;
     }
-    tmp = (cleri_tlist_t *) malloc(sizeof(cleri_tlist_t));
+    tmp = cleri__malloc(cleri_tlist_t);
     if (tmp == NULL)
     {
         return -1;
@@ -225,24 +225,22 @@ static int tokens__list_add(
 }
 
 /*
- * Returns 0 if successful and -1 in case an error occurred.
- * (the token list remains unchanged in case of an error)
- *
- * The token will be placed in the list based on the length. Thus the token
- * list remains ordered on length. (largest first)
+ * Copies tokens to spaced. This is the input tokes orders by their length.
+ * No errors can occur since in any case enough space is allocated for *s.
  */
-static int tokens__list_str(cleri_tlist_t * tlist, char * s)
+static void tokens__list_str(cleri_tlist_t * tlist, char * s)
 {
     assert (tlist->token != NULL);
-    cleri_tlist_t * next;
-    sprintf(s, "%s", tlist->token);
-
-    while (tlist != NULL)
+    memcpy(s, tlist->token, tlist->len);
+    s += tlist->len;
+    while ((tlist = tlist->next) != NULL)
     {
-        next = tlist->next;
-        tlist->token
-        tlist = next;
+        *s = ' ';
+        s++;
+        memcpy(s, tlist->token, tlist->len);
+        s += tlist->len;
     }
+    *s = '\0';
 }
 
 /*

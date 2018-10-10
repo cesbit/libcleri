@@ -15,9 +15,9 @@
 #include <string.h>
 #include <assert.h>
 
-static void REGEX_free(cleri_t * cl_object);
+static void regex__free(cleri_t * cl_object);
 
-static cleri_node_t *  REGEX_parse(
+static cleri_node_t *  regex__parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
@@ -43,15 +43,15 @@ cleri_t * cleri_regex(uint32_t gid, const char * pattern)
     cl_object = cleri_new(
             gid,
             CLERI_TP_REGEX,
-            &REGEX_free,
-            &REGEX_parse);
+            &regex__free,
+            &regex__parse);
 
     if (cl_object == NULL)
     {
         return NULL;
     }
 
-    cl_object->via.regex = (cleri_regex_t *) malloc(sizeof(cleri_regex_t));
+    cl_object->via.regex = cleri__malloc(cleri_regex_t);
 
     if (cl_object->via.regex == NULL)
     {
@@ -101,7 +101,7 @@ cleri_t * cleri_regex(uint32_t gid, const char * pattern)
 /*
  * Destroy regex object.
  */
-static void REGEX_free(cleri_t * cl_object)
+static void regex__free(cleri_t * cl_object)
 {
     pcre2_match_data_free(cl_object->via.regex->match_data);
     pcre2_code_free(cl_object->via.regex->regex);
@@ -111,7 +111,7 @@ static void REGEX_free(cleri_t * cl_object)
 /*
  * Returns a node or NULL. In case of an error, pr->is_valid is set to -1
  */
-static cleri_node_t *  REGEX_parse(
+static cleri_node_t *  regex__parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,

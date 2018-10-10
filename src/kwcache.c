@@ -16,7 +16,7 @@
 #include <string.h>
 #include <cleri/kwcache.h>
 
-static void KWCACHE_kw_match(
+static void kwcache__kw_match(
         cleri_kwcache_t * kwcache,
         cleri_parse_t * pr,
         const char * str);
@@ -26,8 +26,7 @@ static void KWCACHE_kw_match(
  */
 cleri_kwcache_t * cleri__kwcache_new(void)
 {
-    cleri_kwcache_t * kwcache;
-    kwcache = (cleri_kwcache_t *) malloc(sizeof(cleri_kwcache_t));
+    cleri_kwcache_t * kwcache = cleri__malloc(cleri_kwcache_t);
     if (kwcache != NULL)
     {
         kwcache->len = 0;
@@ -61,7 +60,7 @@ ssize_t cleri__kwcache_match(
             }
             kwcache = kwcache->next;
         }
-        kwcache->next = (cleri_kwcache_t *) malloc(sizeof(cleri_kwcache_t));
+        kwcache->next = cleri__malloc(cleri_kwcache_t);
         if (kwcache->next == NULL)
         {
             return -1;
@@ -72,7 +71,7 @@ ssize_t cleri__kwcache_match(
     }
 
     kwcache->str = str;
-    KWCACHE_kw_match(kwcache, pr, str);
+    kwcache__kw_match(kwcache, pr, str);
     return kwcache->len;
 }
 
@@ -93,7 +92,7 @@ void cleri__kwcache_free(cleri_kwcache_t * kwcache)
 /*
  * This function will set kwcache->len if a match is found.
  */
-static void KWCACHE_kw_match(
+static void kwcache__kw_match(
         cleri_kwcache_t * kwcache,
         cleri_parse_t * pr,
         const char * str)

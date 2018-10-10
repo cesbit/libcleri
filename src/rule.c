@@ -39,8 +39,7 @@ cleri_t * cleri__rule(uint32_t gid, cleri_t * cl_obj)
 
     if (cl_object != NULL)
     {
-        cl_object->via.rule =
-                (cleri_rule_t *) malloc(sizeof(cleri_rule_t));
+        cl_object->via.rule = cleri__malloc(cleri_rule_t);
 
         if (cl_object->via.rule == NULL)
         {
@@ -92,8 +91,7 @@ cleri_rule_test_t cleri__rule_init(
         prev = (*target);
         (*target) = (*target)->next;
     }
-    *target = prev->next =
-            (cleri_rule_tested_t *) malloc(sizeof(cleri_rule_tested_t));
+    *target = prev->next = cleri__malloc(cleri_rule_tested_t);
 
     if (*target == NULL)
     {
@@ -132,7 +130,7 @@ static cleri_node_t * rule__parse(
     }
 
     nrule.depth = 0;
-    nrule.tested = (cleri_rule_tested_t *) malloc(sizeof(cleri_rule_tested_t));
+    nrule.tested = cleri__malloc(cleri_rule_tested_t);
 
     if (nrule.tested == NULL)
     {

@@ -49,8 +49,7 @@ cleri_t * cleri_repeat(uint32_t gid, cleri_t * cl_obj, size_t min, size_t max)
         return NULL;
     }
 
-    cl_object->via.repeat =
-            (cleri_repeat_t *) malloc(sizeof(cleri_repeat_t));
+    cl_object->via.repeat = cleri__malloc(cleri_repeat_t);
 
     if (cl_object->via.repeat == NULL)
     {

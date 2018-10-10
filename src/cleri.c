@@ -30,9 +30,7 @@ cleri_t * cleri_new(
         cleri_free_object_t free_object,
         cleri_parse_object_t parse_object)
 {
-    cleri_t * cl_object;
-
-    cl_object = (cleri_t *) malloc(sizeof(cleri_t));
+    cleri_t * cl_object = cleri__malloc(cleri_t);
     if (cl_object != NULL)
     {
         cl_object->gid = gid;

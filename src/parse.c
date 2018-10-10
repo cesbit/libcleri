@@ -29,7 +29,7 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
     bool at_end = true;
 
     /* prepare parsing */
-    pr = (cleri_parse_t *) malloc(sizeof(cleri_parse_t));
+    pr = cleri__malloc(cleri_parse_t);
     if (pr == NULL)
     {
         return NULL;
@@ -88,6 +88,7 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
 
     if (!at_end && pr->expecting->required->cl_obj == NULL)
     {
+        pr->pos = pr->tree->len;
         if (cleri__expecting_set_mode(
                 pr->expecting,
                 end,

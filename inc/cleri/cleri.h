@@ -12,6 +12,12 @@
 #ifndef CLERI_OBJECT_H_
 #define CLERI_OBJECT_H_
 
+#ifdef __cplusplus
+#define cleri__malloc(__t) ((__t*)malloc(sizeof(__t)))
+#else
+#define cleri__malloc(__t) (malloc(sizeof(__t)))
+#endif
+
 #include <cleri/expecting.h>
 #include <cleri/keyword.h>
 #include <cleri/sequence.h>

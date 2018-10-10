@@ -38,8 +38,7 @@ cleri_t * cleri_sequence(uint32_t gid, size_t len, ...)
         return NULL;
     }
 
-    cl_object->via.sequence =
-            (cleri_sequence_t *) malloc(sizeof(cleri_sequence_t));
+    cl_object->via.sequence = cleri__malloc(cleri_sequence_t);
 
     if (cl_object->via.sequence == NULL)
     {

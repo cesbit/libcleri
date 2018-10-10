@@ -36,8 +36,7 @@ cleri_grammar_t * cleri_grammar(cleri_t * start, const char * re_keywords)
         return NULL;
     }
 
-    cleri_grammar_t * grammar =
-            (cleri_grammar_t *) malloc(sizeof(cleri_grammar_t));
+    cleri_grammar_t * grammar = cleri__malloc(cleri_grammar_t);
     if (grammar == NULL)
     {
         return NULL;

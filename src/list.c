@@ -12,8 +12,8 @@
 #include <cleri/list.h>
 #include <stdlib.h>
 
-static void LIST_free(cleri_t * cl_object);
-static cleri_node_t * LIST_parse(
+static void list__free(cleri_t * cl_object);
+static cleri_node_t * list__parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
@@ -46,16 +46,15 @@ cleri_t * cleri_list(
     cleri_t * cl_object = cleri_new(
             gid,
             CLERI_TP_LIST,
-            &LIST_free,
-            &LIST_parse);
+            &list__free,
+            &list__parse);
 
     if (cl_object == NULL)
     {
         return NULL;
     }
 
-    cl_object->via.list =
-            (cleri_list_t *) malloc(sizeof(cleri_list_t));
+    cl_object->via.list = cleri__malloc(cleri_list_t);
 
     if (cl_object->via.list == NULL)
     {
@@ -78,7 +77,7 @@ cleri_t * cleri_list(
 /*
  * Destroy list object.
  */
-static void LIST_free(cleri_t * cl_object)
+static void list__free(cleri_t * cl_object)
 {
     cleri_free(cl_object->via.list->cl_obj);
     cleri_free(cl_object->via.list->delimiter);
@@ -88,12 +87,13 @@ static void LIST_free(cleri_t * cl_object)
 /*
  * Returns a node or NULL. In case of an error pr->is_valid is set to -1.
  */
-static cleri_node_t *  LIST_parse(
+static cleri_node_t *  list__parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
         cleri_rule_store_t * rule)
 {
+    cleri_list_t * list = cl_obj->via.list;
     cleri_node_t * node;
     cleri_node_t * rnode;
     size_t i = 0;
@@ -110,29 +110,25 @@ static cleri_node_t *  LIST_parse(
         rnode = cleri__parse_walk(
                 pr,
                 node,
-                cl_obj->via.list->cl_obj,
+                list->cl_obj,
                 rule,
-                i < cl_obj->via.list->min); // 1 = REQUIRED
-        if (rnode == NULL)
+                i < list->min); // 1 = REQUIRED
+        if (rnode == NULL || (++i == list->max && list->opt_closing == false))
         {
             break;
         }
-        i++;
         rnode = cleri__parse_walk(
                 pr,
                 node,
-                cl_obj->via.list->delimiter,
+                list->delimiter,
                 rule,
-                i < cl_obj->via.list->min); // 1 = REQUIRED
-        if (rnode == NULL)
+                i < list->min); // 1 = REQUIRED
+        if (rnode == NULL || ++j == list->max)
         {
             break;
         }
-        j++;
     }
-    if (    i < cl_obj->via.list->min ||
-            (cl_obj->via.list->max && i > cl_obj->via.list->max) ||
-            ((cl_obj->via.list->opt_closing == 0) && i && i == j))
+    if (i < list->min || (list->opt_closing == false && i && i == j))
     {
         cleri__node_free(node);
         return NULL;

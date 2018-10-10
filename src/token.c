@@ -40,8 +40,7 @@ cleri_t * cleri_token(uint32_t gid, const char * token)
         return NULL;
     }
 
-    cl_object->via.token =
-            (cleri_token_t *) malloc(sizeof(cleri_token_t));
+    cl_object->via.token = cleri__malloc(cleri_token_t);
 
     if (cl_object->via.token == NULL)
     {

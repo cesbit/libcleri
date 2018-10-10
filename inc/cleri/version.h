@@ -7,11 +7,7 @@
 #ifndef CLERI_VERSION_H_
 #define CLERI_VERSION_H_
 
-#define LIBCLERI_VERSION_MAJOR 0
-#define LIBCLERI_VERSION_MINOR 9
-#define LIBCLERI_VERSION_PATCH 4
-
-#define LIBCLERI_VERSION "0.9.4"
+#define LIBCLERI_VERSION "1.0.0"
 
 /* public funtion */
 #ifdef __cplusplus

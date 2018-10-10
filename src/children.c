@@ -17,8 +17,7 @@
  */
 cleri_children_t * cleri__children_new(void)
 {
-    cleri_children_t * children =
-            (cleri_children_t *) malloc(sizeof(cleri_children_t));
+    cleri_children_t * children = cleri__malloc(cleri_children_t);
     if (children != NULL)
     {
         children->node = NULL;
@@ -45,7 +44,7 @@ int cleri__children_add(cleri_children_t * children, cleri_node_t * node)
         children = children->next;
     }
 
-    children->next = (cleri_children_t *) malloc(sizeof(cleri_children_t));
+    children->next = cleri__malloc(cleri_children_t);
     if (children->next == NULL)
     {
         return -1;

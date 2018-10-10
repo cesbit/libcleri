@@ -12,10 +12,10 @@ static int test_choice_most_greedy(void)
     k_hi = cleri_keyword(0, "hi", 0);
     k_iris = cleri_keyword(0, "iris", 0);
     seq = cleri_sequence(0, 2, k_hi, k_iris);
-    choice = cleri_choice(0, 1, 2, k_hi, seq);
+    choice = cleri_choice(0, true, 2, k_hi, seq);
     grammar = cleri_grammar(choice, NULL);
 
-    _assert (choice->via.choice->most_greedy);
+    _assert (choice->via.choice->most_greedy == true);
     _assert_is_valid (grammar, "hi");
     _assert_is_valid (grammar, "hi iris");
     _assert_is_not_valid (grammar, "hi sasha");
@@ -35,10 +35,10 @@ static int test_choice_first_match(void)
     k_hi = cleri_keyword(0, "hi", 0);
     k_iris = cleri_keyword(0, "iris", 0);
     seq = cleri_sequence(0, 2, k_hi, k_iris);
-    choice = cleri_choice(0, 0, 2, k_hi, seq);
+    choice = cleri_choice(0, false, 2, k_hi, seq);
     grammar = cleri_grammar(choice, NULL);
 
-    _assert (!choice->via.choice->most_greedy);
+    _assert (choice->via.choice->most_greedy == false);
     _assert_is_valid (grammar, "hi");
     _assert_is_not_valid (grammar, "hi iris");
     _assert_is_not_valid (grammar, "hi sasha");

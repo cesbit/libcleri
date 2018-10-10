@@ -14,7 +14,7 @@ static char * parse_str(cleri_parse_t * pr, cleri_translate_t * translate)
         return NULL;
     }
     sz = i + 1;
-    char * s = malloc(sz);
+    char * s = (char *) malloc(sz);
     if (s)
     {
         i = cleri_parse_strn(s, sz, pr, translate);

@@ -13,9 +13,9 @@
 #include <string.h>
 #include <cleri/keyword.h>
 
-static void KEYWORD_free(cleri_t * cl_object);
+static void keyword__free(cleri_t * cl_object);
 
-static cleri_node_t * KEYWORD_parse(
+static cleri_node_t * keyword__parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
@@ -29,16 +29,15 @@ cleri_t * cleri_keyword(uint32_t gid, const char * keyword, int ign_case)
     cleri_t * cl_object = cleri_new(
             gid,
             CLERI_TP_KEYWORD,
-            &KEYWORD_free,
-            &KEYWORD_parse);
+            &keyword__free,
+            &keyword__parse);
 
     if (cl_object == NULL)
     {
         return NULL;
     }
 
-    cl_object->via.keyword =
-            (cleri_keyword_t *) malloc(sizeof(cleri_keyword_t));
+    cl_object->via.keyword = cleri__malloc(cleri_keyword_t);
 
     if (cl_object->via.tokens == NULL)
     {
@@ -56,7 +55,7 @@ cleri_t * cleri_keyword(uint32_t gid, const char * keyword, int ign_case)
 /*
  * Destroy keyword object.
  */
-static void KEYWORD_free(cleri_t * cl_object)
+static void keyword__free(cleri_t * cl_object)
 {
     free(cl_object->via.keyword);
 }
@@ -64,7 +63,7 @@ static void KEYWORD_free(cleri_t * cl_object)
 /*
  * Returns a node or NULL. In case or an error, pr->is_valid is set to -1.
  */
-static cleri_node_t * KEYWORD_parse(
+static cleri_node_t * keyword__parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,

@@ -13,21 +13,19 @@
 #include <cleri/expecting.h>
 #include <stdlib.h>
 
-static cleri_exp_modes_t * EXPECTING_modes_new(const char * str);
-static void EXPECTING_empty(cleri_expecting_t * expecting);
-static int EXPECTING_get_mode(cleri_exp_modes_t * modes, const char * str);
-static void EXPECTING_shift_modes(
+static void expecting__empty(cleri_expecting_t * expecting);
+static int expecting__get_mode(cleri_exp_modes_t * modes, const char * str);
+static void expecting__shift_modes(
         cleri_exp_modes_t ** modes,
         const char * str);
-static void EXPECTING_modes_free(cleri_exp_modes_t * modes);
+static void expecting__modes_free(cleri_exp_modes_t * modes);
 
 /*
  * Returns NULL in case an error has occurred.
  */
 cleri_expecting_t * cleri__expecting_new(const char * str)
 {
-    cleri_expecting_t * expecting =
-            (cleri_expecting_t *) malloc(sizeof(cleri_expecting_t));
+    cleri_expecting_t * expecting = cleri__malloc(cleri_expecting_t);
 
     if (expecting != NULL)
     {
@@ -46,13 +44,7 @@ cleri_expecting_t * cleri__expecting_new(const char * str)
             return NULL;
         }
 
-        if ((expecting->modes = EXPECTING_modes_new(str)) == NULL)
-        {
-            free(expecting->optional);
-            free(expecting->required);
-            free(expecting);
-            return NULL;
-        }
+        expecting->modes = NULL;
     }
 
     return expecting;
@@ -70,14 +62,14 @@ int cleri__expecting_update(
 
     if (str > expecting->str)
     {
-        EXPECTING_empty(expecting);
+        expecting__empty(expecting);
         expecting->str = str;
-        EXPECTING_shift_modes(&(expecting->modes), str);
+        expecting__shift_modes(&(expecting->modes), str);
     }
 
     if (expecting->str == str)
     {
-        if (EXPECTING_get_mode(expecting->modes, str))
+        if (expecting__get_mode(expecting->modes, str))
         {
             /* true (1) is required */
             rc = cleri__olist_append_nref(expecting->required, cl_obj);
@@ -100,25 +92,26 @@ int cleri__expecting_set_mode(
         const char * str,
         int mode)
 {
-    cleri_exp_modes_t * current = expecting->modes;
-    for (; current->next != NULL; current = current->next)
+    cleri_exp_modes_t ** modes = &expecting->modes;
+    for (; *modes != NULL; modes = &(*modes)->next)
     {
-        if (current->str == str)
+        if ((*modes)->str == str)
         {
-            current->mode = mode && current->mode;
+            (*modes)->mode = mode && (*modes)->mode;
             return 0;
         }
     }
-    current->next = (cleri_exp_modes_t *) malloc(sizeof(cleri_exp_modes_t));
 
-    if (current->next == NULL)
+    *modes = cleri__malloc(cleri_exp_modes_t);
+
+    if (*modes == NULL)
     {
         return -1;
     }
 
-    current->next->mode = mode;
-    current->next->next = NULL;
-    current->next->str = str;
+    (*modes)->mode = mode;
+    (*modes)->next = NULL;
+    (*modes)->str = str;
 
     return 0;
 }
@@ -128,10 +121,10 @@ int cleri__expecting_set_mode(
  */
 void cleri__expecting_free(cleri_expecting_t * expecting)
 {
-    EXPECTING_empty(expecting);
+    expecting__empty(expecting);
     free(expecting->required);
     free(expecting->optional);
-    EXPECTING_modes_free(expecting->modes);
+    expecting__modes_free(expecting->modes);
     free(expecting);
 }
 
@@ -165,25 +158,9 @@ void cleri__expecting_combine(cleri_expecting_t * expecting)
 }
 
 /*
- * Returns NULL in case an error has occurred.
- */
-static cleri_exp_modes_t * EXPECTING_modes_new(const char * str)
-{
-    cleri_exp_modes_t * modes =
-            (cleri_exp_modes_t *) malloc(sizeof(cleri_exp_modes_t));
-    if (modes != NULL)
-    {
-        modes->mode = CLERI__EXP_MODE_REQUIRED;
-        modes->next = NULL;
-        modes->str = str;
-    }
-    return modes;
-}
-
-/*
  * shift from modes
  */
-static void EXPECTING_shift_modes(
+static void expecting__shift_modes(
         cleri_exp_modes_t ** modes,
         const char * str)
 {
@@ -199,12 +176,13 @@ static void EXPECTING_shift_modes(
         free(*modes);
         *modes = next;
     }
+    (*modes)->str = str;
 }
 
 /*
  * Destroy modes.
  */
-static void EXPECTING_modes_free(cleri_exp_modes_t * modes)
+static void expecting__modes_free(cleri_exp_modes_t * modes)
 {
     cleri_exp_modes_t * next;
     while (modes != NULL)
@@ -218,7 +196,7 @@ static void EXPECTING_modes_free(cleri_exp_modes_t * modes)
 /*
  * Return modes for a given position in str.
  */
-static int EXPECTING_get_mode(cleri_exp_modes_t * modes, const char * str)
+static int expecting__get_mode(cleri_exp_modes_t * modes, const char * str)
 {
     for (; modes != NULL; modes = modes->next)
     {
@@ -233,7 +211,7 @@ static int EXPECTING_get_mode(cleri_exp_modes_t * modes, const char * str)
 /*
  * Empty both required and optional lists.
  */
-static void EXPECTING_empty(cleri_expecting_t * expecting)
+static void expecting__empty(cleri_expecting_t * expecting)
 {
     cleri__olist_empty(expecting->required);
     cleri__olist_empty(expecting->optional);
