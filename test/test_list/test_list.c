@@ -9,7 +9,7 @@ static int test_list(void)
     cleri_grammar_t * grammar;
     cleri_t * k_hi, * delimiter, * list;
 
-    k_hi = cleri_keyword(0, "hi", 0);
+    k_hi = cleri_keyword(0, "hi", false);
     delimiter = cleri_token(0, ",");
     list = cleri_list(0, k_hi, delimiter, 0, 0, false);
     grammar = cleri_grammar(list, NULL);
@@ -25,7 +25,7 @@ static int test_list(void)
     _assert_parse_str (
         grammar,
         "hi.",
-        "error at position 2, expecting , or end_of_statement",
+        "error at position 2, expecting: , or end_of_statement",
         NULL);
 
     cleri_grammar_free(grammar);
@@ -40,7 +40,7 @@ static int test_list_all_options(void)
     cleri_grammar_t * grammar;
     cleri_t * k_hi, * delimiter, * list;
 
-    k_hi = cleri_keyword(0, "hi", 0);
+    k_hi = cleri_keyword(0, "hi", false);
     delimiter = cleri_token(0, "-");
     list = cleri_list(0, k_hi, delimiter, 1, 3, true);
     grammar = cleri_grammar(list, NULL);
@@ -59,17 +59,17 @@ static int test_list_all_options(void)
     _assert_parse_str (
         grammar,
         "hi-hi-hi-hi-hi",
-        "error at position 9, expecting end_of_statement",
+        "error at position 9, expecting: end_of_statement",
         NULL);
     _assert_parse_str (
         grammar,
         "hi.",
-        "error at position 2, expecting - or end_of_statement",
+        "error at position 2, expecting: - or end_of_statement",
         NULL);
     _assert_parse_str (
         grammar,
         "",
-        "error at position 0, expecting hi",
+        "error at position 0, expecting: hi",
         NULL);
 
     cleri_grammar_free(grammar);

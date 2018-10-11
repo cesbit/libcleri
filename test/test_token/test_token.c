@@ -19,7 +19,7 @@ static int test_token(void)
     _assert_parse_str (
         grammar,
         "",
-        "error at position 0, expecting .",
+        "error at position 0, expecting: .",
         NULL);
 
     cleri_grammar_free(grammar);
@@ -44,7 +44,7 @@ static int test_token_multi_char(void)
     _assert_parse_str (
         grammar,
         "",
-        "error at position 0, expecting !=",
+        "error at position 0, expecting: !=",
         NULL);
     cleri_grammar_free(grammar);
 

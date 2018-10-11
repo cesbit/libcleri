@@ -3,14 +3,6 @@
  *           slightly faster compared to tokens containing more characters.
  *           (be careful a token should not match the keyword regular
  *           expression)
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *
  */
 #include <cleri/token.h>
 #include <stdlib.h>

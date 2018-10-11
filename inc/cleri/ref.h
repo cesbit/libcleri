@@ -1,13 +1,5 @@
 /*
  * ref.h - cleri ref element
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2017, Transceptor Technology
- *
- * changes
- *  - initial version, 20-06-2017
- *
  */
 #ifndef CLERI_REF_H_
 #define CLERI_REF_H_

@@ -1,14 +1,6 @@
 /*
  * tokens.c - cleri tokens element. (like token but can contain more tokens
  *            in one element)
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *
  */
 #include <cleri/tokens.h>
 #include <stdlib.h>

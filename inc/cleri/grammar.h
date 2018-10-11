@@ -1,13 +1,5 @@
 /*
  * grammar.h - this should contain the 'start' or your grammar.
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *  - refactoring, 17-06-2017
  */
 #ifndef CLERI_GRAMMAR_H_
 #define CLERI_GRAMMAR_H_

@@ -1,13 +1,5 @@
 /*
  * sequence.c - cleri sequence element.
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *
  */
 #include <cleri/sequence.h>
 #include <stdarg.h>

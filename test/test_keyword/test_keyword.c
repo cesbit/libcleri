@@ -23,9 +23,13 @@ static int test_keyword(void)
     _assert_parse_str (
         grammar,
         "hello",
-        "error at position 0, expecting hi",
+        "error at position 0, expecting: hi",
         NULL);
-
+    _assert_parse_str (
+        grammar,
+        "hi",
+        "parsed successfully",
+        NULL);
     cleri_grammar_free(grammar);
 
     return test_end();
@@ -51,7 +55,7 @@ static int test_keyword_ign_case(void)
     _assert_parse_str (
         grammar,
         "Hi Iris",
-        "error at position 2, expecting end_of_statement",
+        "error at position 2, expecting: end_of_statement",
         NULL);
     cleri_grammar_free(grammar);
 

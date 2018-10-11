@@ -54,3 +54,6 @@ clean:
 .SECONDARY:
 
 -include ../makefile.targets
+
+test:
+	@cd ../test && ./test.sh

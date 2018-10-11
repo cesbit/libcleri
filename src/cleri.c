@@ -1,13 +1,5 @@
 /*
- * object.c - each cleri element is a cleri object.
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *
+ * cleri.c - each cleri element is a cleri object.
  */
 #include <cleri/cleri.h>
 #include <stdlib.h>

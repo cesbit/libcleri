@@ -9,8 +9,8 @@ static int test_choice_most_greedy(void)
     cleri_grammar_t * grammar;
     cleri_t * k_hi, * k_iris, * seq, * choice;
 
-    k_hi = cleri_keyword(0, "hi", 0);
-    k_iris = cleri_keyword(0, "iris", 0);
+    k_hi = cleri_keyword(0, "hi", false);
+    k_iris = cleri_keyword(0, "iris", false);
     seq = cleri_sequence(0, 2, k_hi, k_iris);
     choice = cleri_choice(0, true, 2, k_hi, seq);
     grammar = cleri_grammar(choice, NULL);
@@ -32,8 +32,8 @@ static int test_choice_first_match(void)
     cleri_grammar_t * grammar;
     cleri_t * k_hi, * k_iris, * seq, * choice;
 
-    k_hi = cleri_keyword(0, "hi", 0);
-    k_iris = cleri_keyword(0, "iris", 0);
+    k_hi = cleri_keyword(0, "hi", false);
+    k_iris = cleri_keyword(0, "iris", false);
     seq = cleri_sequence(0, 2, k_hi, k_iris);
     choice = cleri_choice(0, false, 2, k_hi, seq);
     grammar = cleri_grammar(choice, NULL);

@@ -1,13 +1,5 @@
 /*
- * children.c - linked list for keeping node results
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *
+ * children.c - linked list for keeping node results.
  */
 #include <stdlib.h>
 #include <cleri/children.h>

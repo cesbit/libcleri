@@ -1,13 +1,5 @@
 /*
  * regex.c - cleri regular expression element.
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *
  */
 #include <cleri/regex.h>
 #include <inttypes.h>

@@ -1,13 +1,5 @@
 /*
  * grammar.c - this should contain the 'start' or your grammar.
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *
  */
 #define PCRE2_CODE_UNIT_WIDTH 8
 

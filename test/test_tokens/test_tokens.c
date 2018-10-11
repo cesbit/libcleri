@@ -24,7 +24,7 @@ static int test_tokens(void)
     _assert_parse_str (
         grammar,
         "",
-        "error at position 0, expecting == != >= <= > <",
+        "error at position 0, expecting: == != >= <= > <",
         NULL);
 
     cleri_grammar_free(grammar);

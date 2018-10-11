@@ -1,0 +1,11 @@
+../src/children.c
+../src/cleri.c
+../src/expecting.c
+../src/grammar.c
+../src/kwcache.c
+../src/node.c
+../src/olist.c
+../src/parse.c
+../src/keyword.c
+../src/sequence.c
+../src/dup.c

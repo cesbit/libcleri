@@ -1,13 +1,5 @@
 /*
  * dup.c - this cleri element can be used to duplicate an element.
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2017, Transceptor Technology
- *
- * changes
- *  - initial version, 21-06-2017
- *
  */
  #include <cleri/dup.h>
 

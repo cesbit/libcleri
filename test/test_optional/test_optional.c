@@ -9,7 +9,7 @@ static int test_optional(void)
     cleri_grammar_t * grammar;
     cleri_t * k_hi, * optional;
 
-    k_hi = cleri_keyword(0, "hi", 0);
+    k_hi = cleri_keyword(0, "hi", false);
     optional = cleri_optional(0, k_hi);
     grammar = cleri_grammar(optional, NULL);
 
@@ -21,13 +21,13 @@ static int test_optional(void)
     _assert_parse_str (
         grammar,
         "hello",
-        "error at position 0, expecting hi or end_of_statement",
+        "error at position 0, expecting: hi or end_of_statement",
         NULL);
 
     _assert_parse_str (
         grammar,
         "hi hi",
-        "error at position 2, expecting end_of_statement",
+        "error at position 2, expecting: end_of_statement",
         NULL);
 
     cleri_grammar_free(grammar);

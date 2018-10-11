@@ -1,14 +1,6 @@
 /*
  * choice.c - this cleri element can hold other elements and the grammar
  *            has to choose one of them.
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *  - fixed issue #53, 23-02-2017
  */
 #include <cleri/choice.h>
 #include <cleri/node.h>
@@ -54,7 +46,7 @@ cleri_t * cleri_choice(uint32_t gid, int most_greedy, size_t len, ...)
         return NULL;
     }
 
-    cl_object->via.choice = malloc(sizeof(cleri_choice_t));
+    cl_object->via.choice = cleri__malloc(cleri_choice_t);
 
     if (cl_object->via.choice == NULL)
     {

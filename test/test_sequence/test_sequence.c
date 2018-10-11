@@ -9,8 +9,8 @@ static int test_sequence(void)
     cleri_grammar_t * grammar;
     cleri_t * k_hi, * k_iris, * seq;
 
-    k_hi = cleri_keyword(0, "hi", 0);
-    k_iris = cleri_keyword(0, "iris", 0);
+    k_hi = cleri_keyword(0, "hi", false);
+    k_iris = cleri_keyword(0, "iris", false);
     seq = cleri_sequence(0, 2, k_hi, k_iris);
     grammar = cleri_grammar(seq, NULL);
 
@@ -19,7 +19,7 @@ static int test_sequence(void)
     _assert_parse_str (
         grammar,
         "hi sasha",
-        "error at position 3, expecting iris",
+        "error at position 3, expecting: iris",
         NULL);
 
     cleri_grammar_free(grammar);

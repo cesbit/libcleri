@@ -1,13 +1,5 @@
 /*
- * parser.h - this contains the start for parsing a string to a grammar.
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *  - refactoring, 17-06-2017
+ * parse.h - this contains everything for parsing a string to a grammar.
  */
 #ifndef CLERI_PARSE_H_
 #define CLERI_PARSE_H_
@@ -29,7 +21,7 @@ typedef struct cleri_expecting_s cleri_expecting_t;
 typedef struct cleri_kwcache_s cleri_kwcache_t;
 typedef struct cleri_rule_store_s cleri_rule_store_t;
 typedef struct cleri_parse_s cleri_parse_t;
-typedef const char * (*cleri_translate_t)(cleri_t *);
+typedef const char * (cleri_translate_t)(cleri_t *);
 
 /* public functions */
 #ifdef __cplusplus

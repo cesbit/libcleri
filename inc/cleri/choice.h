@@ -1,14 +1,6 @@
 /*
  * choice.h - this cleri element can hold other elements and the grammar
  *            has to choose one of them.
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2017, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *  - refactoring, 17-06-2017
  */
 #ifndef CLERI_CHOICE_H_
 #define CLERI_CHOICE_H_

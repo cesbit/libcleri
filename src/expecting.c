@@ -1,14 +1,6 @@
 /*
  * expecting.c - holds elements which the grammar expects at one position.
  *               this can be used for suggestions.
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *
  */
 #include <cleri/expecting.h>
 #include <stdlib.h>

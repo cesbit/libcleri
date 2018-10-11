@@ -1,13 +1,5 @@
 /*
- * parser.c - this contains the start for parsing a string to a grammar.
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *
+ * parse.c - this contains everything for parsing a string to a grammar.
  */
 #include <cleri/expecting.h>
 #include <cleri/parse.h>
@@ -152,12 +144,12 @@ int cleri_parse_strn(
     const char * template;
     if (pr->is_valid)
     {
-        return snprintf(s, n, "successfully parsed");
+        return snprintf(s, n, "parsed successfully");
     }
     /* make sure expecting is at start */
     cleri_parse_expect_start(pr);
 
-    rc = snprintf(s, n, "error at position %zd, expecting ", pr->pos);
+    rc = snprintf(s, n, "error at position %zd", pr->pos);
     if (rc < 0)
     {
         return rc;
@@ -182,6 +174,12 @@ int cleri_parse_strn(
             expect = o->via.token->token;
             break;
         default:
+            expect = "";  /* continue */
+        }
+
+        if (*expect == '\0')
+        {
+            /* ignore empty strings */
             pr->expect = pr->expect->next;
             continue;
         }
@@ -192,7 +190,11 @@ int cleri_parse_strn(
         /* we use count = 0 to print the first one, then for the others
          * a comma prefix and the last with -or-
          */
-        template = !count++ ? "%s" : pr->expect->next ? ", %s" : " or %s";
+        template = !count++
+            ? ", expecting: %s"
+            : pr->expect->next
+            ? ", %s"
+            : " or %s";
         rc = snprintf(s + i, m, template, expect);
         if (rc < 0)
         {

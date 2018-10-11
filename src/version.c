@@ -1,7 +1,5 @@
-/* version.h
- *
- *  Created on: Jun 14, 2017
- *      Author: Jeroen van der Heijden <jeroen@transceptor.technology>
+/*
+ * version.c - cleri version information.
  */
 
  #include <cleri/version.h>

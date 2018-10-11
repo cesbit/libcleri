@@ -1,14 +1,6 @@
 /*
  * prio.c - cleri prio element. (this element create a cleri rule object
  *          holding this prio element)
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *
  */
 #include <cleri/prio.h>
 #include <cleri/expecting.h>
@@ -17,7 +9,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define PRIO_MAX_RECURSION_DEPTH 200
+#ifndef PRIO_MAX_RECURSION_DEPTH
+#define PRIO_MAX_RECURSION_DEPTH 50
+#endif
 
 static void prio__free(cleri_t * cl_obj);
 

@@ -1,13 +1,10 @@
 /*
- * version.h
- *
- *  Created on: Jun 19, 2017
- *      Author: Jeroen van der Heijden <jeroen@transceptor.technology>
+ * version.h - cleri version information.
  */
 #ifndef CLERI_VERSION_H_
 #define CLERI_VERSION_H_
 
-#define LIBCLERI_VERSION "1.0.0"
+#define LIBCLERI_VERSION "0.10.0"
 
 /* public funtion */
 #ifdef __cplusplus

@@ -1,13 +1,5 @@
 /*
  * kwcache.c - holds keyword regular expression result while parsing.
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *
  */
 #define PCRE2_CODE_UNIT_WIDTH 8
 

@@ -1,13 +1,5 @@
 /*
- * ref.c - cleri ref element
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2017, Transceptor Technology
- *
- * changes
- *  - initial version, 20-06-2017
- *
+ * ref.c - cleri ref element.
  */
 #include <stdlib.h>
 #include <assert.h>

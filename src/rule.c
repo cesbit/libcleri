@@ -1,14 +1,6 @@
 /*
  * rule.c - cleri regular rule element. (do not directly use this element but
  *          create a 'prio' instead which will be wrapped by a rule element)
- *
- * author       : Jeroen van der Heijden
- * email        : jeroen@transceptor.technology
- * copyright    : 2016, Transceptor Technology
- *
- * changes
- *  - initial version, 08-03-2016
- *
  */
 #include <cleri/rule.h>
 #include <stdlib.h>
