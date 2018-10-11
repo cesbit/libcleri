@@ -37,3 +37,14 @@
 
 # Folder for build artifacts
 [Bb]uild/
+
+# Debian
+debian/.debhelper/
+debian/debhelper-build-stamp
+debian/files
+debian/libcleri-dev.debhelper.log
+debian/libcleri-dev.substvars
+debian/libcleri-dev/
+debian/libcleri0.debhelper.log
+debian/libcleri0.substvars
+debian/libcleri0/
