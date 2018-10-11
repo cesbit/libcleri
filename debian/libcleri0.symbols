@@ -38,6 +38,7 @@ libcleri.so.0 libcleri0 #MINVER#
  cleri_parse@Base 0.9.3
  cleri_parse_expect_start@Base 0.9.3
  cleri_parse_free@Base 0.9.3
+ cleri_parse_strn@Base 0.10.0-1
  cleri_prio@Base 0.9.3
  cleri_ref@Base 0.9.3
  cleri_ref_set@Base 0.9.3
