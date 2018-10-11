@@ -12,6 +12,7 @@ export SONAME=0
 	dh $@
 
 override_dh_auto_build-arch:
+	$(MAKE) --directory=Release test
 	$(MAKE) --directory=Release all
 
 override_dh_auto_clean:
@@ -20,5 +21,3 @@ override_dh_auto_clean:
 
 override_dh_fixperms:
 	dh_fixperms
-	# This script is executable, while it doesn't have a she-bang
-	chmod a-x debian/libcleri-dev/usr/share/doc/libcleri-dev/examples/examples.sh
