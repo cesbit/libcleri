@@ -10,7 +10,7 @@ install:
 .PHONY: uninstall
 uninstall:
 	@rm -f $(INSTALL_PATH)/include/cleri/*.h
-	@rmdir $(INSTALL_PATH)/include/cleri/
+	@rm -r -f $(INSTALL_PATH)/include/cleri/
 	@rm -f $(INSTALL_PATH)/lib/$(FN)
 	@rm -f $(INSTALL_PATH)/lib/$(FN).$(MAJOR)
 	@rm -f $(INSTALL_PATH)/lib/$(FN).$(VERSION)

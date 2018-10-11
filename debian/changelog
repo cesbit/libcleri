@@ -1,14 +1,3 @@
-libcleri (0.10.0-1) unstable; urgency=medium
-
-  * New upstream release
-    - Fixed expecting when parsing a list (Issue: #11)
-    - Fixed `is_valid` property when parsing empty strings
-      (Issue #12)
-    - Added `cleri_parse_strn()` function for generating a textual
-      parse result
-
- -- Jeroen van der Heijden <jeroen@transceptor.technology>  Thu, 11 Oct 2018 13:08:02 +0200
-
 libcleri (0.9.4-1) unstable; urgency=medium
 
   * New upstream release
