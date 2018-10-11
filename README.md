@@ -283,8 +283,10 @@ use this function since the expect list is already at the start position.
 
 #### `void cleri_parse_strn(char * s, size_t n, cleri_parse_t * pr, cleri_translate_t * translate)`
 Can be used to generate a textual parse result. The first argument `s` should be able to hold
-the complete message and will be restricted by `n`. The return value is the number of characters written
-to `s`, excluding the terminator char. This behavior is similar to functions like `snprintf`.
+the complete message and will be restricted by `n`. The return value is the number of characters which
+are (or would be) written to `s`, excluding the terminator char. This behavior is similar to functions like `snprintf`.
+One could for example use `NULL` for `s` with `n` equals to `0` to get the size which is required. Then you could
+`malloc` the size plus one for the terminator and run the functions again. A negative value indicates an error.
 Argument `pr` should be a parse result or `NULL` and `translate` a translation function or `NULL`.
 
 Example:
