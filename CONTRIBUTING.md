@@ -29,7 +29,7 @@ sudo apt-get install devscripts lintian
 
 Create archive from code
 ```
-git archive -o ../siridb-server_2.0.29.orig.tar.gz master
+git archive -o ../libcleri_0.10.0.orig.tar.gz master
 ```
 
 In case of a new package, update the changelog.
