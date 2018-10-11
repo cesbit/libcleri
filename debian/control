@@ -1,0 +1,44 @@
+Source: libcleri
+Section: libs
+Priority: optional
+Maintainer: SiriDB Maintainers <libcleri@packages.debian.org>
+Uploaders:
+ Jeroen van der Heijden <jeroen@transceptor.technology>,
+ Paul Gevers <elbrus@debian.org>,
+Rules-Requires-Root: no
+Build-Depends:
+ debhelper (>= 10~),
+ dh-exec,
+ libpcre2-dev,
+Homepage: http://siridb.net/
+Vcs-Browser: https://github.com/paulgevers/libcleri/tree/debian-packaging
+Standards-Version: 4.1.2
+
+Package: libcleri0
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+Description: language parser library
+ Libcleri is a powerful tool to build languages. From a built language,
+ libcleri can automatically create parse trees, which are data structures
+ representing how a grammar matches input. It also provides feedback in case
+ the input does not match the language. This can be useful for auto-completion,
+ suggestions or error handling.
+
+Package: libcleri-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends:
+ libcleri0 (= ${binary:Version}),
+ ${misc:Depends},
+Description: language parser library - development files
+ Libcleri is a powerful tool to build languages. From a built language,
+ libcleri can automatically create parse trees, which are data structures
+ representing how a grammar matches input. It also provides feedback in case
+ the input does not match the language. This can be useful for auto-completion,
+ suggestions or error handling.
+ .
+ This package contains the development files.

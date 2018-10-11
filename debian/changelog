@@ -1,0 +1,16 @@
+libcleri (0.9.4-1) unstable; urgency=medium
+
+  * New upstream release
+    - Migrated to pcre2 after being informed by us about the state of
+      pcre3
+  * Drop obsolete patch
+  * Make packages as Multi-Arch:same
+  * Bump standards to 4.1.2 (no changes)
+
+ -- Paul Gevers <elbrus@debian.org>  Sun, 03 Dec 2017 19:24:17 +0100
+
+libcleri (0.9.3-1) unstable; urgency=medium
+
+  * Initial release. (Closes: #882677)
+
+ -- Paul Gevers <elbrus@debian.org>  Sun, 26 Nov 2017 08:11:22 +0100
