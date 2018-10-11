@@ -1,0 +1,24 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+
+include /usr/share/dpkg/pkg-info.mk
+# Use both these variable to create the right libcleri.so* files/links
+export DEB_VERSION_UPSTREAM
+# Should be dynamic or unnecessary in the future, for now, just hard-code
+export SONAME=0
+
+%:
+	dh $@
+
+override_dh_auto_build-arch:
+	$(MAKE) --directory=Release all
+
+override_dh_auto_clean:
+	$(MAKE) --directory=Release clean
+	dh_auto_clean
+
+override_dh_fixperms:
+	dh_fixperms
+	# This script is executable, while it doesn't have a she-bang
+	chmod a-x debian/libcleri-dev/usr/share/doc/libcleri-dev/examples/examples.sh

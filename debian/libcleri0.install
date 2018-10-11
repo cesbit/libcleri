@@ -1,0 +1,2 @@
+#! /usr/bin/dh-exec
+Release/libcleri.so => /usr/lib/${DEB_HOST_MULTIARCH}/libcleri.so.${DEB_VERSION_UPSTREAM}
