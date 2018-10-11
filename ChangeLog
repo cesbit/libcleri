@@ -1,4 +1,14 @@
-ibcleri (0.9.4)
+libcleri (0.10.0)
+
+  * Fixed expecting when parsing a list. (issue #11)
+
+  * Fixed correct `is_valid` property when parsing empty strings. (issue #12)
+
+  * Added `cleri_parse_strn()` function for generating a textual parse result.
+
+ -- Jeroen van der Heijden <jeroen@transceptor.technology> 11 Oct 2018
+
+libcleri (0.9.4)
 
   * Replaced pcre with pcre2. (issue #5)
 

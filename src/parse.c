@@ -142,6 +142,12 @@ int cleri_parse_strn(
     cleri_t * o;
     const char * expect;
     const char * template;
+    if (pr == NULL)
+    {
+        return snprintf(s, n,
+            "no parse result, a possible reason might be that the maximum "
+            "recursion depth of %d has been reached", MAX_RECURSION_DEPTH);
+    }
     if (pr->is_valid)
     {
         return snprintf(s, n, "parsed successfully");

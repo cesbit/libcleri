@@ -44,7 +44,16 @@ static int test_prio(void)
             ")))))))))))))))))))))))))))))))))))))))))))))))))))"
         );
         _assert (pr == NULL);  /* max recursion depth */
+
     }
+
+    _assert_parse_str (
+        grammar,
+        "(((((((((((((((((((((((((((((((((((((((((((((((((((hi"
+        ")))))))))))))))))))))))))))))))))))))))))))))))))))",
+        "no parse result, a possible reason might be that the maximum "
+        "recursion depth of 50 has been reached",
+        NULL);
 
     cleri_grammar_free(grammar);
 

@@ -13,6 +13,10 @@
 #include <cleri/kwcache.h>
 #include <cleri/rule.h>
 
+#ifndef MAX_RECURSION_DEPTH
+#define MAX_RECURSION_DEPTH 50
+#endif
+
 /* typedefs */
 typedef struct cleri_s cleri_t;
 typedef struct cleri_grammar_s cleri_grammar_t;

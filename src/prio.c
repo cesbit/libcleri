@@ -9,9 +9,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifndef PRIO_MAX_RECURSION_DEPTH
-#define PRIO_MAX_RECURSION_DEPTH 50
-#endif
 
 static void prio__free(cleri_t * cl_obj);
 
@@ -97,7 +94,7 @@ static cleri_node_t *  prio__parse(
 
     /* initialize and return rule test, or return an existing test
      * if *str is already in tested */
-    if (    rule->depth++ > PRIO_MAX_RECURSION_DEPTH ||
+    if (    rule->depth++ > MAX_RECURSION_DEPTH ||
             cleri__rule_init(&tested, rule->tested, str) == CLERI_RULE_ERROR)
     {
         pr->is_valid = -1;

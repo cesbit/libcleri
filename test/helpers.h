@@ -46,11 +46,10 @@ static char * parse_str(cleri_parse_t * pr, cleri_translate_t * translate)
 #define _assert_parse_str(__grammar, __str, __expect, __translate) \
 { \
     cleri_parse_t * __pr = cleri_parse(__grammar, __str); \
-    _assert (__pr); \
     char * __s = parse_str(__pr, __translate); \
     _assert (__s); \
     if (strcmp(__s, __expect) != 0) printf("\n\ngot: `%s`\n", __s); \
     _assert (strcmp(__s, __expect) == 0); \
     free(__s); \
-    cleri_parse_free(__pr); \
+    if (__pr) cleri_parse_free(__pr); \
 }

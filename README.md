@@ -282,7 +282,27 @@ Can be used to reset the expect list to start. Usually you are not required to
 use this function since the expect list is already at the start position.
 
 #### `void cleri_parse_strn(char * s, size_t n, cleri_parse_t * pr, cleri_translate_t * translate)`
-TODO: Explain with small example
+Can be used to generate a textual parse result. The first argument `s` should be able to hold
+the complete message and will be restricted by `n`. The return value is the number of characters written
+to `s`, excluding the terminator char. This behavior is similar to functions like `snprintf`.
+Argument `pr` should be a parse result or `NULL` and `translate` a translation function or `NULL`.
+
+Example:
+```c
+// In case a translation function returns an empty string, no text is used
+const char * translate(cleri_t * o) {
+    return "";  // a possible result might be: `error at position x`
+}
+
+// Text may be returned based on gid
+const char * translate(cleri_t * o) {
+    switch (o->gid) {
+        case 1: return "A";  // error at position x, expecting: A
+        case 2: return "";   // gid 2 will be ignored
+    }
+    return NULL;  // normal parsing for everything else
+}
+```
 
 ### `cleri_node_t`
 Node object. A parse result has a parse tree which consists of nodes. Each node
