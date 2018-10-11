@@ -27,15 +27,21 @@ Make sure the required tools are installed
 sudo apt-get install devscripts lintian
 ```
 
-Create archive from code
+When symbols are changed:
 ```
-git archive -o ../libcleri_0.10.0.orig.tar.gz master
+dpkg-gensymbols -eRelease/libcleri.so -plibcleri0
 ```
 
 In case of a new package, update the changelog.
 Skip this step if you just want to rebuild the current deb version.
 ```
 debchange
+git commit -am 'Update changelog'
+```
+
+Create archive from code
+```
+git archive -o ../libcleri_0.10.0.orig.tar.gz master
 ```
 
 Build deb package
