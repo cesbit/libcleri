@@ -10,7 +10,7 @@ Build-Depends:
  debhelper (>= 10~),
  dh-exec,
  libpcre2-dev,
-Homepage: http://siridb.net/
+Homepage: https://siridb.net/
 Vcs-Browser: https://github.com/transceptor-technology/libcleri/tree/master
 Vcs-Git: https://github.com/transceptor-technology/libcleri.git
 Standards-Version: 4.1.2
