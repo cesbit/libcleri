@@ -1,3 +1,9 @@
+libcleri (0.10.0-3) unstable; urgency=medium
+
+  * Update Vsc fields 
+
+ -- Jeroen van der Heijden <jeroen@transceptor.technology>  Fri, 12 Oct 2018 15:28:28 +0200
+
 libcleri (0.10.0-2) unstable; urgency=medium
 
   * Update deb test

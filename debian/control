@@ -11,8 +11,8 @@ Build-Depends:
  dh-exec,
  libpcre2-dev,
 Homepage: https://siridb.net/
-Vcs-Browser: https://github.com/transceptor-technology/libcleri/tree/master
-Vcs-Git: https://github.com/transceptor-technology/libcleri.git
+Vcs-Browser: https://salsa.debian.org/siridb-team/libcleri
+Vcs-Git: https://salsa.debian.org/siridb-team/libcleri.git
 Standards-Version: 4.1.2
 
 Package: libcleri0
