@@ -10,7 +10,7 @@ Build-Depends:
  debhelper (>= 10~),
  dh-exec,
  libpcre2-dev,
-Homepage: http://siridb.net/
+Homepage: https://github.com/transceptor-technology/libcleri/
 Vcs-Browser: https://github.com/paulgevers/libcleri/tree/debian-packaging
 Standards-Version: 4.1.2
 
