@@ -9,17 +9,24 @@ else
     echo -e "\x1B[33mdisabled\x1B[0m";
 fi
 
+
+
 run () {
     if [ ! -f $1/sources ]; then
        return;
     fi
-    C_SRC=$(cat $1/sources)
+
+    if [[ "$USELIB" -eq "1" ]]; then
+        LSOURCE=-lcleri
+    else
+        LSOURCE=$(cat $1/sources)
+    fi
 
     SOURCE=$1/$1.c
     OUT=$1.out
     rm "$OUT" 2> /dev/null
 
-    gcc -I"../inc" -O0 -g3 -Wall -Wextra -Winline -std=gnu89 $SOURCE $C_SRC -lm -lpcre2-8 -o "$OUT"
+    gcc -I"../inc" -O0 -g3 -Wall -Wextra -Winline -std=gnu89 $SOURCE $LSOURCE -lm -lpcre2-8 -o "$OUT"
     if [[ "$NOMEMTEST" -ne "1" ]]; then
         valgrind --tool=memcheck --error-exitcode=1 --leak-check=full -q ./$OUT
     else

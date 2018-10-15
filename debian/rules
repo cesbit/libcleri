@@ -12,7 +12,6 @@ export SONAME=0
 	dh $@
 
 override_dh_auto_build-arch:
-	$(MAKE) --directory=Release test
 	$(MAKE) --directory=Release all
 
 override_dh_auto_clean:

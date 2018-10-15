@@ -1,5 +1,7 @@
-libcleri (0.10.0-1) UNRELEASED; urgency=medium
+libcleri (0.10.0-0~tt1) unstable; urgency=medium
 
+  * Update deb test
+  * Update Vsc fields
   * New upstream release
     - Fixed expecting when parsing a list (Issue: #11)
     - Fixed `is_valid` property when parsing empty strings
@@ -7,7 +9,15 @@ libcleri (0.10.0-1) UNRELEASED; urgency=medium
     - Added `cleri_parse_strn()` function for generating a textual
       parse result
 
- -- Jeroen van der Heijden <jeroen@transceptor.technology>  Thu, 11 Oct 2018 14:35:36 +0200
+ -- Jeroen van der Heijden <jeroen@transceptor.technology>  Fri, 12 Oct 2018 15:28:28 +0200
+
+libcleri (0.9.4-2) unstable; urgency=medium
+
+  * Update and add Vcs-* fields for move to salsa (Closes: #890701)
+  * Add autopkgtest by compiling the examples
+  * Install examples
+
+ -- Paul Gevers <elbrus@debian.org>  Fri, 27 Jul 2018 21:04:02 +0200
 
 libcleri (0.9.4-1) unstable; urgency=medium
 

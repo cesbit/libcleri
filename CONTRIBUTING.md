@@ -36,7 +36,11 @@ In case of a new package, update the changelog.
 Skip this step if you just want to rebuild the current deb version.
 ```
 debchange
-git commit -am 'Update changelog'
+```
+
+In case of any changes, commit
+```
+git commit -am 'some work that has been done'
 ```
 
 Create archive from code

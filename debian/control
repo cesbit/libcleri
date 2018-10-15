@@ -10,8 +10,9 @@ Build-Depends:
  debhelper (>= 10~),
  dh-exec,
  libpcre2-dev,
-Homepage: https://github.com/transceptor-technology/libcleri/
-Vcs-Browser: https://github.com/paulgevers/libcleri/tree/debian-packaging
+Homepage: https://siridb.net/
+Vcs-Browser: https://salsa.debian.org/siridb-team/libcleri
+Vcs-Git: https://salsa.debian.org/siridb-team/libcleri.git
 Standards-Version: 4.1.2
 
 Package: libcleri0
