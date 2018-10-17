@@ -62,11 +62,34 @@ static int test_keyword_ign_case(void)
     return test_end();
 }
 
+static int test_keyword_alt_regkw(void)
+{
+    test_start("keyword (alt_regkw)");
+
+    cleri_grammar_t * grammar;
+    cleri_t * k_hi, * t_hi;
+
+    k_hi = cleri_keyword(0, "hi", false);
+    t_hi = cleri_token(0, "HI");
+
+    grammar = cleri_grammar(cleri_choice(0, 1, 2, k_hi, t_hi), "^[a-z]+");
+    _assert (grammar);
+
+    _assert_is_valid (grammar, "hi");
+    _assert_is_valid (grammar, "HI");
+    _assert_is_not_valid (grammar, "Hi");
+
+    cleri_grammar_free(grammar);
+
+    return test_end();
+}
+
 int main()
 {
     return (
         test_keyword() ||
         test_keyword_ign_case() ||
+        test_keyword_alt_regkw() ||
         0
     );
 }

@@ -82,5 +82,3 @@ src/%.o: ../src/%.c
 	gcc -DNDEBUG -I../inc -O3 -Wall $(CPPFLAGS) $(CFLAGS) -c -fmessage-length=0 -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
-
-
