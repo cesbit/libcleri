@@ -30,14 +30,15 @@ extern cleri_node_t * CLERI_EMPTY_NODE;
 struct cleri_node_s
 {
     /* public */
+    void * data;            /* can be used for binding custom data */
     const char * str;
     size_t len;
     cleri_t * cl_obj;
     cleri_children_t * children;
 
     /* private */
-    uint_fast8_t ref;
-    int64_t result;
+    uint32_t ref;
+    int64_t result;         /* DEPRECATED */
 };
 
 #endif /* CLERI_NODE_H_ */
