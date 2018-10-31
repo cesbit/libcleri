@@ -47,3 +47,4 @@ libcleri.so.0 libcleri0 #MINVER#
  cleri_sequence@Base 0.9.3
  cleri_token@Base 0.9.3
  cleri_tokens@Base 0.9.3
+ cleri_version@Base 0.10.1~
