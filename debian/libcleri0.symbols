@@ -4,7 +4,6 @@ libcleri.so.0 libcleri0 #MINVER#
  CLERI_THIS@Base 0.9.3
  cleri__children_add@Base 0.9.3
  cleri__children_free@Base 0.9.3
- cleri__children_new@Base 0.9.3
  cleri__expecting_combine@Base 0.9.3
  cleri__expecting_free@Base 0.9.3
  cleri__expecting_new@Base 0.9.3
