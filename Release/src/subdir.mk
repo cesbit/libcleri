@@ -25,7 +25,9 @@ C_SRCS += \
 ../src/sequence.c \
 ../src/this.c \
 ../src/token.c \
-../src/tokens.c
+../src/tokens.c \
+../src/version.c
+
 
 OBJS += \
 ./src/children.o \
@@ -49,7 +51,8 @@ OBJS += \
 ./src/sequence.o \
 ./src/this.o \
 ./src/token.o \
-./src/tokens.o
+./src/tokens.o \
+./src/version.o
 
 C_DEPS += \
 ./src/children.d \
@@ -73,7 +76,8 @@ C_DEPS += \
 ./src/sequence.d \
 ./src/this.d \
 ./src/token.d \
-./src/tokens.d
+./src/tokens.d \
+./src/version.d
 
 # Each subdirectory must supply rules for building sources it contributes
 src/%.o: ../src/%.c

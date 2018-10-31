@@ -139,7 +139,7 @@ static cleri_node_t *  regex__parse(
     if ((node = cleri__node_new(cl_obj, str, (size_t) ovector[1])) != NULL)
     {
         parent->len += node->len;
-        if (cleri__children_add(parent->children, node))
+        if (cleri__children_add(&parent->children, node))
         {
              /* error occurred, reverse changes set node to NULL */
             pr->is_valid = -1;

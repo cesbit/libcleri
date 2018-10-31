@@ -28,6 +28,7 @@
 #include <cleri/rule.h>
 #include <cleri/this.h>
 #include <cleri/ref.h>
+#include <cleri/version.h>
 
 /* typedefs */
 typedef struct cleri_s cleri_t;

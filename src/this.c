@@ -79,7 +79,7 @@ static cleri_node_t * cleri_parse_this(
     }
 
     parent->len += tested->node->len;
-    if (cleri__children_add(parent->children, node))
+    if (cleri__children_add(&parent->children, node))
     {
          /* error occurred, reverse changes set mg_node to NULL */
         pr->is_valid = -1;

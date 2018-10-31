@@ -28,22 +28,7 @@ cleri_node_t * cleri__node_new(cleri_t * cl_obj, const char * str, size_t len)
 
         node->str = str;
         node->len = len;
-
-        if (cl_obj == NULL || cl_obj->tp <= CLERI_TP_THIS)
-        {
-            /* NULL when initializing the root node but we do need children */
-            node->children = cleri__children_new();
-            if (node->children == NULL)
-            {
-                free(node);
-                return NULL;
-            }
-        }
-        else
-        {
-            /* we do not need children for some objects */
-            node->children = NULL;
-        }
+        node->children = NULL;
     }
     return node;
 }

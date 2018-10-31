@@ -1,3 +1,10 @@
+libcleri (0.10.1-0~alpha0-tt1) unstable; urgency=medium
+
+  * Added `void *data` to node type for public usage
+  * Children will only be added to a node when necessary
+
+ -- Jeroen van der Heijden <jeroen@transceptor.technology>  Wed, 31 Oct 2018 22:22:05 +0100
+
 libcleri (0.10.0-0~tt1) unstable; urgency=medium
 
   * Update deb test

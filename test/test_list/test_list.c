@@ -28,6 +28,16 @@ static int test_list(void)
         "error at position 2, expecting: , or end_of_statement",
         NULL);
 
+    /* check if list children is really NULL */
+    {
+        cleri_parse_t * pr = cleri_parse(grammar, "");
+        _assert (pr);
+        _assert (pr->is_valid);
+        _assert (pr->tree->children->node->cl_obj->tp == CLERI_TP_LIST);
+        _assert (pr->tree->children->node->children == NULL);
+        cleri_parse_free(pr);
+    }
+
     cleri_grammar_free(grammar);
 
     return test_end();
