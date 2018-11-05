@@ -2,6 +2,9 @@ libcleri (0.10.1-0~alpha0-tt1) unstable; urgency=medium
 
   * Added `void *data` to node type for public usage
   * Children will only be added to a node when necessary
+    (Be carefull that accessing the first child therefore
+    must be checked for NULL whereas in previous versions,
+    one could immediately check the `children->node` pointer)
 
  -- Jeroen van der Heijden <jeroen@transceptor.technology>  Wed, 31 Oct 2018 22:22:05 +0100
 
