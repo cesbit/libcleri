@@ -27,6 +27,11 @@ static int test_list(void)
         "hi.",
         "error at position 2, expecting: , or end_of_statement",
         NULL);
+    _assert_parse_str2 (
+        grammar,
+        "hi.",
+        "error at position 2",
+        NULL);
 
     /* check if list children is really NULL */
     {
@@ -81,7 +86,21 @@ static int test_list_all_options(void)
         "",
         "error at position 0, expecting: hi",
         NULL);
-
+    _assert_parse_str2 (
+        grammar,
+        "hi-hi-hi-hi-hi",
+        "error at position 9",
+        NULL);
+    _assert_parse_str2 (
+        grammar,
+        "hi.",
+        "error at position 2",
+        NULL);
+    _assert_parse_str2 (
+        grammar,
+        "",
+        "error at position 0",
+        NULL);
     cleri_grammar_free(grammar);
 
     return test_end();

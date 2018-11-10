@@ -37,7 +37,11 @@ static int test_regex(void)
         "\"double quoted\"",
         "error at position 0, expecting: single_quoted_string",
         translate);
-
+    _assert_parse_str2 (
+        grammar,
+        "\"double quoted\"",
+        "error at position 0",
+        translate);
     cleri_grammar_free(grammar);
 
     return test_end();

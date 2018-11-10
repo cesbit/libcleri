@@ -5,6 +5,7 @@
 #include <cleri/expecting.h>
 #include <stdlib.h>
 
+
 static void expecting__empty(cleri_expecting_t * expecting);
 static int expecting__get_mode(cleri_exp_modes_t * modes, const char * str);
 static void expecting__shift_modes(
@@ -15,13 +16,21 @@ static void expecting__modes_free(cleri_exp_modes_t * modes);
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_expecting_t * cleri__expecting_new(const char * str)
+cleri_expecting_t * cleri__expecting_new(const char * str, int flags)
 {
     cleri_expecting_t * expecting = cleri__malloc(cleri_expecting_t);
 
     if (expecting != NULL)
     {
         expecting->str = str;
+        expecting->modes = NULL;
+
+        if (flags & CLERI_FLAG_EXPECTING_DISABLED)
+        {
+            expecting->required = NULL;
+            expecting->optional = NULL;
+            return expecting;
+        }
 
         if ((expecting->required = cleri__olist_new()) == NULL)
         {
@@ -36,7 +45,6 @@ cleri_expecting_t * cleri__expecting_new(const char * str)
             return NULL;
         }
 
-        expecting->modes = NULL;
     }
 
     return expecting;
@@ -51,6 +59,14 @@ int cleri__expecting_update(
         const char * str)
 {
     int rc = 0;
+    if (expecting->required == NULL)
+    {
+        if (str > expecting->str)
+        {
+            expecting->str = str;
+        }
+        return 0;
+    }
 
     if (str > expecting->str)
     {

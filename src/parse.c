@@ -12,7 +12,10 @@
  * Return a parse result. In case of a memory allocation error the return value
  * will be NULL.
  */
-cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
+cleri_parse_t * cleri_parse2(
+    cleri_grammar_t * grammar,
+    const char * str,
+    int flags)
 {
     cleri_node_t * nd;
     cleri_parse_t * pr;
@@ -35,7 +38,7 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
 
     if (    (pr->tree = cleri__node_new(NULL, str, 0)) == NULL ||
             (pr->kwcache = cleri__kwcache_new()) == NULL ||
-            (pr->expecting = cleri__expecting_new(str)) == NULL)
+            (pr->expecting = cleri__expecting_new(str, flags)) == NULL)
     {
         cleri_parse_free(pr);
         return NULL;
@@ -75,12 +78,11 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
         }
     }
 
-    pr->pos = (pr->is_valid) ?
+    pr->pos = (pr->is_valid || (!at_end && nd)) ?
             pr->tree->len : (size_t) (pr->expecting->str - pr->str);
 
-    if (!at_end && pr->expecting->required->cl_obj == NULL)
+    if (pr->expecting->required && !at_end && nd)
     {
-        pr->pos = pr->tree->len;
         if (cleri__expecting_set_mode(
                 pr->expecting,
                 end,
@@ -93,9 +95,9 @@ cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str)
             cleri_parse_free(pr);
             return NULL;
         }
-    }
 
-    cleri__expecting_combine(pr->expecting);
+        cleri__expecting_combine(pr->expecting);
+    }
 
     pr->expect = pr->expecting->required;
 

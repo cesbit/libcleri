@@ -23,7 +23,11 @@ static int test_ref(void)
         "ha",
         "error at position 0, expecting: hi",
         NULL);
-
+    _assert_parse_str2 (
+        grammar,
+        "ha",
+        "error at position 0",
+        NULL);
     cleri_grammar_free(grammar);
 
     return test_end();

@@ -20,7 +20,7 @@ typedef struct cleri_exp_modes_s cleri_exp_modes_t;
 typedef struct cleri_expecting_s cleri_expecting_t;
 
 /* private functions */
-cleri_expecting_t * cleri__expecting_new(const char * str);
+cleri_expecting_t * cleri__expecting_new(const char * str, int flags);
 int cleri__expecting_update(
         cleri_expecting_t * expecting,
         cleri_t * cl_obj,

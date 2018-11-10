@@ -54,7 +54,13 @@ static int test_prio(void)
         "no parse result, a possible reason might be that the maximum "
         "recursion depth of 50 has been reached",
         NULL);
-
+    _assert_parse_str2 (
+        grammar,
+        "(((((((((((((((((((((((((((((((((((((((((((((((((((hi"
+        ")))))))))))))))))))))))))))))))))))))))))))))))))))",
+        "no parse result, a possible reason might be that the maximum "
+        "recursion depth of 50 has been reached",
+        NULL);
     cleri_grammar_free(grammar);
 
     return test_end();

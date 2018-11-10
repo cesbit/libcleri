@@ -37,6 +37,16 @@ static int test_repeat(void)
         "hi.",
         "error at position 2",
         &translate);
+    _assert_parse_str2 (
+        grammar,
+        "hi.",
+        "error at position 2",
+        NULL);
+    _assert_parse_str2 (
+        grammar,
+        "hi.",
+        "error at position 2",
+        &translate);
     cleri_grammar_free(grammar);
 
     return test_end();
@@ -75,7 +85,21 @@ static int test_repeat_all_options(void)
         "",
         "error at position 0, expecting: hi",
         NULL);
-
+    _assert_parse_str2 (
+        grammar,
+        "hi hi hi hi hi",
+        "error at position 8",
+        NULL);
+    _assert_parse_str2 (
+        grammar,
+        "hi.",
+        "error at position 2",
+        NULL);
+    _assert_parse_str2 (
+        grammar,
+        "",
+        "error at position 0",
+        NULL);
     cleri_grammar_free(grammar);
 
     return test_end();

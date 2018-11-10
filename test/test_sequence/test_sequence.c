@@ -21,7 +21,11 @@ static int test_sequence(void)
         "hi sasha",
         "error at position 3, expecting: iris",
         NULL);
-
+    _assert_parse_str2 (
+        grammar,
+        "hi sasha",
+        "error at position 3",
+        NULL);
     cleri_grammar_free(grammar);
 
     return test_end();

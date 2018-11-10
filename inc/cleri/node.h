@@ -34,7 +34,7 @@ struct cleri_node_s
     size_t len;
     cleri_t * cl_obj;
     cleri_children_t * children;
-    void * data;    /* free to use by the user */
+    void * data;        /* free to use by the user */
 
     /* private */
     size_t ref;

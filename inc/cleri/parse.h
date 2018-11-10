@@ -17,6 +17,11 @@
 #define MAX_RECURSION_DEPTH 50
 #endif
 
+enum
+{
+    CLERI_FLAG_EXPECTING_DISABLED =1<<0,
+};
+
 /* typedefs */
 typedef struct cleri_s cleri_t;
 typedef struct cleri_grammar_s cleri_grammar_t;
@@ -32,7 +37,13 @@ typedef const char * (cleri_translate_t)(cleri_t *);
 extern "C" {
 #endif
 
-cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str);
+static inline cleri_parse_t * cleri_parse(
+    cleri_grammar_t * grammar,
+    const char * str);
+cleri_parse_t * cleri_parse2(
+    cleri_grammar_t * grammar,
+    const char * str,
+    int flags);
 void cleri_parse_free(cleri_parse_t * pr);
 void cleri_parse_expect_start(cleri_parse_t * pr);
 int cleri_parse_strn(
@@ -66,5 +77,12 @@ struct cleri_parse_s
     pcre2_match_data * match_data;
     cleri_kwcache_t * kwcache;
 };
+
+static inline cleri_parse_t * cleri_parse(
+    cleri_grammar_t * grammar,
+    const char * str)
+{
+    return cleri_parse2(grammar, str, 0);
+}
 
 #endif /* CLERI_PARSE_H_ */

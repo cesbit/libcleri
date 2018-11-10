@@ -26,7 +26,11 @@ static int test_tokens(void)
         "",
         "error at position 0, expecting: == != >= <= > <",
         NULL);
-
+    _assert_parse_str2 (
+        grammar,
+        "",
+        "error at position 0",
+        NULL);
     cleri_grammar_free(grammar);
 
     return test_end();
