@@ -35,6 +35,7 @@ libcleri.so.0 libcleri0 #MINVER#
  cleri_new@Base 0.9.3
  cleri_optional@Base 0.9.3
  cleri_parse@Base 0.9.3
+ cleri_parse2@Base 0.10.1-0~
  cleri_parse_expect_start@Base 0.9.3
  cleri_parse_free@Base 0.9.3
  cleri_parse_strn@Base 0.10.0~
