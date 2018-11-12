@@ -1,3 +1,9 @@
+libcleri (0.10.1-0~alpha1-tt1) unstable; urgency=medium
+
+  * Added option to disable generating expecting info
+
+ -- Jeroen van der Heijden <jeroen@transceptor.technology>  Mon, 12 Nov 2018 14:34:16 +0100
+
 libcleri (0.10.1-0~alpha0-tt1) unstable; urgency=medium
 
   * Added `void *data` to node type for public usage
