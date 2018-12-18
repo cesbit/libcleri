@@ -16,7 +16,7 @@ enum cleri_grammar_ids {
     CLERI_GID_R_REGEX,
 };
 
-/* User-defined function used in the show_cleri_obj(). Here the regex elemnts
+/* User-defined function used in the show_cleri_obj(). Here the regex elements
 are given a user-defined name based on the gid.
 With "choice" you can return either the explanation of the regex or an example
 of the regex. */
@@ -47,7 +47,7 @@ const char * re_to_str(uint32_t gid, int choice)
 
 cleri_grammar_t * create_grammar(void)
 {
-    /* Define grammar and if error occurred redirect to goto*/
+    /* Define grammar and if error occurs, redirect (goto)*/
     cleri_t * k_hi = cleri_keyword(0, "hi", 0);
     if (k_hi == NULL)
         goto end_create_grammar;
@@ -69,7 +69,7 @@ cleri_grammar_t * create_grammar(void)
 
     return cleri_grammar(start, NULL);
 
-/* On error: clean up the previous objects that were succesfully allocated */
+/* If error occurs, clean up the previous objects that were succesfully allocated */
 end_create_grammar:
     if (k_hi)
         cleri_free(k_hi);
@@ -89,7 +89,7 @@ end_create_grammar:
 
 int main(void)
 {
-    /* Creates grammar. If error occurred, NULL is returned and the program
+    /* Creates grammar. If error occurs, NULL is returned and the program
     will be aborted. */
     cleri_grammar_t * my_grammar = create_grammar();
     if (my_grammar == NULL)
@@ -105,12 +105,12 @@ int main(void)
         str[len-1]='\0';
 
     /* Creates a dynamic buffer that will store the string to be parsed.
-    If error occurred NULL is returned and redirected to goto. */
+    If error occurrs, NULL is returned. */
     buffer_t * buf = buffer_create();
         if (buf == NULL)
             goto end_main;
 
-    /* String will be parsed and if invalid autocorrected */
+    /* String will be parsed and if invalid it will be autocorrected */
     test_autocor(my_grammar, (const char *)str, buf);
 
     /* Cleanup*/

@@ -6,7 +6,7 @@
 
 cleri_grammar_t * create_grammar(void)
 {
-    /* Define grammar and if error occurred redirect to goto. */
+    /* Define grammar and if error occurs, redirect (goto). */
     cleri_t * k_hi = cleri_keyword(0, "hi", 0);
     if (k_hi == NULL)
         goto end_create_grammar;
@@ -28,7 +28,7 @@ cleri_grammar_t * create_grammar(void)
 
     return cleri_grammar(start, NULL);
 
-/* On error: clean up the previous objects that were succesfully allocated. */
+/* If error occurs, clean up the previous objects that were succesfully allocated. */
 end_create_grammar:
     if (k_hi)
         cleri_free(k_hi);
@@ -48,7 +48,7 @@ end_create_grammar:
 
 int main(void)
 {
-    /* Create grammar. If an error occurred, NULL is returned and
+    /* Create grammar. If an error occurs, NULL is returned and
     the program will be aborted. */
     cleri_grammar_t * my_grammar = create_grammar();
     if (my_grammar == NULL)
