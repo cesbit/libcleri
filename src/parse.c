@@ -78,7 +78,10 @@ cleri_parse_t * cleri_parse2(
         }
     }
 
-    pr->pos = (pr->is_valid || (!at_end && nd)) ?
+    pr->pos = (pr->is_valid || (
+                !at_end && nd && (
+                    !pr->expecting->required ||
+                    pr->expecting->str == pr->str))) ?
             pr->tree->len : (size_t) (pr->expecting->str - pr->str);
 
     if (pr->expecting->required && !at_end && nd)
