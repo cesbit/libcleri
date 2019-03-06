@@ -98,10 +98,10 @@ cleri_parse_t * cleri_parse2(
             cleri_parse_free(pr);
             return NULL;
         }
-
         cleri__expecting_combine(pr->expecting);
     }
 
+    cleri__olist_unique(pr->expecting->required);
     pr->expect = pr->expecting->required;
 
     return pr;

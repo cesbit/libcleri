@@ -14,7 +14,7 @@
 #include <cleri/rule.h>
 
 #ifndef MAX_RECURSION_DEPTH
-#define MAX_RECURSION_DEPTH 50
+#define MAX_RECURSION_DEPTH 500
 #endif
 
 enum

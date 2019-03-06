@@ -18,6 +18,7 @@ int cleri__olist_append_nref(cleri_olist_t * olist, cleri_t * cl_object);
 void cleri__olist_free(cleri_olist_t * olist);
 void cleri__olist_empty(cleri_olist_t * olist);
 void cleri__olist_cancel(cleri_olist_t * olist);
+void cleri__olist_unique(cleri_olist_t * olist);
 
 /* structs */
 struct cleri_olist_s

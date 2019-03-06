@@ -106,11 +106,56 @@ static int test_list_all_options(void)
     return test_end();
 }
 
+static int test_list_vs_single(void)
+{
+    test_start("list (vs_single)");
+
+    cleri_grammar_t * grammar;
+    cleri_t * k_hi, * delimiter, * list, * choice;
+
+    k_hi = cleri_keyword(0, "hi", false);
+    delimiter = cleri_token(0, ",");
+    list = cleri_list(0, k_hi, delimiter, 1, 0, false);
+    choice = cleri_choice(0, true, 2, k_hi, list);
+
+    grammar = cleri_grammar(choice, NULL);
+
+    // assert statements
+    _assert_is_valid (grammar, "hi, hi, hi");
+    _assert_parse_str (
+        grammar,
+        "hi, hello",
+        "error at position 4, expecting: hi",
+        NULL);
+    _assert_parse_str (
+        grammar,
+        "hello",
+        "error at position 0, expecting: hi",
+        NULL);
+    _assert_parse_str2 (
+        grammar,
+        "hi, hello",
+        "error at position 2",
+        NULL);
+    _assert_parse_str2 (
+        grammar,
+        "hello",
+        "error at position 0",
+        NULL);
+    cleri_grammar_free(grammar);
+
+    return test_end();
+}
+
+
+
+
 int main()
 {
     return (
         test_list() ||
         test_list_all_options() ||
+        test_list_vs_single() ||
         0
     );
 }

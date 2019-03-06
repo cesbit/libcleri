@@ -9,3 +9,4 @@
 ../src/keyword.c
 ../src/token.c
 ../src/list.c
+../src/choice.c
