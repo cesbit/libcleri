@@ -10,20 +10,20 @@
 
 /* typedefs */
 typedef struct cleri_parse_s cleri_parse_t;
-typedef struct cleri_kwcache_s cleri_kwcache_t;
 
 /* private functions */
-cleri_kwcache_t * cleri__kwcache_new(void);
+uint16_t * cleri__kwcache_new(const char * str);
 ssize_t cleri__kwcache_match(cleri_parse_t * pr, const char * str);
-void cleri__kwcache_free(cleri_kwcache_t * kwcache);
+static inline void cleri__kwcache_free(uint16_t * kwcache);
 
-/* structs */
-struct cleri_kwcache_s
+
+/*
+ * Destroy kwcache. (parsing NULL is allowed)
+ */
+static inline void cleri__kwcache_free(uint16_t * kwcache)
 {
-    size_t len;
-    const char * str;
-    cleri_kwcache_t * next;
-};
+    free(kwcache);
+}
 
 #endif /* CLERI_KWCACHE_H_ */
 

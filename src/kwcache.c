@@ -7,25 +7,19 @@
 #include <pcre2.h>
 #include <string.h>
 #include <cleri/kwcache.h>
+#include <assert.h>
 
 static void kwcache__kw_match(
-        cleri_kwcache_t * kwcache,
+        uint16_t * kwcache,
         cleri_parse_t * pr,
         const char * str);
 
 /*
  * Returns NULL in case an error has occurred.
  */
-cleri_kwcache_t * cleri__kwcache_new(void)
+uint16_t * cleri__kwcache_new(const char * str)
 {
-    cleri_kwcache_t * kwcache = cleri__malloc(cleri_kwcache_t);
-    if (kwcache != NULL)
-    {
-        kwcache->len = 0;
-        kwcache->str = NULL;
-        kwcache->next = NULL;
-    }
-    return kwcache;
+    return cleri__calloc((size_t) (strlen(str) / 2) + 1, uint16_t);
 }
 
 /*
@@ -36,56 +30,23 @@ ssize_t cleri__kwcache_match(
         cleri_parse_t * pr,
         const char * str)
 {
-    cleri_kwcache_t * kwcache = pr->kwcache;
-    if (kwcache->str != NULL)
-    {
-        while (1)
-        {
-            if (str == kwcache->str)
-            {
-                return kwcache->len;
-            }
+    assert (str >= pr->str);
+    size_t pos = (size_t) ((str - pr->str) / 2);
+    uint16_t * len = &pr->kwcache[pos];
 
-            if (kwcache->next == NULL)
-            {
-                break;
-            }
-            kwcache = kwcache->next;
-        }
-        kwcache->next = cleri__malloc(cleri_kwcache_t);
-        if (kwcache->next == NULL)
-        {
-            return -1;
-        }
-        kwcache = kwcache->next;
-        kwcache->len = 0;
-        kwcache->next = NULL;
-    }
+    if (*len)
+        return *len == UINT16_MAX ? 0 : *len;
 
-    kwcache->str = str;
-    kwcache__kw_match(kwcache, pr, str);
-    return kwcache->len;
+    kwcache__kw_match(len, pr, str);
+    return *len;
 }
 
-/*
- * Destroy kwcache. (parsing NULL is allowed)
- */
-void cleri__kwcache_free(cleri_kwcache_t * kwcache)
-{
-    cleri_kwcache_t * next;
-    while (kwcache != NULL)
-    {
-        next = kwcache->next;
-        free(kwcache);
-        kwcache = next;
-    }
-}
 
 /*
  * This function will set kwcache->len if a match is found.
  */
 static void kwcache__kw_match(
-        cleri_kwcache_t * kwcache,
+        uint16_t * kwcache,
         cleri_parse_t * pr,
         const char * str)
 {
@@ -96,7 +57,7 @@ static void kwcache__kw_match(
     pcre_exec_ret = pcre2_match(
                 pr->re_keywords,
                 (PCRE2_SPTR8) str,
-                strlen(str),
+                PCRE2_ZERO_TERMINATED,
                 0,                     // start looking at this point
                 0,                     // OPTIONS
                 pr->match_data,
@@ -108,7 +69,5 @@ static void kwcache__kw_match(
     }
 
     ovector = pcre2_get_ovector_pointer(pr->match_data);
-    kwcache->len = ovector[1];
-
-
+    *kwcache = (uint16_t) ovector[1];
 }

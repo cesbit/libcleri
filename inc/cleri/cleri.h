@@ -10,6 +10,12 @@
 #define cleri__malloc(__t) (malloc(sizeof(__t)))
 #endif
 
+#ifdef __cplusplus
+#define cleri__calloc(__n, __t) ((__t*)calloc(__n, sizeof(__t)))
+#else
+#define cleri__calloc(__n, __t) (calloc(__n, sizeof(__t)))
+#endif
+
 #include <cleri/expecting.h>
 #include <cleri/keyword.h>
 #include <cleri/sequence.h>

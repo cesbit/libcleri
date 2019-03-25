@@ -37,7 +37,7 @@ cleri_parse_t * cleri_parse2(
     pr->is_valid = 0;
 
     if (    (pr->tree = cleri__node_new(NULL, str, 0)) == NULL ||
-            (pr->kwcache = cleri__kwcache_new()) == NULL ||
+            (pr->kwcache = cleri__kwcache_new(str)) == NULL ||
             (pr->expecting = cleri__expecting_new(str, flags)) == NULL)
     {
         cleri_parse_free(pr);

@@ -27,7 +27,6 @@ typedef struct cleri_s cleri_t;
 typedef struct cleri_grammar_s cleri_grammar_t;
 typedef struct cleri_node_s cleri_node_t;
 typedef struct cleri_expecting_s cleri_expecting_t;
-typedef struct cleri_kwcache_s cleri_kwcache_t;
 typedef struct cleri_rule_store_s cleri_rule_store_t;
 typedef struct cleri_parse_s cleri_parse_t;
 typedef const char * (cleri_translate_t)(cleri_t *);
@@ -75,7 +74,7 @@ struct cleri_parse_s
     cleri_expecting_t * expecting;
     pcre2_code * re_keywords;
     pcre2_match_data * match_data;
-    cleri_kwcache_t * kwcache;
+    uint16_t * kwcache;
 };
 
 static inline cleri_parse_t * cleri_parse(
