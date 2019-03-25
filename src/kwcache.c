@@ -9,6 +9,8 @@
 #include <cleri/kwcache.h>
 #include <assert.h>
 
+#define NOT_FOUND UINT16_MAX
+
 static void kwcache__kw_match(
         uint16_t * kwcache,
         cleri_parse_t * pr,
@@ -19,7 +21,7 @@ static void kwcache__kw_match(
  */
 uint16_t * cleri__kwcache_new(const char * str)
 {
-    return cleri__calloc((size_t) (strlen(str) / 2) + 1, uint16_t);
+    return cleri__calloc(strlen(str) + 1, uint16_t);
 }
 
 /*
@@ -31,16 +33,20 @@ ssize_t cleri__kwcache_match(
         const char * str)
 {
     assert (str >= pr->str);
-    size_t pos = (size_t) ((str - pr->str) / 2);
+    size_t pos = (size_t) (str - pr->str);
     uint16_t * len = &pr->kwcache[pos];
 
-    if (*len)
-        return *len == UINT16_MAX ? 0 : *len;
+    if (!*len)
+    {
+        kwcache__kw_match(len, pr, str);
+        if (!*len)
+        {
+            *len = NOT_FOUND;
+        }
+    }
 
-    kwcache__kw_match(len, pr, str);
-    return *len;
+    return *len == NOT_FOUND ? 0 : *len;
 }
-
 
 /*
  * This function will set kwcache->len if a match is found.
