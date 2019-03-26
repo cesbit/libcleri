@@ -21,7 +21,13 @@ static void kwcache__kw_match(
  */
 uint16_t * cleri__kwcache_new(const char * str)
 {
-    return cleri__calloc(strlen(str) + 1, uint16_t);
+    size_t n = strlen(str);
+    uint16_t * kwcache = cleri__mallocn(n, uint16_t);
+    if (kwcache != NULL)
+    {
+        memset(kwcache, 0xff, n * sizeof(uint16_t));
+    }
+    return kwcache;
 }
 
 /*
@@ -32,20 +38,20 @@ ssize_t cleri__kwcache_match(
         cleri_parse_t * pr,
         const char * str)
 {
-    assert (str >= pr->str);
-    size_t pos = (size_t) (str - pr->str);
-    uint16_t * len = &pr->kwcache[pos];
-
-    if (!*len)
+    uint16_t * len;
+    if (*str == '\0')
     {
-        kwcache__kw_match(len, pr, str);
-        if (!*len)
-        {
-            *len = NOT_FOUND;
-        }
+        return 0;
     }
 
-    return *len == NOT_FOUND ? 0 : *len;
+    len = &pr->kwcache[str - pr->str];
+
+    if (*len == NOT_FOUND)
+    {
+        kwcache__kw_match(len, pr, str);
+    }
+
+    return *len;
 }
 
 /*
@@ -58,8 +64,6 @@ static void kwcache__kw_match(
 {
     int pcre_exec_ret;
 
-    PCRE2_SIZE * ovector;
-
     pcre_exec_ret = pcre2_match(
                 pr->re_keywords,
                 (PCRE2_SPTR8) str,
@@ -69,11 +73,7 @@ static void kwcache__kw_match(
                 pr->match_data,
                 NULL);
 
-    if (pcre_exec_ret < 0)
-    {
-        return;
-    }
-
-    ovector = pcre2_get_ovector_pointer(pr->match_data);
-    *kwcache = (uint16_t) ovector[1];
+    *kwcache = pcre_exec_ret < 0
+        ? 0
+        : pcre2_get_ovector_pointer(pr->match_data)[1];
 }

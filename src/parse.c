@@ -232,11 +232,10 @@ cleri_node_t * cleri__parse_walk(
         cleri_rule_store_t * rule,
         int mode)
 {
+    const char * str = parent->str + parent->len;
+
     /* set parent len to next none white space char */
-    while (isspace(*(parent->str + parent->len)))
-    {
-        parent->len++;
-    }
+    for (; isspace(*str); ++str, ++parent->len);
 
     /* set expecting mode */
     if (cleri__expecting_set_mode(pr->expecting, parent->str, mode) == -1)

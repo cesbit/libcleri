@@ -11,9 +11,9 @@
 #endif
 
 #ifdef __cplusplus
-#define cleri__calloc(__n, __t) ((__t*)calloc(__n, sizeof(__t)))
+#define cleri__mallocn(__n, __t) ((__t*)malloc(__n * sizeof(__t)))
 #else
-#define cleri__calloc(__n, __t) (calloc(__n, sizeof(__t)))
+#define cleri__mallocn(__n, __t) (malloc(__n * sizeof(__t)))
 #endif
 
 #include <cleri/expecting.h>
