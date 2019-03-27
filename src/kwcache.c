@@ -9,23 +9,23 @@
 #include <cleri/kwcache.h>
 #include <assert.h>
 
-#define NOT_FOUND UINT16_MAX
+#define NOT_FOUND UINT8_MAX
 
 static void kwcache__kw_match(
-        uint16_t * kwcache,
+        uint8_t * kwcache,
         cleri_parse_t * pr,
         const char * str);
 
 /*
  * Returns NULL in case an error has occurred.
  */
-uint16_t * cleri__kwcache_new(const char * str)
+uint8_t * cleri__kwcache_new(const char * str)
 {
     size_t n = strlen(str);
-    uint16_t * kwcache = cleri__mallocn(n, uint16_t);
+    uint8_t * kwcache = cleri__mallocn(n, uint8_t);
     if (kwcache != NULL)
     {
-        memset(kwcache, 0xff, n * sizeof(uint16_t));
+        memset(kwcache, NOT_FOUND, n * sizeof(uint8_t));
     }
     return kwcache;
 }
@@ -38,7 +38,8 @@ ssize_t cleri__kwcache_match(
         cleri_parse_t * pr,
         const char * str)
 {
-    uint16_t * len;
+    uint8_t * len;
+
     if (*str == '\0')
     {
         return 0;
@@ -58,7 +59,7 @@ ssize_t cleri__kwcache_match(
  * This function will set kwcache->len if a match is found.
  */
 static void kwcache__kw_match(
-        uint16_t * kwcache,
+        uint8_t * kwcache,
         cleri_parse_t * pr,
         const char * str)
 {

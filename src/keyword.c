@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cleri/keyword.h>
+#include <assert.h>
 
 static void keyword__free(cleri_t * cl_object);
 
@@ -14,10 +15,16 @@ static cleri_node_t * keyword__parse(
         cleri_rule_store_t * rule);
 
 /*
+ * Keywords must match the `keyword` regular expression defined by the grammar,
+ * and should have more than 0 and less than 255 characters.
+ *
  * Returns NULL in case an error has occurred.
  */
 cleri_t * cleri_keyword(uint32_t gid, const char * keyword, int ign_case)
 {
+    size_t n = strlen(keyword);
+    assert (n > 0 && n < UINT8_MAX);
+
     cleri_t * cl_object = cleri_new(
             gid,
             CLERI_TP_KEYWORD,
@@ -39,7 +46,7 @@ cleri_t * cleri_keyword(uint32_t gid, const char * keyword, int ign_case)
 
     cl_object->via.keyword->keyword = keyword;
     cl_object->via.keyword->ign_case = ign_case;
-    cl_object->via.keyword->len = strlen(keyword);
+    cl_object->via.keyword->len = n;
 
     return cl_object;
 }

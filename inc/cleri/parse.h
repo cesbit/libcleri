@@ -74,7 +74,7 @@ struct cleri_parse_s
     cleri_expecting_t * expecting;
     pcre2_code * re_keywords;
     pcre2_match_data * match_data;
-    uint16_t * kwcache;
+    uint8_t * kwcache;
 };
 
 static inline cleri_parse_t * cleri_parse(

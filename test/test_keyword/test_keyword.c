@@ -62,6 +62,15 @@ static int test_keyword_ign_case(void)
     _assert_is_valid (grammar, "hi");
     _assert_is_valid (grammar, "Hi");
     _assert_is_not_valid (grammar, "hello");
+    _assert_is_not_valid (grammar,
+        "hihihihihihihihihihihihihihihihi"
+        "hihihihihihihihihihihihihihihihi"
+        "hihihihihihihihihihihihihihihihi"
+        "hihihihihihihihihihihihihihihihi"
+        "hihihihihihihihihihihihihihihihi"
+        "hihihihihihihihihihihihihihihihi"
+        "hihihihihihihihihihihihihihihihi"
+        "hihihihihihihihihihihihihihihihi");
     _assert_parse_str (
         grammar,
         "Hi Iris",
