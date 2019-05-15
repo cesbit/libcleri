@@ -30,6 +30,7 @@ cleri_parse_t * cleri_parse2(
         return NULL;
     }
 
+    pr->flags = flags;
     pr->str = str;
     pr->tree = NULL;
     pr->kwcache = NULL;

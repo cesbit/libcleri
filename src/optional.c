@@ -70,17 +70,30 @@ static cleri_node_t * optional__parse(
     cleri_node_t * node;
     cleri_node_t * rnode;
 
+    if (pr->flags & CLERI_FLAG_EXCLUDE_OPTIONAL)
+    {
+        node = cleri__parse_walk(
+            pr,
+            parent,
+            cl_obj->via.optional->cl_obj,
+            rule,
+            CLERI__EXP_MODE_OPTIONAL);
+        return node ? node : CLERI_EMPTY_NODE;
+    }
+
     if ((node = cleri__node_new(cl_obj, parent->str + parent->len, 0)) == NULL)
     {
         pr->is_valid = -1;
         return NULL;
     }
+
     rnode = cleri__parse_walk(
             pr,
             node,
             cl_obj->via.optional->cl_obj,
             rule,
             CLERI__EXP_MODE_OPTIONAL);
+
     if (rnode != NULL)
     {
         parent->len += node->len;

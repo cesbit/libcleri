@@ -19,7 +19,8 @@
 
 enum
 {
-    CLERI_FLAG_EXPECTING_DISABLED =1<<0,
+    CLERI_FLAG_EXPECTING_DISABLED   =1<<0,
+    CLERI_FLAG_EXCLUDE_OPTIONAL     =1<<1,
 };
 
 /* typedefs */
@@ -67,6 +68,7 @@ cleri_node_t * cleri__parse_walk(
 struct cleri_parse_s
 {
     int is_valid;
+    int flags;
     size_t pos;
     const char * str;
     cleri_node_t * tree;
