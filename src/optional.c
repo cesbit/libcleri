@@ -70,7 +70,7 @@ static cleri_node_t * optional__parse(
     cleri_node_t * node;
     cleri_node_t * rnode;
 
-    if (pr->flags & CLERI_FLAG_EXCLUDE_OPTIONAL)
+    if ((pr->flags & CLERI_FLAG_EXCLUDE_OPTIONAL) && !cl_obj->gid)
     {
         node = cleri__parse_walk(
             pr,

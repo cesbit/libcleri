@@ -21,6 +21,7 @@ enum
 {
     CLERI_FLAG_EXPECTING_DISABLED   =1<<0,
     CLERI_FLAG_EXCLUDE_OPTIONAL     =1<<1,
+    CLERI_FLAG_EXCLUDE_FM_CHOICE    =1<<2,
 };
 
 /* typedefs */

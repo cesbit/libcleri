@@ -173,6 +173,26 @@ static cleri_node_t * choice__parse_first_match(
     cleri_node_t * rnode;
 
     olist = cl_obj->via.choice->olist;
+
+    if ((pr->flags & CLERI_FLAG_EXCLUDE_FM_CHOICE) && !cl_obj->gid)
+    {
+        while (olist != NULL)
+        {
+            node = cleri__parse_walk(
+                    pr,
+                    parent,
+                    olist->cl_obj,
+                    rule,
+                    CLERI__EXP_MODE_REQUIRED);
+            if (node != NULL)
+            {
+                return node;
+            }
+            olist = olist->next;
+        }
+       return NULL;
+    }
+
     node = cleri__node_new(cl_obj, parent->str + parent->len, 0);
     if (node == NULL)
     {
