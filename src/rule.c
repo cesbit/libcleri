@@ -115,6 +115,41 @@ static cleri_node_t * rule__parse(
     cleri_node_t * rnode;
     cleri_rule_store_t nrule;
 
+    if (pr->flags & CLERI_FLAG_EXCLUDE_RULE_THIS)
+    {
+        nrule.depth = 0;
+        nrule.tested = cleri__malloc(cleri_rule_tested_t);
+
+        if (nrule.tested == NULL)
+        {
+            pr->is_valid = -1;
+            return NULL;
+        }
+
+        nrule.tested->str = NULL;
+        nrule.tested->node = NULL;
+        nrule.tested->next = NULL;
+        nrule.root_obj = cl_obj->via.rule->cl_obj;
+
+        node = cleri__parse_walk(
+                pr,
+                parent,
+                nrule.root_obj,
+                &nrule,
+                CLERI__EXP_MODE_REQUIRED);
+
+
+        if (node != NULL)
+        {
+            node = parent;
+        }
+
+        /* cleanup rule */
+        rule__tested_free(nrule.tested);
+
+        return node;
+    }
+
     if ((node = cleri__node_new(cl_obj, parent->str + parent->len, 0)) == NULL)
     {
         pr->is_valid = -1;

@@ -43,6 +43,17 @@ static cleri_node_t * cleri_parse_this(
     switch (cleri__rule_init(&tested, rule->tested, str))
     {
     case CLERI_RULE_TRUE:
+        if (pr->flags & CLERI_FLAG_EXCLUDE_RULE_THIS)
+        {
+            tested->node = cleri__parse_walk(
+                    pr,
+                    parent,
+                    rule->root_obj,
+                    rule,
+                    CLERI__EXP_MODE_REQUIRED);
+
+            return tested->node == NULL ? NULL : parent;
+        }
         if ((node = cleri__node_new(cl_obj, str, 0)) == NULL)
         {
             pr->is_valid = -1;
