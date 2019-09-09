@@ -4,7 +4,7 @@
 #ifndef CLERI_VERSION_H_
 #define CLERI_VERSION_H_
 
-#define LIBCLERI_VERSION "0.10.1-alpha-5"
+#define LIBCLERI_VERSION "0.10.1-alpha-6"
 
 /* public funtion */
 #ifdef __cplusplus

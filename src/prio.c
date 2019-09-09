@@ -43,6 +43,7 @@ cleri_t * cleri_prio(uint32_t gid, size_t len, ...)
         return NULL;
     }
 
+    cl_object->gid = gid;
     cl_object->via.prio->olist = cleri__olist_new();
 
     if (cl_object->via.prio->olist == NULL)
