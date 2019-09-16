@@ -226,19 +226,24 @@ int cleri_parse_strn(
     expect = pr->str + pr->pos;
     if (isgraph(*expect))
     {
-        int nc;
+        ssize_t nc = cleri__kwcache_match(pr, expect);
         const char * pt = expect;
-        m = (i < n) ? n-i : 0;
-        while (isalnum(*pt))
-            ++pt;
+        const int max_chars = 8;
 
-        nc = pt - expect;
+        if (nc < 1)
+        {
+            while (isdigit(*pt))
+                ++pt;
+            nc = pt - expect;
+        }
+
+        m = (i < n) ? n-i : 0;
+
         if (nc > 1)
         {
-            nc = nc > 8 ? 8 : nc;
-            rc = isgraph(*(expect + nc))
-                ? snprintf(s+i, m, ", unexpected `%.*s...`", nc, expect)
-                : snprintf(s+i, m, ", unexpected `%.*s`", nc, expect);
+            rc = nc > max_chars
+                ? snprintf(s+i, m, ", unexpected `%.*s...`", max_chars, expect)
+                : snprintf(s+i, m, ", unexpected `%.*s`", (int) nc, expect);
         }
         else
         {

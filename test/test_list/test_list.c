@@ -76,7 +76,7 @@ static int test_list_all_options(void)
         grammar,
         "hi-hi-hi-hi-hi",
         "error at line 0, position 9, "
-        "unexpected `hi...`, expecting: end_of_statement",
+        "unexpected `hi`, expecting: end_of_statement",
         NULL);
     _assert_parse_str (
         grammar,
@@ -92,7 +92,7 @@ static int test_list_all_options(void)
     _assert_parse_str2 (
         grammar,
         "hi-hi-hi-hi-hi",
-        "error at line 0, position 9, unexpected `hi...`",
+        "error at line 0, position 9, unexpected `hi`",
         NULL);
     _assert_parse_str2 (
         grammar,
