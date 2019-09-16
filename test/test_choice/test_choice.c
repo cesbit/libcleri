@@ -71,7 +71,8 @@ static int test_choice_expecting(void)
     _assert_parse_str (
         grammar,
         "hi cleri",
-        "error at position 3, expecting: iris or sasha",
+        "error at line 0, position 3, "
+        "unexpected `cleri`, expecting: iris or sasha",
         NULL);
 
     cleri_grammar_free(grammar);

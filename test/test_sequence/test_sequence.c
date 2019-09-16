@@ -19,12 +19,14 @@ static int test_sequence(void)
     _assert_parse_str (
         grammar,
         "hi sasha",
-        "error at position 3, expecting: iris",
+        "error at line 0, position 3, "
+        "unexpected `sasha`, expecting: iris",
         NULL);
     _assert_parse_str2 (
         grammar,
         "hi sasha",
-        "error at position 3",
+        "error at line 0, position 3, "
+        "unexpected `sasha`",
         NULL);
     cleri_grammar_free(grammar);
 

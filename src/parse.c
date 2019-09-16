@@ -21,7 +21,6 @@ cleri_parse_t * cleri_parse2(
     cleri_parse_t * pr;
     const char * end;
     const char * test;
-    bool at_end = true;
 
     /* prepare parsing */
     pr = cleri__malloc(cleri_parse_t);
@@ -69,38 +68,42 @@ cleri_parse_t * cleri_parse2(
     end = pr->tree->str + pr->tree->len;
 
     /* check if we are at the end of the string */
-    for (test = end; *test; test++)
+    if (pr->is_valid) for (test = end; *test; test++)
     {
         if (!isspace(*test))
         {
-            at_end = false;
             pr->is_valid = false;
+            if (pr->expecting->required)
+            {
+                if (cleri__expecting_set_mode(
+                        pr->expecting,
+                        end,
+                        CLERI__EXP_MODE_REQUIRED) == -1 ||
+                    cleri__expecting_update(
+                        pr->expecting,
+                        CLERI_END_OF_STATEMENT,
+                        end) == -1)
+                {
+                    cleri_parse_free(pr);
+                    return NULL;
+                }
+                cleri__expecting_combine(pr->expecting);
+            }
+            else if (cleri__expecting_update(
+                        pr->expecting,
+                        CLERI_END_OF_STATEMENT,
+                        end))
+            {
+                cleri_parse_free(pr);
+                return NULL;
+            }
             break;
         }
     }
 
-    pr->pos = (pr->is_valid || (
-                !at_end && nd && (
-                    !pr->expecting->required ||
-                    pr->expecting->str == pr->str))) ?
-            pr->tree->len : (size_t) (pr->expecting->str - pr->str);
-
-    if (pr->expecting->required && !at_end && nd)
-    {
-        if (cleri__expecting_set_mode(
-                pr->expecting,
-                end,
-                CLERI__EXP_MODE_REQUIRED) == -1 ||
-            cleri__expecting_update(
-                pr->expecting,
-                CLERI_END_OF_STATEMENT,
-                end) == -1)
-        {
-            cleri_parse_free(pr);
-            return NULL;
-        }
-        cleri__expecting_combine(pr->expecting);
-    }
+    pr->pos = pr->is_valid
+        ? pr->tree->len
+        : (size_t) (pr->expecting->str - pr->str);
 
     cleri__olist_unique(pr->expecting->required);
     pr->expect = pr->expecting->required;
@@ -130,6 +133,56 @@ void cleri_parse_expect_start(cleri_parse_t * pr)
     pr->expect = pr->expecting->required;
 }
 
+static void parse__line_pos(cleri_parse_t * pr, size_t * line, size_t * pos)
+{
+    size_t n = pr->pos;
+    const char * pt = pr->str;
+    *pos = 0;
+    *line = 0;
+    while (n--)
+    {
+        if (*pt == '\n')
+        {
+            if (!n)
+                break;
+
+            ++pt;
+            if (*pt == '\r')
+            {
+                if (!--n)
+                    break;
+                ++pt;
+            }
+
+            ++(*line);
+            *pos = 0;
+            continue;
+        }
+        if (*pt == '\r')
+        {
+            if (!n)
+                break;
+
+            ++pt;
+            if (*(++pt) == '\n' )
+            {
+                if (!--n)
+                    break;
+
+                ++pt;
+                ++(*line);
+                *pos = 0;
+            }
+
+            ++(*line);
+            *pos = 0;
+            continue;
+        }
+        ++(*pos);
+        ++pt;
+    }
+}
+
 /*
  * Print parse result to a string. The return value is equal to the snprintf
  * function. Argument `translate_cb` maybe NULL or a function which may return
@@ -144,7 +197,7 @@ int cleri_parse_strn(
     cleri_translate_t * translate)
 {
     int rc, count = 0;
-    size_t i, m;
+    size_t i, m, line, pos;
     cleri_t * o;
     const char * expect;
     const char * template;
@@ -161,12 +214,45 @@ int cleri_parse_strn(
     /* make sure expecting is at start */
     cleri_parse_expect_start(pr);
 
-    rc = snprintf(s, n, "error at position %zd", pr->pos);
+    parse__line_pos(pr, &line, &pos);
+
+    rc = snprintf(s, n, "error at line %zu, position %zu", line, pos);
     if (rc < 0)
     {
         return rc;
     }
     i = rc;
+
+    expect = pr->str + pr->pos;
+    if (isgraph(*expect))
+    {
+        int nc;
+        const char * pt = expect;
+        m = (i < n) ? n-i : 0;
+        while (isalnum(*pt))
+            ++pt;
+
+        nc = pt - expect;
+        if (nc > 1)
+        {
+            nc = nc > 8 ? 8 : nc;
+            rc = isgraph(*(expect + nc))
+                ? snprintf(s+i, m, ", unexpected `%.*s...`", nc, expect)
+                : snprintf(s+i, m, ", unexpected `%.*s`", nc, expect);
+        }
+        else
+        {
+            rc = snprintf(s+i, m, ", unexpected character `%c`", *expect);
+        }
+
+        if (rc < 0)
+        {
+            return rc;
+        }
+
+        i += rc;
+    }
+
 
     while (pr->expect)
     {
@@ -197,7 +283,7 @@ int cleri_parse_strn(
         }
 
         /* make sure len is not greater than the maximum size */
-        m = (i < n) ? n - i : 0;
+        m = (i < n) ? n-i : 0;
 
         /* we use count = 0 to print the first one, then for the others
          * a comma prefix and the last with -or-
@@ -209,7 +295,7 @@ int cleri_parse_strn(
             : pr->expect->next
             ? ", %s"
             : " or %s";
-        rc = snprintf(s + i, m, template, expect);
+        rc = snprintf(s+i, m, template, expect);
         if (rc < 0)
         {
             return rc;
