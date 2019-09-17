@@ -228,7 +228,7 @@ int cleri_parse_strn(
     {
         ssize_t nc = cleri__kwcache_match(pr, expect);
         const char * pt = expect;
-        const int max_chars = 8;
+        const int max_chars = 20;
 
         if (nc < 1)
         {
