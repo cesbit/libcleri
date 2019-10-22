@@ -78,3 +78,11 @@ static void kwcache__kw_match(
         ? 0
         : pcre2_get_ovector_pointer(pr->match_data)[1];
 }
+
+/*
+ * Destroy kwcache. (parsing NULL is allowed)
+ */
+void cleri__kwcache_free(uint8_t * kwcache)
+{
+    free(kwcache);
+}

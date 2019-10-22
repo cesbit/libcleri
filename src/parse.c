@@ -117,7 +117,7 @@ cleri_parse_t * cleri_parse2(
 void cleri_parse_free(cleri_parse_t * pr)
 {
     cleri__node_free(pr->tree);
-    cleri__kwcache_free(pr->kwcache);
+    free(pr->kwcache);
     if (pr->expecting != NULL)
     {
         cleri__expecting_free(pr->expecting);
