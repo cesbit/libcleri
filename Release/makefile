@@ -1,12 +1,7 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-################################################################################
-
 -include ../makefile.init
 
 RM := rm -rf
 
-# All of the sources participating in the build are defined here
 -include sources.mk
 -include src/subdir.mk
 -include subdir.mk
@@ -30,8 +25,6 @@ FN := libcleri.so
 INSTALL_PATH := /usr
 SO_NAME := soname
 endif
-
-# Add inputs and outputs from these tool invocations to the build variables
 
 # All Target
 all: libcleri

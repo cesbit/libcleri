@@ -1,3 +1,11 @@
+libcleri (0.11.0-0~tt1) unstable; urgency=medium
+
+  * Added cleri_parse2() which accepts an additional `flags` argument
+  * Improved syntax error handling
+  * Set correct position when nested error in syntax is found
+
+ -- Jeroen van der Heijden <joente@xjoente>  Tue, 22 Oct 2019 10:59:14 +0200
+
 libcleri (0.10.1-0~alpha1-tt1) unstable; urgency=medium
 
   * Added option to disable generating expecting info

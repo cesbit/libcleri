@@ -1,8 +1,3 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-################################################################################
-
-# Add inputs and outputs from these tool invocations to the build variables
 C_SRCS += \
 ../src/children.c \
 ../src/choice.c \
@@ -79,7 +74,6 @@ C_DEPS += \
 ./src/tokens.d \
 ./src/version.d
 
-# Each subdirectory must supply rules for building sources it contributes
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
