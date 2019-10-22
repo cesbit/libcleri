@@ -20,6 +20,7 @@ libcleri.so.0 libcleri0 #MINVER#
  cleri__olist_empty@Base 0.9.3
  cleri__olist_free@Base 0.9.3
  cleri__olist_new@Base 0.9.3
+ cleri__olist_unique@Base 0.11.0~
  cleri__parse_walk@Base 0.9.3
  cleri__rule@Base 0.9.3
  cleri__rule_init@Base 0.9.3
