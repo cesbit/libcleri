@@ -10,6 +10,12 @@
 #define cleri__malloc(__t) (malloc(sizeof(__t)))
 #endif
 
+#ifdef __cplusplus
+#define cleri__mallocn(__n, __t) ((__t*)malloc(__n * sizeof(__t)))
+#else
+#define cleri__mallocn(__n, __t) (malloc(__n * sizeof(__t)))
+#endif
+
 #include <cleri/expecting.h>
 #include <cleri/keyword.h>
 #include <cleri/sequence.h>
@@ -28,6 +34,7 @@
 #include <cleri/rule.h>
 #include <cleri/this.h>
 #include <cleri/ref.h>
+#include <cleri/version.h>
 
 /* typedefs */
 typedef struct cleri_s cleri_t;

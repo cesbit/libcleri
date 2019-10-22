@@ -76,7 +76,7 @@ static cleri_node_t * token__parse(
                 cl_obj->via.token->len)) != NULL)
         {
             parent->len += node->len;
-            if (cleri__children_add(parent->children, node))
+            if (cleri__children_add(&parent->children, node))
             {
                  /* error occurred, reverse changes set mg_node to NULL */
                 pr->is_valid = -1;

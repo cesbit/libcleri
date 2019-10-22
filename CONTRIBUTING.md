@@ -45,7 +45,7 @@ git commit -am 'some work that has been done'
 
 Create archive from code
 ```
-git archive -o ../libcleri_0.10.0.orig.tar.gz master
+git archive -o ../libcleri_0.10.1.orig.tar.gz master
 ```
 
 Build deb package

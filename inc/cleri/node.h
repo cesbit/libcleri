@@ -34,10 +34,11 @@ struct cleri_node_s
     size_t len;
     cleri_t * cl_obj;
     cleri_children_t * children;
+    void * data;        /* free to use by the user */
 
     /* private */
-    uint_fast8_t ref;
-    int64_t result;
+    size_t ref;
+    int64_t result;     /* DEPRECATED */
 };
 
 #endif /* CLERI_NODE_H_ */

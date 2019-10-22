@@ -131,7 +131,7 @@ static cleri_node_t *  prio__parse(
     if (tested->node != NULL)
     {
         parent->len += tested->node->len;
-        if (cleri__children_add(parent->children, tested->node))
+        if (cleri__children_add(&parent->children, tested->node))
         {
              /* error occurred, reverse changes set mg_node to NULL */
             pr->is_valid = -1;

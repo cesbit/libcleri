@@ -5,47 +5,43 @@
 #include <cleri/children.h>
 
 /*
- * Returns NULL and in case an error has occurred.
- */
-cleri_children_t * cleri__children_new(void)
-{
-    cleri_children_t * children = cleri__malloc(cleri_children_t);
-    if (children != NULL)
-    {
-        children->node = NULL;
-        children->next = NULL;
-    }
-    return children;
-}
-
-/*
  * Appends a node to children.
  *
  * Returns 0 when successful or -1 in case of an error.
  */
-int cleri__children_add(cleri_children_t * children, cleri_node_t * node)
+int cleri__children_add(cleri_children_t ** children, cleri_node_t * node)
 {
-    if (children->node == NULL)
+    cleri_children_t * child;
+    if (*children == NULL)
     {
-        children->node = node;
+        *children = cleri__malloc(cleri_children_t);
+        if (*children == NULL)
+        {
+            return -1;
+        }
+
+        (*children)->node = node;
+        (*children)->next = NULL;
+
         return 0;
     }
 
-    while (children->next != NULL)
+    child = *children;
+
+    while (child->next != NULL)
     {
-        children = children->next;
+        child = child->next;
     }
 
-    children->next = cleri__malloc(cleri_children_t);
-    if (children->next == NULL)
+    child->next = cleri__malloc(cleri_children_t);
+    if (child->next == NULL)
     {
         return -1;
     }
-    else
-    {
-        children->next->node = node;
-        children->next->next = NULL;
-    }
+
+    child->next->node = node;
+    child->next->next = NULL;
+
     return 0;
 }
 
@@ -63,4 +59,3 @@ void cleri__children_free(cleri_children_t * children)
         children = next;
     }
 }
-

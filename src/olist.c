@@ -155,3 +155,23 @@ void cleri__olist_cancel(cleri_olist_t * olist)
     }
     cleri__olist_empty(olist);
 }
+
+void cleri__olist_unique(cleri_olist_t * olist)
+{
+    while (olist != NULL && olist->next != NULL)
+    {
+        cleri_olist_t * test = olist;
+        while (test->next != NULL)
+        {
+            if (olist->cl_obj == test->next->cl_obj)
+            {
+                cleri_olist_t * tmp = test->next->next;
+                free(test->next);
+                test->next = tmp;
+                continue;
+            }
+            test = test->next;
+        }
+        olist = olist->next;
+    }
+}

@@ -32,14 +32,23 @@ static int test_dup(void)
     _assert_parse_str (
         grammar,
         "",
-        "error at position 0, expecting: hi",
+        "error at line 0, position 0, expecting: hi",
         &translate);
     _assert_parse_str (
         grammar,
         "hi",
-        "error at position 2, expecting: hi(dup)",
+        "error at line 0, position 2, expecting: hi(dup)",
         &translate);
-
+    _assert_parse_str2 (
+        grammar,
+        "",
+        "error at line 0, position 0",
+        &translate);
+    _assert_parse_str2 (
+        grammar,
+        "hi",
+        "error at line 0, position 2",
+        &translate);
     cleri_grammar_free(grammar);
 
     return test_end();

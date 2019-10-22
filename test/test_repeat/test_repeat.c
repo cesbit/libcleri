@@ -30,12 +30,26 @@ static int test_repeat(void)
     _assert_parse_str (
         grammar,
         "hi.",
-        "error at position 2, expecting: hi or end_of_statement",
+        "error at line 0, position 2, "
+        "unexpected character `.`, expecting: hi or end_of_statement",
         NULL);
     _assert_parse_str (
         grammar,
         "hi.",
-        "error at position 2",
+        "error at line 0, position 2, "
+        "unexpected character `.`",
+        &translate);
+    _assert_parse_str2 (
+        grammar,
+        "hi.",
+        "error at line 0, position 2, "
+        "unexpected character `.`",
+        NULL);
+    _assert_parse_str2 (
+        grammar,
+        "hi.",
+        "error at line 0, position 2, "
+        "unexpected character `.`",
         &translate);
     cleri_grammar_free(grammar);
 
@@ -63,19 +77,35 @@ static int test_repeat_all_options(void)
     _assert_parse_str (
         grammar,
         "hi hi hi hi hi",
-        "error at position 8, expecting: end_of_statement",
+        "error at line 0, position 8, expecting: end_of_statement",
         NULL);
     _assert_parse_str (
         grammar,
         "hi.",
-        "error at position 2, expecting: hi or end_of_statement",
+        "error at line 0, position 2, "
+        "unexpected character `.`, expecting: hi or end_of_statement",
         NULL);
     _assert_parse_str (
         grammar,
         "",
-        "error at position 0, expecting: hi",
+        "error at line 0, position 0, expecting: hi",
         NULL);
-
+    _assert_parse_str2 (
+        grammar,
+        "hi hi hi hi hi",
+        "error at line 0, position 8",
+        NULL);
+    _assert_parse_str2 (
+        grammar,
+        "hi.",
+        "error at line 0, position 2, "
+        "unexpected character `.`",
+        NULL);
+    _assert_parse_str2 (
+        grammar,
+        "",
+        "error at line 0, position 0",
+        NULL);
     cleri_grammar_free(grammar);
 
     return test_end();

@@ -7,3 +7,5 @@
 ../src/olist.c
 ../src/parse.c
 ../src/keyword.c
+../src/token.c
+../src/choice.c

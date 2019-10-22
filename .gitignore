@@ -48,3 +48,4 @@ debian/libcleri-dev/
 debian/libcleri0.debhelper.log
 debian/libcleri0.substvars
 debian/libcleri0/
+debian/tmp/

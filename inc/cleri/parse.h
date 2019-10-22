@@ -14,15 +14,22 @@
 #include <cleri/rule.h>
 
 #ifndef MAX_RECURSION_DEPTH
-#define MAX_RECURSION_DEPTH 50
+#define MAX_RECURSION_DEPTH 500
 #endif
+
+enum
+{
+    CLERI_FLAG_EXPECTING_DISABLED   =1<<0,
+    CLERI_FLAG_EXCLUDE_OPTIONAL     =1<<1,
+    CLERI_FLAG_EXCLUDE_FM_CHOICE    =1<<2,
+    CLERI_FLAG_EXCLUDE_RULE_THIS    =1<<3,
+};
 
 /* typedefs */
 typedef struct cleri_s cleri_t;
 typedef struct cleri_grammar_s cleri_grammar_t;
 typedef struct cleri_node_s cleri_node_t;
 typedef struct cleri_expecting_s cleri_expecting_t;
-typedef struct cleri_kwcache_s cleri_kwcache_t;
 typedef struct cleri_rule_store_s cleri_rule_store_t;
 typedef struct cleri_parse_s cleri_parse_t;
 typedef const char * (cleri_translate_t)(cleri_t *);
@@ -32,7 +39,13 @@ typedef const char * (cleri_translate_t)(cleri_t *);
 extern "C" {
 #endif
 
-cleri_parse_t * cleri_parse(cleri_grammar_t * grammar, const char * str);
+static inline cleri_parse_t * cleri_parse(
+    cleri_grammar_t * grammar,
+    const char * str);
+cleri_parse_t * cleri_parse2(
+    cleri_grammar_t * grammar,
+    const char * str,
+    int flags);
 void cleri_parse_free(cleri_parse_t * pr);
 void cleri_parse_expect_start(cleri_parse_t * pr);
 int cleri_parse_strn(
@@ -57,6 +70,7 @@ cleri_node_t * cleri__parse_walk(
 struct cleri_parse_s
 {
     int is_valid;
+    int flags;
     size_t pos;
     const char * str;
     cleri_node_t * tree;
@@ -64,7 +78,14 @@ struct cleri_parse_s
     cleri_expecting_t * expecting;
     pcre2_code * re_keywords;
     pcre2_match_data * match_data;
-    cleri_kwcache_t * kwcache;
+    uint8_t * kwcache;
 };
+
+static inline cleri_parse_t * cleri_parse(
+    cleri_grammar_t * grammar,
+    const char * str)
+{
+    return cleri_parse2(grammar, str, 0);
+}
 
 #endif /* CLERI_PARSE_H_ */

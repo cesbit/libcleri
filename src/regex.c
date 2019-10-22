@@ -117,7 +117,7 @@ static cleri_node_t *  regex__parse(
     pcre_exec_ret = pcre2_match(
             cl_obj->via.regex->regex,
             (PCRE2_SPTR8) str,
-            strlen(str),
+            PCRE2_ZERO_TERMINATED,
             0,                     // start looking at this point
             0,                     // OPTIONS
             cl_obj->via.regex->match_data,
@@ -139,7 +139,7 @@ static cleri_node_t *  regex__parse(
     if ((node = cleri__node_new(cl_obj, str, (size_t) ovector[1])) != NULL)
     {
         parent->len += node->len;
-        if (cleri__children_add(parent->children, node))
+        if (cleri__children_add(&parent->children, node))
         {
              /* error occurred, reverse changes set node to NULL */
             pr->is_valid = -1;
