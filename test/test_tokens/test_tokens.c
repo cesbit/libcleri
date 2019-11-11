@@ -24,12 +24,12 @@ static int test_tokens(void)
     _assert_parse_str (
         grammar,
         "",
-        "error at line 0, position 0, expecting: == != >= <= > <",
+        "error at line 1, position 0, expecting: == != >= <= > <",
         NULL);
     _assert_parse_str2 (
         grammar,
         "",
-        "error at line 0, position 0",
+        "error at line 1, position 0",
         NULL);
     cleri_grammar_free(grammar);
 

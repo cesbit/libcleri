@@ -138,7 +138,7 @@ static void parse__line_pos(cleri_parse_t * pr, size_t * line, size_t * pos)
     size_t n = pr->pos;
     const char * pt = pr->str;
     *pos = 0;
-    *line = 0;
+    *line = 1;
     while (n--)
     {
         if (*pt == '\n')

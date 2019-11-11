@@ -25,13 +25,13 @@ static int test_list(void)
     _assert_parse_str (
         grammar,
         "hi.",
-        "error at line 0, position 2, "
+        "error at line 1, position 2, "
         "unexpected character `.`, expecting: , or end_of_statement",
         NULL);
     _assert_parse_str2 (
         grammar,
         "hi.",
-        "error at line 0, position 2, unexpected character `.`",
+        "error at line 1, position 2, unexpected character `.`",
         NULL);
 
     /* check if list children is really NULL */
@@ -75,34 +75,34 @@ static int test_list_all_options(void)
     _assert_parse_str (
         grammar,
         "hi-hi-hi-hi-hi",
-        "error at line 0, position 9, "
+        "error at line 1, position 9, "
         "unexpected `hi`, expecting: end_of_statement",
         NULL);
     _assert_parse_str (
         grammar,
         "hi.",
-        "error at line 0, position 2"
+        "error at line 1, position 2"
         ", unexpected character `.`, expecting: - or end_of_statement",
         NULL);
     _assert_parse_str (
         grammar,
         "",
-        "error at line 0, position 0, expecting: hi",
+        "error at line 1, position 0, expecting: hi",
         NULL);
     _assert_parse_str2 (
         grammar,
         "hi-hi-hi-hi-hi",
-        "error at line 0, position 9, unexpected `hi`",
+        "error at line 1, position 9, unexpected `hi`",
         NULL);
     _assert_parse_str2 (
         grammar,
         "hi.",
-        "error at line 0, position 2, unexpected character `.`",
+        "error at line 1, position 2, unexpected character `.`",
         NULL);
     _assert_parse_str2 (
         grammar,
         "",
-        "error at line 0, position 0",
+        "error at line 1, position 0",
         NULL);
     cleri_grammar_free(grammar);
 
@@ -128,22 +128,22 @@ static int test_list_vs_single(void)
     _assert_parse_str (
         grammar,
         "hi, hello",
-        "error at line 0, position 4, unexpected `hello`, expecting: hi",
+        "error at line 1, position 4, unexpected `hello`, expecting: hi",
         NULL);
     _assert_parse_str (
         grammar,
         "hello",
-        "error at line 0, position 0, unexpected `hello`, expecting: hi",
+        "error at line 1, position 0, unexpected `hello`, expecting: hi",
         NULL);
     _assert_parse_str2 (
         grammar,
         "hi, hello",
-        "error at line 0, position 4, unexpected `hello`",
+        "error at line 1, position 4, unexpected `hello`",
         NULL);
     _assert_parse_str2 (
         grammar,
         "hello",
-        "error at line 0, position 0, unexpected `hello`",
+        "error at line 1, position 0, unexpected `hello`",
         NULL);
     cleri_grammar_free(grammar);
 

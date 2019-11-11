@@ -293,13 +293,13 @@ Example:
 ```c
 // In case a translation function returns an empty string, no text is used
 const char * translate(cleri_t * o) {
-    return "";  // a possible result might be: `error at line 0, position x`
+    return "";  // a possible result might be: `error at line 1, position x`
 }
 
 // Text may be returned based on gid
 const char * translate(cleri_t * o) {
     switch (o->gid) {
-        case 1: return "A";  // error at line 0, position x, expecting: A
+        case 1: return "A";  // error at line 1, position x, expecting: A
         case 2: return "";   // gid 2 will be ignored
     }
     return NULL;  // normal parsing for everything else

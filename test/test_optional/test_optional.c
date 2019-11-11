@@ -21,25 +21,25 @@ static int test_optional(void)
     _assert_parse_str (
         grammar,
         "hello",
-        "error at line 0, position 0, "
+        "error at line 1, position 0, "
         "unexpected `hello`, expecting: hi or end_of_statement",
         NULL);
 
     _assert_parse_str (
         grammar,
         "hi hi",
-        "error at line 0, position 2, expecting: end_of_statement",
+        "error at line 1, position 2, expecting: end_of_statement",
         NULL);
     _assert_parse_str2 (
         grammar,
         "hello",
-        "error at line 0, position 0, unexpected `hello`",
+        "error at line 1, position 0, unexpected `hello`",
         NULL);
 
     _assert_parse_str2 (
         grammar,
         "hi hi",
-        "error at line 0, position 2",
+        "error at line 1, position 2",
         NULL);
     cleri_grammar_free(grammar);
 

@@ -35,13 +35,13 @@ static int test_regex(void)
     _assert_parse_str (
         grammar,
         "\"double quoted\"",
-        "error at line 0, position 0, "
+        "error at line 1, position 0, "
         "unexpected character `\"`, expecting: single_quoted_string",
         translate);
     _assert_parse_str2 (
         grammar,
         "\"double quoted\"",
-        "error at line 0, position 0, "
+        "error at line 1, position 0, "
         "unexpected character `\"`",
         translate);
     cleri_grammar_free(grammar);

@@ -21,12 +21,12 @@ static int test_ref(void)
     _assert_parse_str (
         grammar,
         "ha",
-        "error at line 0, position 0, unexpected `ha`, expecting: hi",
+        "error at line 1, position 0, unexpected `ha`, expecting: hi",
         NULL);
     _assert_parse_str2 (
         grammar,
         "ha",
-        "error at line 0, position 0, unexpected `ha`",
+        "error at line 1, position 0, unexpected `ha`",
         NULL);
     cleri_grammar_free(grammar);
 
