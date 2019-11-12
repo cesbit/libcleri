@@ -1,10 +1,16 @@
+libcleri (0.11.1-0~tt1) unstable; urgency=medium
+
+  * Changed start of line numbering from 0 to 1
+
+ -- Jeroen van der Heijden <jeroen@transceptor.technology>  Tue, 12 Nov 2019 08:44:10 +0100
+
 libcleri (0.11.0-0~tt1) unstable; urgency=medium
 
   * Added cleri_parse2() which accepts an additional `flags` argument
   * Improved syntax error handling
   * Set correct position when nested error in syntax is found
 
- -- Jeroen van der Heijden <joente@transceptor.technology>  Tue, 22 Oct 2019 10:59:14 +0200
+ -- Jeroen van der Heijden <jeroen@transceptor.technology>  Tue, 22 Oct 2019 10:59:14 +0200
 
 libcleri (0.10.1-0~alpha1-tt1) unstable; urgency=medium
 
