@@ -38,7 +38,6 @@ struct cleri_node_s
 
     /* private */
     size_t ref;
-    int64_t result;     /* DEPRECATED */
 };
 
 #endif /* CLERI_NODE_H_ */
