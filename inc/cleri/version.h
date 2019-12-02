@@ -4,7 +4,22 @@
 #ifndef CLERI_VERSION_H_
 #define CLERI_VERSION_H_
 
-#define LIBCLERI_VERSION "0.12.0"
+#define CLERI_VERSION_MAJOR 0
+#define CLERI_VERSION_MINOR 12
+#define CLERI_VERSION_PATCH 0
+
+#define VERSION__STRINGIFY(num) #num
+#define VERSION___STR(major,minor,patch) \
+        VERSION__STRINGIFY(major) "." \
+        VERSION__STRINGIFY(minor) "." \
+        VERSION__STRINGIFY(patch)
+/* end helpers */
+
+/* start auto generated from above */
+#define LIBCLERI_VERSION VERSION___STR( \
+        CLERI_VERSION_MAJOR, \
+        CLERI_VERSION_MINOR, \
+        CLERI_VERSION_PATCH)
 
 /* public funtion */
 #ifdef __cplusplus
