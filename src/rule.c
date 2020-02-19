@@ -3,6 +3,7 @@
  *          create a 'prio' instead which will be wrapped by a rule element)
  */
 #include <cleri/rule.h>
+#include <cleri/node.inline.h>
 #include <stdlib.h>
 
 static void rule__free(cleri_t * cl_object);
@@ -74,7 +75,7 @@ cleri_rule_test_t cleri__rule_init(
         return CLERI_RULE_TRUE;
     }
 
-    while ((*target) != NULL)
+    do
     {
         if ((*target)->str == str)
         {
@@ -83,6 +84,8 @@ cleri_rule_test_t cleri__rule_init(
         prev = (*target);
         (*target) = (*target)->next;
     }
+    while ((*target) != NULL);
+
     *target = prev->next = cleri__malloc(cleri_rule_tested_t);
 
     if (*target == NULL)
@@ -212,6 +215,7 @@ static void rule__tested_free(cleri_rule_tested_t * tested)
     while (tested != NULL)
     {
         next = tested->next;
+        cleri__node_free(tested->node);
         free(tested);
         tested = next;
     }

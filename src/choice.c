@@ -4,9 +4,10 @@
  */
 #include <cleri/choice.h>
 #include <cleri/node.h>
+#include <cleri/node.inline.h>
 #include <stdarg.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 static void choice__free(cleri_t * cl_object);
 

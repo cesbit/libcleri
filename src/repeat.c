@@ -2,6 +2,7 @@
  * repeat.c - cleri regular repeat element.
  */
 #include <cleri/repeat.h>
+#include <cleri/node.inline.h>
 #include <stdlib.h>
 #include <assert.h>
 

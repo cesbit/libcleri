@@ -2,6 +2,7 @@
  * list.c - cleri list element.
  */
 #include <cleri/list.h>
+#include <cleri/node.inline.h>
 #include <stdlib.h>
 
 static void list__free(cleri_t * cl_object);

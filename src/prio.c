@@ -5,10 +5,10 @@
 #include <cleri/prio.h>
 #include <cleri/expecting.h>
 #include <cleri/olist.h>
+#include <cleri/node.inline.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
-
 
 static void prio__free(cleri_t * cl_obj);
 
@@ -116,11 +116,23 @@ static cleri_node_t *  prio__parse(
                 olist->cl_obj,
                 rule,
                 CLERI__EXP_MODE_REQUIRED);
+
         if (rnode != NULL &&
                 (tested->node == NULL || node->len > tested->node->len))
         {
-            cleri__node_free(tested->node);
+            if (tested->node != NULL)
+            {
+                /*
+                 * It is required to decrement an extra reference here, one
+                 * belongs to the parse result, and one for the tested rule.
+                 * The node->ref increment below is required for when a str
+                 * position is visited a second time by another parent.
+                 */
+                --tested->node->ref;
+                cleri__node_free(tested->node);
+            }
             tested->node = node;
+            node->ref++;
         }
         else
         {

@@ -5,6 +5,7 @@
  *           expression)
  */
 #include <cleri/token.h>
+#include <cleri/node.inline.h>
 #include <stdlib.h>
 #include <string.h>
 

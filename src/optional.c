@@ -3,6 +3,7 @@
  */
 #include <cleri/optional.h>
 #include <cleri/expecting.h>
+#include <cleri/node.inline.h>
 #include <stdlib.h>
 
 static void optional__free(cleri_t * cl_object);

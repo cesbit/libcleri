@@ -3,6 +3,7 @@
  */
 #include <stdlib.h>
 #include <cleri/children.h>
+#include <cleri/node.inline.h>
 
 /*
  * Appends a node to children.

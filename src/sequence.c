@@ -2,6 +2,7 @@
  * sequence.c - cleri sequence element.
  */
 #include <cleri/sequence.h>
+#include <cleri/node.inline.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>

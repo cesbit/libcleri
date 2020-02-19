@@ -32,18 +32,3 @@ cleri_node_t * cleri__node_new(cleri_t * cl_obj, const char * str, size_t len)
     }
     return node;
 }
-
-/*
- * Destroy node. (parsing NULL is allowed)
- */
-void cleri__node_free(cleri_node_t * node)
-{
-    /* node can be NULL or this could be an CLERI_EMPTY_NODE */
-    if (node == NULL || node == CLERI_EMPTY_NODE || --node->ref)
-    {
-        return;
-    }
-    cleri__children_free(node->children);
-    free(node);
-}
-

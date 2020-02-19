@@ -21,7 +21,6 @@ typedef struct cleri_node_s cleri_node_t;
 
 /* private functions */
 cleri_node_t * cleri__node_new(cleri_t * cl_obj, const char * str, size_t len);
-void cleri__node_free(cleri_node_t * node);
 
 /* private use as empty node */
 extern cleri_node_t * CLERI_EMPTY_NODE;
@@ -39,5 +38,7 @@ struct cleri_node_s
     /* private */
     size_t ref;
 };
+
+
 
 #endif /* CLERI_NODE_H_ */
