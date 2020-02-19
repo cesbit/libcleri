@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
 static void prio__free(cleri_t * cl_obj);
 
 static cleri_node_t *  prio__parse(
@@ -123,6 +122,12 @@ static cleri_node_t *  prio__parse(
         {
             if (tested->node != NULL)
             {
+                /*
+                 * It is required to decrement an extra reference here, one
+                 * belongs to the parse result, and one for the tested rule.
+                 * The node->ref increment below is required for when a str
+                 * position is visited a second time by another parent.
+                 */
                 --tested->node->ref;
                 cleri__node_free(tested->node);
             }

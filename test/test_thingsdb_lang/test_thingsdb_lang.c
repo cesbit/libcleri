@@ -316,7 +316,7 @@ static int test_thingsdb_lang(void)
 
     _assert_is_valid (grammar, "x = 1");
     _assert_is_valid (grammar, "||1?2:3");
-    _assert_is_not_valid (grammar, "||1?2"   );
+    _assert_is_not_valid (grammar, "||1?2");
 
     cleri_grammar_free(grammar);
 
