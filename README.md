@@ -1,4 +1,5 @@
 # C Left-Right Parser (libcleri)
+
 Language parser for the C/C++ programming language. Initially created for [SiriDB](https://github.com/SiriDB/siridb-server).
 
 ---------------------------------------
@@ -62,9 +63,10 @@ $ sudo make install
 > Note: run `sudo make uninstall` for removal.
 
 ## Related projects
-- [pyleri](https://github.com/transceptor-technology/pyleri): Python parser (can export grammar to pyleri, libcleri, goleri and jsleri)
+- [pyleri](https://github.com/transceptor-technology/pyleri): Python parser (can export grammar to pyleri, libcleri, goleri, jsleri and jleri)
 - [jsleri](https://github.com/transceptor-technology/jsleri): JavaScript parser
 - [goleri](https://github.com/transceptor-technology/goleri): Go parser
+- [jleri](https://github.com/transceptor-technology/jleri): Java parser
 
 ## Quick usage
 >The recommended way to create a grammar is to use [pyleri](https://github.com/transceptor-technology/pyleri) for
