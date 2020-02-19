@@ -3,6 +3,7 @@
  *            in one element)
  */
 #include <cleri/tokens.h>
+#include <cleri/node.inline.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

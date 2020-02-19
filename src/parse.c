@@ -3,6 +3,7 @@
  */
 #include <cleri/expecting.h>
 #include <cleri/parse.h>
+#include <cleri/node.inline.h>
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>

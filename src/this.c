@@ -6,6 +6,7 @@
  */
 #include <cleri/expecting.h>
 #include <cleri/this.h>
+#include <cleri/node.inline.h>
 #include <stdlib.h>
 #include <assert.h>
 
@@ -59,13 +60,13 @@ static cleri_node_t * cleri_parse_this(
             pr->is_valid = -1;
             return NULL;
         }
+        assert(tested->node == NULL);
         tested->node = cleri__parse_walk(
                 pr,
                 node,
                 rule->root_obj,
                 rule,
                 CLERI__EXP_MODE_REQUIRED);
-
         if (tested->node == NULL)
         {
             cleri__node_free(node);
@@ -94,7 +95,7 @@ static cleri_node_t * cleri_parse_this(
     {
          /* error occurred, reverse changes set mg_node to NULL */
         pr->is_valid = -1;
-        parent->len -=  tested->node->len;
+        parent->len -= tested->node->len;
         cleri__node_free(node);
         node = NULL;
     }

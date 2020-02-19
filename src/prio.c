@@ -5,6 +5,7 @@
 #include <cleri/prio.h>
 #include <cleri/expecting.h>
 #include <cleri/olist.h>
+#include <cleri/node.inline.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -116,11 +117,17 @@ static cleri_node_t *  prio__parse(
                 olist->cl_obj,
                 rule,
                 CLERI__EXP_MODE_REQUIRED);
+
         if (rnode != NULL &&
                 (tested->node == NULL || node->len > tested->node->len))
         {
-            cleri__node_free(tested->node);
+            if (tested->node != NULL)
+            {
+                --tested->node->ref;
+                cleri__node_free(tested->node);
+            }
             tested->node = node;
+            node->ref++;
         }
         else
         {

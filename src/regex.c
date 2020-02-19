@@ -2,6 +2,7 @@
  * regex.c - cleri regular expression element.
  */
 #include <cleri/regex.h>
+#include <cleri/node.inline.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
