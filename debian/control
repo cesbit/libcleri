@@ -3,7 +3,7 @@ Section: libs
 Priority: optional
 Maintainer: SiriDB Maintainers <libcleri@packages.debian.org>
 Uploaders:
- Jeroen van der Heijden <jeroen@transceptor.technology>,
+ Jeroen van der Heijden <jeroen@cesbit.com>,
  Paul Gevers <elbrus@debian.org>,
 Rules-Requires-Root: no
 Build-Depends:
