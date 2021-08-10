@@ -140,6 +140,9 @@ static cleri_node_t *  prio__parse(
         }
         olist = olist->next;
     }
+
+    rule->depth--;
+
     if (tested->node != NULL)
     {
         parent->len += tested->node->len;

@@ -6,7 +6,7 @@
 
 #define CLERI_VERSION_MAJOR 0
 #define CLERI_VERSION_MINOR 12
-#define CLERI_VERSION_PATCH 1
+#define CLERI_VERSION_PATCH 2
 
 #define VERSION__STRINGIFY(num) #num
 #define VERSION___STR(major,minor,patch) \
