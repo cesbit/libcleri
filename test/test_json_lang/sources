@@ -1,4 +1,3 @@
-../src/children.c
 ../src/cleri.c
 ../src/expecting.c
 ../src/grammar.c

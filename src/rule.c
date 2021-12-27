@@ -3,7 +3,6 @@
  *          create a 'prio' instead which will be wrapped by a rule element)
  */
 #include <cleri/rule.h>
-#include <cleri/node.inline.h>
 #include <stdlib.h>
 
 static void rule__free(cleri_t * cl_object);
@@ -190,14 +189,7 @@ static cleri_node_t * rule__parse(
     else
     {
         parent->len += node->len;
-        if (cleri__children_add(&parent->children, node))
-        {
-             /* error occurred, reverse changes set mg_node to NULL */
-            pr->is_valid = -1;
-            parent->len -= node->len;
-            cleri__node_free(node);
-            node = NULL;
-        }
+        cleri__node_add(parent, node);
     }
 
     /* cleanup rule */

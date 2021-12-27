@@ -90,7 +90,7 @@ static cleri_node_t * keyword__parse(
         if ((node = cleri__node_new(cl_obj, str, match_len)) != NULL)
         {
             parent->len += node->len;
-            cleri__children_add(&parent->children, node);
+            cleri__node_add(parent, node);
         }
     }
     else

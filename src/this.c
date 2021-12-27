@@ -6,7 +6,6 @@
  */
 #include <cleri/expecting.h>
 #include <cleri/this.h>
-#include <cleri/node.inline.h>
 #include <stdlib.h>
 #include <assert.h>
 
@@ -90,14 +89,7 @@ static cleri_node_t * cleri_parse_this(
         node = NULL;
     }
 
-    parent->len += tested->node->len;
-    if (cleri__children_add(&parent->children, node))
-    {
-         /* error occurred, reverse changes set mg_node to NULL */
-        pr->is_valid = -1;
-        parent->len -= tested->node->len;
-        cleri__node_free(node);
-        node = NULL;
-    }
+    parent->len += node->len;
+    cleri__node_add(parent, node);
     return node;
 }

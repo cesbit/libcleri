@@ -4,7 +4,6 @@
  */
 #include <cleri/choice.h>
 #include <cleri/node.h>
-#include <cleri/node.inline.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -148,14 +147,7 @@ static cleri_node_t * choice__parse_most_greedy(
     if (mg_node != NULL)
     {
         parent->len += mg_node->len;
-        if (cleri__children_add(&parent->children, mg_node))
-        {
-             /* error occurred, reverse changes set mg_node to NULL */
-            pr->is_valid = -1;
-            parent->len -= mg_node->len;
-            cleri__node_free(mg_node);
-            mg_node = NULL;
-        }
+        cleri__node_add(parent, mg_node);
     }
     return mg_node;
 }
@@ -211,14 +203,7 @@ static cleri_node_t * choice__parse_first_match(
         if (rnode != NULL)
         {
             parent->len += node->len;
-            if (cleri__children_add(&parent->children, node))
-            {
-                 /* error occurred, reverse changes set mg_node to NULL */
-                pr->is_valid = -1;
-                parent->len -= node->len;
-                cleri__node_free(node);
-                node = NULL;
-            }
+            cleri__node_add(parent, node);
             return node;
         }
         olist = olist->next;
