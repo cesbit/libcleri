@@ -1,5 +1,5 @@
-[![CI](https://github.com/thingsdb/ThingsDB/workflows/CI/badge.svg)](https://github.com/thingsdb/ThingsDB/actions)
-[![Release Version](https://img.shields.io/github/release/thingsdb/ThingsDB)](https://github.com/thingsdb/ThingsDB/releases)
+[![CI](https://github.com/transceptor-technology/libcleri/workflows/CI/badge.svg)](https://github.com/transceptor-technology/libcleri/actions)
+[![Release Version](https://img.shields.io/github/release/transceptor-technology/libcleri)](https://github.com/transceptor-technology/libcleri/releases)
 
 # C Left-Right Parser (libcleri)
 
