@@ -68,26 +68,16 @@ static cleri_node_t * keyword__parse(
         cleri_t * cl_obj,
         cleri_rule_store_t * rule __attribute__((unused)))
 {
-    ssize_t match_len;
+    size_t kw_len = cl_obj->via.keyword->len;
     cleri_node_t * node = NULL;
     const char * str = parent->str + parent->len;
 
-    if ((match_len = cleri__kwcache_match(pr, str)) < 0)
+    if ((strncmp(cl_obj->via.keyword->keyword, str, kw_len) == 0 || (
+            cl_obj->via.keyword->ign_case &&
+            strncasecmp(cl_obj->via.keyword->keyword, str, kw_len) == 0)) &&
+            cleri__kwcache_match(pr, str) == kw_len)
     {
-        pr->is_valid = -1; /* error occurred */
-        return NULL;
-    }
-
-    if (match_len == (ssize_t) cl_obj->via.keyword->len &&
-       (
-           strncmp(cl_obj->via.keyword->keyword, str, match_len) == 0 ||
-           (
-               cl_obj->via.keyword->ign_case &&
-               strncasecmp(cl_obj->via.keyword->keyword, str, match_len) == 0
-           )
-       ))
-    {
-        if ((node = cleri__node_new(cl_obj, str, match_len)) != NULL)
+        if ((node = cleri__node_new(cl_obj, str, kw_len)) != NULL)
         {
             parent->len += node->len;
             cleri__node_add(parent, node);

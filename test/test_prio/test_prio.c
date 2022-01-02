@@ -120,8 +120,6 @@ static int test_prio(void)
         "recursion depth of 500 has been reached",
         NULL);
 
-
-
     {
         cleri_parse_t * pr;
         cleri_node_t * node;
@@ -155,7 +153,6 @@ static int test_prio(void)
         _assert (*node->str == ',');
         _assert (node->len == 1);
         cleri_parse_free(pr);
-
     }
 
     cleri_grammar_free(grammar);
