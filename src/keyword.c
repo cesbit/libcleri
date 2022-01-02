@@ -82,6 +82,10 @@ static cleri_node_t * keyword__parse(
             parent->len += node->len;
             cleri__node_add(parent, node);
         }
+        else
+        {
+            pr->is_valid = -1;  /* error */
+        }
     }
     else
     {
