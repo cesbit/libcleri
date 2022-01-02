@@ -80,6 +80,11 @@ static cleri_node_t * cleri_parse_this(
         }
         if (node->next)
         {
+            /* It is only required to duplicate when a sibling is set.
+             * If no sibling is set, then either this node will win over the
+             * previous parent but then the sibling will be kept, or the parent
+             * will win, but then we should end up with no sibling
+             */
             node = cleri__node_dup(node);
             if (node == NULL)
             {

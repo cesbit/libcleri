@@ -123,7 +123,10 @@ static int test_prio(void)
 
 
     {
-        cleri_parse_t * pr = cleri_parse2(
+        cleri_parse_t * pr;
+        cleri_node_t * node;
+
+        pr = cleri_parse2(
             grammar,
             "if(hi) bye",
             CLERI_FLAG_EXPECTING_DISABLED|
@@ -133,7 +136,26 @@ static int test_prio(void)
         );
         _assert (pr->is_valid);
         _assert (pr->tree->children->children->children->next->next->next);
+        node = pr->tree->children->children->children->next->next->next;
+        _assert (*node->str == ')');
+        _assert (node->len == 1);
         cleri_parse_free(pr);
+
+        pr = cleri_parse2(
+            grammar,
+            "if(hi, bye) bye",
+            CLERI_FLAG_EXPECTING_DISABLED|
+            CLERI_FLAG_EXCLUDE_OPTIONAL|
+            CLERI_FLAG_EXCLUDE_FM_CHOICE|
+            CLERI_FLAG_EXCLUDE_RULE_THIS
+        );
+        _assert (pr->is_valid);
+        _assert (pr->tree->children->children->children->next->next->next);
+        node = pr->tree->children->children->children->next->next->next;
+        _assert (*node->str == ',');
+        _assert (node->len == 1);
+        cleri_parse_free(pr);
+
     }
 
     cleri_grammar_free(grammar);
