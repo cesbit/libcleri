@@ -78,7 +78,19 @@ static cleri_node_t * cleri_parse_this(
         {
             return NULL;
         }
-        node->ref++;
+        if (node->next)
+        {
+            node = cleri__node_dup(node);
+            if (node == NULL)
+            {
+                pr->is_valid = -1;
+                return NULL;
+            }
+        }
+        else
+        {
+            node->ref++;
+        }
         break;
     case CLERI_RULE_ERROR:
         pr->is_valid = -1;
@@ -86,7 +98,7 @@ static cleri_node_t * cleri_parse_this(
 
     default:
         assert (0);
-        node = NULL;
+        return NULL;
     }
 
     parent->len += node->len;

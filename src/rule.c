@@ -140,7 +140,6 @@ static cleri_node_t * rule__parse(
                 &nrule,
                 CLERI__EXP_MODE_REQUIRED);
 
-
         if (node != NULL)
         {
             node = parent;
@@ -179,7 +178,6 @@ static cleri_node_t * rule__parse(
             nrule.root_obj,
             &nrule,
             CLERI__EXP_MODE_REQUIRED);
-
 
     if (rnode == NULL)
     {
