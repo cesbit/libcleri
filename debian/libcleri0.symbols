@@ -2,8 +2,6 @@ libcleri.so.0 libcleri0 #MINVER#
  CLERI_EMPTY_NODE@Base 0.9.3
  CLERI_END_OF_STATEMENT@Base 0.9.3
  CLERI_THIS@Base 0.9.3
- cleri__children_add@Base 0.9.3
- cleri__children_free@Base 0.9.3
  cleri__expecting_combine@Base 0.9.3
  cleri__expecting_free@Base 0.9.3
  cleri__expecting_new@Base 0.9.3
@@ -12,6 +10,7 @@ libcleri.so.0 libcleri0 #MINVER#
  cleri__kwcache_free@Base 0.9.3
  cleri__kwcache_match@Base 0.9.3
  cleri__kwcache_new@Base 0.9.3
+ cleri__node_dup@Base 1.0.0~
  cleri__node_free@Base 0.9.3
  cleri__node_new@Base 0.9.3
  cleri__olist_append@Base 0.9.3
@@ -48,3 +47,4 @@ libcleri.so.0 libcleri0 #MINVER#
  cleri_token@Base 0.9.3
  cleri_tokens@Base 0.9.3
  cleri_version@Base 0.10.1~
+
