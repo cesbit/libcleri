@@ -84,7 +84,7 @@ static cleri_node_t * keyword__parse(
         }
         else
         {
-            pr->is_valid = -1;  /* error */
+            pr->is_valid = -1;  /* error occurred */
         }
     }
     else

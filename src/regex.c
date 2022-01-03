@@ -143,7 +143,7 @@ static cleri_node_t *  regex__parse(
     }
     else
     {
-        pr->is_valid = -1; /* error occurred */
+        pr->is_valid = -1;  /* error occurred */
     }
 
     return node;
