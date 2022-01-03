@@ -6,7 +6,6 @@
  */
 #include <cleri/expecting.h>
 #include <cleri/this.h>
-#include <cleri/node.inline.h>
 #include <stdlib.h>
 #include <assert.h>
 
@@ -79,7 +78,24 @@ static cleri_node_t * cleri_parse_this(
         {
             return NULL;
         }
-        node->ref++;
+        if (node->next)
+        {
+            /* It is only required to duplicate when a sibling is set.
+             * If no sibling is set, then either this node will win over the
+             * previous parent but then the sibling will be kept, or the parent
+             * will win, but then we should end up with no sibling
+             */
+            node = cleri__node_dup(node);
+            if (node == NULL)
+            {
+                pr->is_valid = -1;
+                return NULL;
+            }
+        }
+        else
+        {
+            node->ref++;
+        }
         break;
     case CLERI_RULE_ERROR:
         pr->is_valid = -1;
@@ -87,17 +103,10 @@ static cleri_node_t * cleri_parse_this(
 
     default:
         assert (0);
-        node = NULL;
+        return NULL;
     }
 
-    parent->len += tested->node->len;
-    if (cleri__children_add(&parent->children, node))
-    {
-         /* error occurred, reverse changes set mg_node to NULL */
-        pr->is_valid = -1;
-        parent->len -= tested->node->len;
-        cleri__node_free(node);
-        node = NULL;
-    }
+    parent->len += node->len;
+    cleri__node_add(parent, node);
     return node;
 }

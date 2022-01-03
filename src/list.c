@@ -2,7 +2,6 @@
  * list.c - cleri list element.
  */
 #include <cleri/list.h>
-#include <cleri/node.inline.h>
 #include <stdlib.h>
 
 static void list__free(cleri_t * cl_object);
@@ -80,7 +79,7 @@ static void list__free(cleri_t * cl_object)
 /*
  * Returns a node or NULL. In case of an error pr->is_valid is set to -1.
  */
-static cleri_node_t *  list__parse(
+static cleri_node_t * list__parse(
         cleri_parse_t * pr,
         cleri_node_t * parent,
         cleri_t * cl_obj,
@@ -127,13 +126,6 @@ static cleri_node_t *  list__parse(
         return NULL;
     }
     parent->len += node->len;
-    if (cleri__children_add(&parent->children, node))
-    {
-         /* error occurred, reverse changes set mg_node to NULL */
-        pr->is_valid = -1;
-        parent->len -= node->len;
-        cleri__node_free(node);
-        node = NULL;
-    }
+    cleri__node_add(parent, node);
     return node;
 }

@@ -39,8 +39,8 @@ static int test_list(void)
         cleri_parse_t * pr = cleri_parse(grammar, "");
         _assert (pr);
         _assert (pr->is_valid);
-        _assert (pr->tree->children->node->cl_obj->tp == CLERI_TP_LIST);
-        _assert (pr->tree->children->node->children == NULL);
+        _assert (pr->tree->children->cl_obj->tp == CLERI_TP_LIST);
+        _assert (pr->tree->children->children == NULL);
         cleri_parse_free(pr);
     }
 

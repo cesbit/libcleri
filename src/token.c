@@ -5,7 +5,6 @@
  *           expression)
  */
 #include <cleri/token.h>
-#include <cleri/node.inline.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -77,14 +76,7 @@ static cleri_node_t * token__parse(
                 cl_obj->via.token->len)) != NULL)
         {
             parent->len += node->len;
-            if (cleri__children_add(&parent->children, node))
-            {
-                 /* error occurred, reverse changes set mg_node to NULL */
-                pr->is_valid = -1;
-                parent->len -= node->len;
-                cleri__node_free(node);
-                node = NULL;
-            }
+            cleri__node_add(parent, node);
         }
         else
         {

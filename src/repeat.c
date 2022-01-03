@@ -2,7 +2,6 @@
  * repeat.c - cleri regular repeat element.
  */
 #include <cleri/repeat.h>
-#include <cleri/node.inline.h>
 #include <stdlib.h>
 #include <assert.h>
 
@@ -108,13 +107,6 @@ static cleri_node_t * repeat__parse(
         return NULL;
     }
     parent->len += node->len;
-    if (cleri__children_add(&parent->children, node))
-    {
-         /* error occurred, reverse changes set mg_node to NULL */
-        pr->is_valid = -1;
-        parent->len -= node->len;
-        cleri__node_free(node);
-        node = NULL;
-    }
+    cleri__node_add(parent, node);
     return node;
 }

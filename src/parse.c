@@ -3,7 +3,6 @@
  */
 #include <cleri/expecting.h>
 #include <cleri/parse.h>
-#include <cleri/node.inline.h>
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
@@ -227,9 +226,9 @@ int cleri_parse_strn(
     expect = pr->str + pr->pos;
     if (isgraph(*expect))
     {
-        ssize_t nc = cleri__kwcache_match(pr, expect);
+        size_t nc = cleri__kwcache_match(pr, expect);
         const char * pt = expect;
-        const int max_chars = 20;
+        const unsigned int max_chars = 20;
 
         if (nc < 1)
         {

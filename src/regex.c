@@ -2,7 +2,6 @@
  * regex.c - cleri regular expression element.
  */
 #include <cleri/regex.h>
-#include <cleri/node.inline.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
@@ -140,18 +139,11 @@ static cleri_node_t *  regex__parse(
     if ((node = cleri__node_new(cl_obj, str, (size_t) ovector[1])) != NULL)
     {
         parent->len += node->len;
-        if (cleri__children_add(&parent->children, node))
-        {
-             /* error occurred, reverse changes set node to NULL */
-            pr->is_valid = -1;
-            parent->len -= node->len;
-            cleri__node_free(node);
-            node = NULL;
-        }
+        cleri__node_add(parent, node);
     }
     else
     {
-        pr->is_valid = -1; /* error occurred */
+        pr->is_valid = -1;  /* error occurred */
     }
 
     return node;
