@@ -64,8 +64,6 @@ cleri_rule_test_t cleri__rule_init(
     /*
      * return true (1) when a new test is created, false (0) when not.
      */
-    cleri_rule_tested_t * prev;
-
     (*target) = tested;
 
     if ((*target)->str == NULL)
@@ -80,20 +78,21 @@ cleri_rule_test_t cleri__rule_init(
         {
             return CLERI_RULE_FALSE;
         }
-        prev = (*target);
-        (*target) = (*target)->next;
+        (*target) = (*target)->prev;
     }
     while ((*target) != NULL);
 
-    *target = prev->next = cleri__malloc(cleri_rule_tested_t);
+    *target = cleri__malloc(cleri_rule_tested_t);
 
     if (*target == NULL)
     {
         return CLERI_RULE_ERROR;
     }
+
     (*target)->str = str;
     (*target)->node = NULL;
-    (*target)->next = NULL;
+    (*target)->prev = tested->prev;
+    tested->prev = *target;
 
     return CLERI_RULE_TRUE;
 }
@@ -113,25 +112,16 @@ static cleri_node_t * rule__parse(
         cleri_t * cl_obj,
         cleri_rule_store_t * __rule __attribute__((unused)))
 {
-    cleri_rule_tested_t rule;
+    cleri_rule_store_t nrule;
     cleri_node_t * node;
     cleri_node_t * rnode;
-    cleri_rule_store_t nrule;
 
     if (pr->flags & CLERI_FLAG_EXCLUDE_RULE_THIS)
     {
         nrule.depth = 0;
-        nrule.tested = &rule;
-
-        if (nrule.tested == NULL)
-        {
-            pr->is_valid = -1;
-            return NULL;
-        }
-
-        nrule.tested->str = NULL;
-        nrule.tested->node = NULL;
-        nrule.tested->next = NULL;
+        nrule.tested.str = NULL;
+        nrule.tested.node = NULL;
+        nrule.tested.prev = NULL;
         nrule.root_obj = cl_obj->via.rule->cl_obj;
 
         node = cleri__parse_walk(
@@ -147,7 +137,7 @@ static cleri_node_t * rule__parse(
         }
 
         /* cleanup rule */
-        rule__tested_free(nrule.tested);
+        rule__tested_free(&nrule.tested);
 
         return node;
     }
@@ -159,18 +149,9 @@ static cleri_node_t * rule__parse(
     }
 
     nrule.depth = 0;
-    nrule.tested = &rule;
-
-    if (nrule.tested == NULL)
-    {
-        pr->is_valid = -1;
-        cleri__node_free(node);
-        return NULL;
-    }
-
-    nrule.tested->str = NULL;
-    nrule.tested->node = NULL;
-    nrule.tested->next = NULL;
+    nrule.tested.str = NULL;
+    nrule.tested.node = NULL;
+    nrule.tested.prev = NULL;
     nrule.root_obj = cl_obj->via.rule->cl_obj;
 
     rnode = cleri__parse_walk(
@@ -192,7 +173,7 @@ static cleri_node_t * rule__parse(
     }
 
     /* cleanup rule */
-    rule__tested_free(nrule.tested);
+    rule__tested_free(&nrule.tested);
 
     return node;
 }
@@ -202,14 +183,14 @@ static cleri_node_t * rule__parse(
  */
 static void rule__tested_free(cleri_rule_tested_t * tested)
 {
-    cleri_rule_tested_t * next = tested->next;
+    cleri_rule_tested_t * prev = tested->prev;
     cleri__node_free(tested->node);
-    while (next != NULL)
+    while (prev != NULL)
     {
-        tested = next->next;
-        cleri__node_free(next->node);
-        free(next);
-        next = tested;
+        tested = prev->prev;
+        cleri__node_free(prev->node);
+        free(prev);
+        prev = tested;
     }
 }
 

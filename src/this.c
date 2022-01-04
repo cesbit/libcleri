@@ -40,7 +40,7 @@ static cleri_node_t * cleri_parse_this(
     cleri_rule_tested_t * tested;
     const char * str = parent->str + parent->len;
 
-    switch (cleri__rule_init(&tested, rule->tested, str))
+    switch (cleri__rule_init(&tested, &rule->tested, str))
     {
     case CLERI_RULE_TRUE:
         if (pr->flags & CLERI_FLAG_EXCLUDE_RULE_THIS)

@@ -38,12 +38,12 @@ struct cleri_rule_tested_s
 {
     const char * str;
     cleri_node_t * node;
-    cleri_rule_tested_t * next;
+    cleri_rule_tested_t * prev;
 };
 
 struct cleri_rule_store_s
 {
-    cleri_rule_tested_t * tested;
+    cleri_rule_tested_t tested;
     cleri_t * root_obj;
     size_t depth;
 };

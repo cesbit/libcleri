@@ -94,7 +94,7 @@ static cleri_node_t *  prio__parse(
     /* initialize and return rule test, or return an existing test
      * if *str is already in tested */
     if (    rule->depth++ > MAX_RECURSION_DEPTH ||
-            cleri__rule_init(&tested, rule->tested, str) == CLERI_RULE_ERROR)
+            cleri__rule_init(&tested, &rule->tested, str) == CLERI_RULE_ERROR)
     {
         pr->is_valid = -1;
         return NULL;
