@@ -113,6 +113,7 @@ static cleri_node_t * rule__parse(
         cleri_t * cl_obj,
         cleri_rule_store_t * __rule __attribute__((unused)))
 {
+    cleri_rule_tested_t rule;
     cleri_node_t * node;
     cleri_node_t * rnode;
     cleri_rule_store_t nrule;
@@ -120,7 +121,7 @@ static cleri_node_t * rule__parse(
     if (pr->flags & CLERI_FLAG_EXCLUDE_RULE_THIS)
     {
         nrule.depth = 0;
-        nrule.tested = cleri__malloc(cleri_rule_tested_t);
+        nrule.tested = &rule;
 
         if (nrule.tested == NULL)
         {
@@ -158,7 +159,7 @@ static cleri_node_t * rule__parse(
     }
 
     nrule.depth = 0;
-    nrule.tested = cleri__malloc(cleri_rule_tested_t);
+    nrule.tested = &rule;
 
     if (nrule.tested == NULL)
     {
@@ -201,13 +202,14 @@ static cleri_node_t * rule__parse(
  */
 static void rule__tested_free(cleri_rule_tested_t * tested)
 {
-    cleri_rule_tested_t * next;
-    while (tested != NULL)
+    cleri_rule_tested_t * next = tested->next;
+    cleri__node_free(tested->node);
+    while (next != NULL)
     {
-        next = tested->next;
-        cleri__node_free(tested->node);
-        free(tested);
-        tested = next;
+        tested = next->next;
+        cleri__node_free(next->node);
+        free(next);
+        next = tested;
     }
 }
 
