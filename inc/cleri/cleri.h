@@ -16,24 +16,25 @@
 #define cleri__mallocn(__n, __t) (malloc(__n * sizeof(__t)))
 #endif
 
-#include <cleri/expecting.h>
-#include <cleri/keyword.h>
-#include <cleri/sequence.h>
-#include <cleri/optional.h>
 #include <cleri/choice.h>
 #include <cleri/dup.h>
+#include <cleri/expecting.h>
+#include <cleri/grammar.h>
+#include <cleri/keyword.h>
+#include <cleri/kwmatch.h>
 #include <cleri/list.h>
+#include <cleri/node.h>
+#include <cleri/optional.h>
+#include <cleri/parse.h>
+#include <cleri/prio.h>
+#include <cleri/ref.h>
 #include <cleri/regex.h>
 #include <cleri/repeat.h>
+#include <cleri/rule.h>
+#include <cleri/sequence.h>
+#include <cleri/this.h>
 #include <cleri/token.h>
 #include <cleri/tokens.h>
-#include <cleri/grammar.h>
-#include <cleri/prio.h>
-#include <cleri/node.h>
-#include <cleri/parse.h>
-#include <cleri/rule.h>
-#include <cleri/this.h>
-#include <cleri/ref.h>
 #include <cleri/version.h>
 
 /* typedefs */
@@ -44,6 +45,7 @@ typedef struct cleri_sequence_s cleri_sequence_t;
 typedef struct cleri_optional_s cleri_optional_t;
 typedef struct cleri_choice_s cleri_choice_t;
 typedef struct cleri_regex_s cleri_regex_t;
+typedef struct cleri_kwmatch_s cleri_kwmatch_t;
 typedef struct cleri_list_s cleri_list_t;
 typedef struct cleri_repeat_s cleri_repeat_t;
 typedef struct cleri_token_s cleri_token_t;
@@ -82,7 +84,8 @@ typedef enum cleri_e {
     CLERI_TP_TOKENS,
     CLERI_TP_REGEX,
     CLERI_TP_REF,
-    CLERI_TP_END_OF_STATEMENT
+    CLERI_TP_KWMATCH,
+    CLERI_TP_END_OF_STATEMENT=255
 } cleri_tp;
 
 /* unions */

@@ -1,13 +1,14 @@
 C_SRCS += \
 ../src/choice.c \
+../src/cleri.c \
 ../src/dup.c \
 ../src/expecting.c \
 ../src/grammar.c \
 ../src/keyword.c \
 ../src/kwcache.c \
+../src/kwmatch.c \
 ../src/list.c \
 ../src/node.c \
-../src/cleri.c \
 ../src/olist.c \
 ../src/optional.c \
 ../src/parse.c \
@@ -25,14 +26,15 @@ C_SRCS += \
 
 OBJS += \
 ./src/choice.o \
+./src/cleri.o \
 ./src/dup.o \
 ./src/expecting.o \
 ./src/grammar.o \
 ./src/keyword.o \
 ./src/kwcache.o \
+./src/kwmatch.o \
 ./src/list.o \
 ./src/node.o \
-./src/cleri.o \
 ./src/olist.o \
 ./src/optional.o \
 ./src/parse.o \
@@ -49,14 +51,15 @@ OBJS += \
 
 C_DEPS += \
 ./src/choice.d \
+./src/cleri.d \
 ./src/dup.d \
 ./src/expecting.d \
 ./src/grammar.d \
 ./src/keyword.d \
 ./src/kwcache.d \
+./src/kwmatch.d \
 ./src/list.d \
 ./src/node.d \
-./src/cleri.d \
 ./src/olist.d \
 ./src/optional.d \
 ./src/parse.d \

@@ -27,8 +27,7 @@ uint8_t * cleri__kwcache_new(const char * str)
 }
 
 /*
- * Returns 0 when no kw_match is found, -1 when an error has occurred, or the
- * new kwcache->len value.
+ * Returns 0 when no kw_match is found, or the new kwcache->len value.
  */
 uint8_t cleri__kwcache_match(cleri_parse_t * pr, const char * str)
 {
