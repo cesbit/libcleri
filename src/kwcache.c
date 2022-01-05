@@ -17,7 +17,7 @@
  */
 uint8_t * cleri__kwcache_new(const char * str)
 {
-    size_t n = strlen(str) + 1;
+    size_t n = strlen(str);
     uint8_t * kwcache = cleri__mallocn(n, uint8_t);
     if (kwcache != NULL)
     {
