@@ -68,6 +68,7 @@ int cleri__expecting_update(
         return 0;
     }
 
+
     if (str > expecting->str)
     {
         expecting__empty(expecting);
@@ -101,6 +102,12 @@ int cleri__expecting_set_mode(
         int mode)
 {
     cleri_exp_modes_t ** modes = &expecting->modes;
+
+    if (expecting->required == NULL)
+    {
+        return 0;
+    }
+
     for (; *modes != NULL; modes = &(*modes)->next)
     {
         if ((*modes)->str == str)

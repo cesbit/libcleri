@@ -43,6 +43,14 @@ static char * parse_str(cleri_parse_t * pr, cleri_translate_t * translate)
     cleri_parse_free(__pr); \
 }
 
+#define _assert_is_valid_flags(__grammar, __str, __flags) \
+{ \
+    cleri_parse_t * __pr = cleri_parse2(__grammar, __str, __flags); \
+    _assert (__pr); \
+    _assert (__pr->is_valid); \
+    cleri_parse_free(__pr); \
+}
+
 #define _assert_parse_str(__grammar, __str, __expect, __translate) \
 { \
     cleri_parse_t * __pr = cleri_parse2(__grammar, __str, 0); \

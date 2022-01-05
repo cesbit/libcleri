@@ -407,11 +407,11 @@ static int test_thingsdb_lang(void)
     cleri_grammar_t * grammar = compile_langdef();
     _assert (grammar);
 
-    int i;
+    int i, flags;
     char buf[262144];
     char * str = buf;
     size_t query_len = strlen(query);
-    for (i = 0; i < 200; i++)
+    for (i = 0; i < 100; i++)
     {
         memcpy(str, query, query_len);
         str += query_len;
@@ -422,7 +422,15 @@ static int test_thingsdb_lang(void)
     _assert_is_valid (grammar, "||1?2:3");
     _assert_is_valid (grammar, "||nil");
     _assert_is_not_valid (grammar, "||1?2");
-    _assert_is_valid (grammar, buf);
+
+    flags = (
+        CLERI_FLAG_EXPECTING_DISABLED|
+        CLERI_FLAG_EXCLUDE_OPTIONAL|
+        CLERI_FLAG_EXCLUDE_FM_CHOICE|
+        CLERI_FLAG_EXCLUDE_RULE_THIS
+    );
+
+    _assert_is_valid_flags (grammar, buf, flags);
 
     cleri_grammar_free(grammar);
 
