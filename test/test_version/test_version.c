@@ -5,7 +5,7 @@ static int test_version(void)
 {
     test_start("version");
 
-    _assert ( strcmp(cleri_version(), "1.0.0") == 0 );
+    _assert ( strcmp(cleri_version(), "0.99.1") == 0 );
 
     return test_end();
 }
