@@ -411,7 +411,7 @@ static int test_thingsdb_lang(void)
     char buf[262144];
     char * str = buf;
     size_t query_len = strlen(query);
-    for (i = 0; i < 100; i++)
+    for (i = 0; i < 200; i++)
     {
         memcpy(str, query, query_len);
         str += query_len;
