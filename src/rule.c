@@ -13,7 +13,7 @@ static cleri_node_t * rule__parse(
         cleri_rule_store_t * rule);
 static void rule__tested_free(cleri_rule_tested_t * tested);
 
-static int c_loop = 0;
+static int c_loop = 0, c_new = 0;
 
 /*
  * Returns NULL in case an error has occurred.
@@ -106,7 +106,8 @@ cleri_rule_test_t cleri__rule_init(
     (*target)->node = NULL;
     (*target)->next = tested->next;
     tested->next = *target;
-    printf("loopcount: %d\n", c_loop);
+    c_new++;
+    printf("loopcount: %d  cnew: %d\n", c_loop, c_new);
     return CLERI_RULE_TRUE;
 }
 
