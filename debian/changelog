@@ -1,6 +1,8 @@
 libcleri (1.0.0-0~tt1)  unstable; urgency=medium
 
   * Remove cleri_children_t to reduce mallocs, issue #18
+  * Fixed bug with `CLERI_FLAG_EXPECTING_DISABLED` flag
+  * Ordered expecting chages for minor speed improvement
 
  -- Jeroen van der Heijden <jeroen@cesbit.com>  Mon, 03 Jan 2022 16:20:49 +0100
 
