@@ -1,5 +1,5 @@
-[![CI](https://github.com/transceptor-technology/libcleri/workflows/CI/badge.svg)](https://github.com/transceptor-technology/libcleri/actions)
-[![Release Version](https://img.shields.io/github/release/transceptor-technology/libcleri)](https://github.com/transceptor-technology/libcleri/releases)
+[![CI](https://github.com/cesbit/libcleri/workflows/CI/badge.svg)](https://github.com/cesbit/libcleri/actions)
+[![Release Version](https://img.shields.io/github/release/cesbit/libcleri)](https://github.com/cesbit/libcleri/releases)
 
 # C Left-Right Parser (libcleri)
 
@@ -65,13 +65,13 @@ $ sudo make install
 > Note: run `sudo make uninstall` for removal.
 
 ## Related projects
-- [pyleri](https://github.com/transceptor-technology/pyleri): Python parser (can export grammar to pyleri, libcleri, goleri, jsleri and jleri)
-- [jsleri](https://github.com/transceptor-technology/jsleri): JavaScript parser
-- [goleri](https://github.com/transceptor-technology/goleri): Go parser
-- [jleri](https://github.com/transceptor-technology/jleri): Java parser
+- [pyleri](https://github.com/cesbit/pyleri): Python parser (can export grammar to pyleri, libcleri, goleri, jsleri and jleri)
+- [jsleri](https://github.com/cesbit/jsleri): JavaScript parser
+- [goleri](https://github.com/cesbit/goleri): Go parser
+- [jleri](https://github.com/cesbit/jleri): Java parser
 
 ## Quick usage
->The recommended way to create a grammar is to use [pyleri](https://github.com/transceptor-technology/pyleri) for
+>The recommended way to create a grammar is to use [pyleri](https://github.com/cesbit/pyleri) for
 >writing the grammar and then export the grammar to libcleri or other languages.
 
 This is a simple example using libcleri:
@@ -756,7 +756,7 @@ Duplicate a libcleri object with a different gid but using the same element.
 >Note: Only the object is duplicated. The element (`cleri_via_t via`)
 >is a pointer to the original object.
 
-The following [pyleri](https://github.com/transceptor-technology/pyleri) code
+The following [pyleri](https://github.com/cesbit/pyleri) code
 will use `cleri_dup()` when exported to c:
 ```python
 elem = Repeat(obj, mi=1, ma=1)
