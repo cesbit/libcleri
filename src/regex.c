@@ -30,7 +30,10 @@ cleri_t * cleri_regex(uint32_t gid, const char * pattern)
     int pcre_error_num;
     PCRE2_SIZE pcre_error_offset;
 
-    assert (pattern[0] == '^');
+    /*
+     * starting with ^ is not required as flags may go first
+     * assert (pattern[0] == '^');
+     */
 
     cl_object = cleri_new(
             gid,
