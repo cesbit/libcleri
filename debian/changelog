@@ -1,4 +1,11 @@
-libcleri (1.0.0-0~tt1)  unstable; urgency=medium
+libcleri (1.0.1-0~tt1) unstable; urgency=medium
+
+  * Changed company name to Cesbit.
+  * Removed regular expression assertion.
+
+ -- Jeroen van der Heijden <jeroen@cesbit.com>  Mon, 17 Oct 2022 09:24 +0100
+
+libcleri (1.0.0-0~tt1) unstable; urgency=medium
 
   * Remove cleri_children_t to reduce mallocs, issue #18
   * Fixed bug with `CLERI_FLAG_EXPECTING_DISABLED` flag
