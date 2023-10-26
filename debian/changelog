@@ -1,3 +1,18 @@
+libcleri (1.0.2-0~tt1) unstable; urgency=medium
+
+  * Fixed makefile to correct version.
+
+ -- Jeroen van der Heijden <jeroen@cesbit.com>  Thu, 26 Oct 2023 15:03:14 +0200
+
+libcleri (1.0.1-0~tt1.1) UNRELEASED; urgency=medium
+
+  * Non-maintainer upload.
+  * Fix FTCBFS: (Closes: #-1)
+    + Let dh_auto_build pass cross tools to make.
+    + cross.patch: Make gcc substitutable.
+
+ -- Helmut Grohne <helmut@subdivi.de>  Sun, 17 May 2020 12:14:38 +0200
+
 libcleri (1.0.1-0~tt1) unstable; urgency=medium
 
   * Changed company name to Cesbit.
