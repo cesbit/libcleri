@@ -1,6 +1,7 @@
 libcleri (1.0.2-0~tt1) unstable; urgency=medium
 
   * Fixed makefile to correct version.
+  * Do not hard-code GCC as compiler #24, @giordano
 
  -- Jeroen van der Heijden <jeroen@cesbit.com>  Thu, 26 Oct 2023 15:03:14 +0200
 
