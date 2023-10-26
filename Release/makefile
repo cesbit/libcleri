@@ -1,6 +1,7 @@
 -include ../makefile.init
 
 RM := rm -rf
+CC ?= gcc
 
 -include sources.mk
 -include src/subdir.mk
@@ -32,8 +33,8 @@ all: libcleri
 # Tool invocations
 libcleri: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	@echo 'Invoking: Cross GCC Linker'
-	gcc -shared -Wl,-$(SO_NAME),$(FN).$(MAJOR) -o $(FN) $(OBJS) $(USER_OBJS) $(LIBS) $(LDFLAGS)
+	@echo "Invoking: Cross $(CC) Linker"
+	$(CC) -shared -Wl,-$(SO_NAME),$(FN).$(MAJOR) -o $(FN) $(OBJS) $(USER_OBJS) $(LIBS) $(LDFLAGS)
 	@chmod -x $(FN)
 	@echo 'Finished building target: $@'
 	@echo ' '

@@ -73,7 +73,7 @@ C_DEPS += \
 
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
-	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DNDEBUG -I../inc -O3 -Winline -Wall $(CPPFLAGS) $(CFLAGS) -c -fmessage-length=0 -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	@echo "Invoking: Cross $(CC) Compiler"
+	$(CC) -DNDEBUG -I../inc -O3 -Winline -Wall $(CPPFLAGS) $(CFLAGS) -c -fmessage-length=0 -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
